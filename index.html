@@ -14,7 +14,7 @@ function iniciarNaHero(){
 addEventListener('pageshow',iniciarNaHero);
 </script>
 
-<link rel="icon" type="image/svg+xml" href="assets/clay-symbol-orange.svg">
+<link rel="icon" type="image/svg+xml" href="assets/clay-symbol-orange.svg?v=4">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Clay</title>
@@ -288,7 +288,8 @@ nav .brand-word{width:72px;height:32px}
 </form>
 </dialog>
 <script src="clay-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -351,22 +352,16 @@ const close=()=>{$('#app').classList.remove('o');document.body.style.overflow=''
 
 let clienteConta=null,usuarioConta=null,modoConta='entrar';
 const configuracao=window.CLAY_CONFIG||{};
-if(window.supabase&&configuracao.supabaseUrl&&configuracao.supabasePublicKey){
- try{clienteConta=supabase.createClient(configuracao.supabaseUrl,configuracao.supabasePublicKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(e){}
+if(window.firebase&&configuracao.firebase?.apiKey){
+ try{firebase.initializeApp(configuracao.firebase);clienteConta=firebase.auth();clienteConta.languageCode='pt-BR'}catch(e){}
 }
 function atualizarUsuario(usuario){
- const anterior=usuarioConta?.id;usuarioConta=usuario||null;
- if(anterior!==usuarioConta?.id){chats=[];cur=null;draw()}
+ const anterior=usuarioConta?.uid;usuarioConta=usuario||null;
+ if(anterior!==usuarioConta?.uid){chats=[];cur=null;draw()}
  $('#conta-usuario').textContent=usuarioConta?'Conta conectada · '+usuarioConta.email:'Modo de demonstração';
  if(!usuarioConta)close();
 }
-if(clienteConta){
- clienteConta.auth.onAuthStateChange((evento,sessao)=>{
-  atualizarUsuario(sessao?.user);
-  if(evento==='PASSWORD_RECOVERY')mostrarConta('redefinir');
- });
- clienteConta.auth.getSession().then(({data,error})=>{if(!error)atualizarUsuario(data.session?.user)}).catch(()=>{});
-}
+if(clienteConta)clienteConta.onAuthStateChanged(atualizarUsuario);
 function mostrarConta(modo){
   modoConta=modo;const cadastro=modo==='cadastrar',redefinir=modo==='redefinir';$('#conta-form').reset();
   $('#conta-email').parentElement.hidden=redefinir;$('#conta-email').required=!redefinir;
@@ -385,48 +380,41 @@ $('#conta-fechar').onclick=()=>$('#conta').close();
 $('#conta-alternar').onclick=()=>mostrarConta(modoConta==='entrar'?'cadastrar':'entrar');
 function erroConta(erro){
  const codigo=erro?.code||'';
- if(codigo==='invalid_credentials')return 'Endereço ou senha incorretos.';
- if(codigo==='email_not_confirmed')return 'Confirme seu endereço pela mensagem enviada antes de entrar.';
- if(codigo==='user_already_exists')return 'Não foi possível cadastrar. Tente entrar ou utilize outro endereço.';
- if(codigo.includes('rate_limit')||erro?.status===429)return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
- if(codigo==='weak_password')return 'Escolha uma senha mais forte.';
+ if(['auth/invalid-credential','auth/wrong-password','auth/user-not-found'].includes(codigo))return 'Endereço ou senha incorretos.';
+ if(codigo==='auth/email-already-in-use')return 'Não foi possível cadastrar. Tente entrar ou utilize outro endereço.';
+ if(codigo==='auth/invalid-email')return 'Digite um endereço válido.';
+ if(codigo==='auth/too-many-requests')return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
+ if(codigo==='auth/weak-password'||codigo==='auth/password-does-not-meet-requirements')return 'Escolha uma senha mais forte.';
+ if(codigo==='auth/operation-not-allowed')return 'O cadastro está temporariamente indisponível.';
  return 'Não foi possível concluir. Verifique sua conexão e tente novamente.';
 }
-function enderecoRetorno(){return configuracao.siteUrl||(/^https?:$/.test(location.protocol)?location.origin+location.pathname:null)}
 $('#conta-recuperar').onclick=async()=>{
  if(!clienteConta)return;
  const campo=$('#conta-email');if(!campo.reportValidity())return;
- const retorno=enderecoRetorno();if(!retorno){$('#conta-status').textContent='Abra o site pelo endereço publicado para recuperar sua senha.';return}
  const botao=$('#conta-recuperar');botao.disabled=true;$('#conta-status').textContent='Enviando instruções…';
  try{
-  const {error}=await clienteConta.auth.resetPasswordForEmail(campo.value.trim(),{redirectTo:retorno});if(error)throw error;
+  await clienteConta.sendPasswordResetEmail(campo.value.trim());
   $('#conta-status').textContent='Se houver uma conta para esse endereço, você receberá um link para criar uma nova senha. Confira também as mensagens indesejadas.';
- }catch(e){$('#conta-status').textContent=erroConta(e)}finally{botao.disabled=false}
+ }catch(e){$('#conta-status').textContent=e.code==='auth/user-not-found'?'Se houver uma conta para esse endereço, você receberá um link para criar uma nova senha.':erroConta(e)}finally{botao.disabled=false}
 };
 $('#conta-form').onsubmit=async e=>{
  e.preventDefault();if(!clienteConta)return;
- const cadastro=modoConta==='cadastrar',redefinir=modoConta==='redefinir',botao=$('#conta-enviar');
- if((cadastro||redefinir)&&$('#conta-senha').value!==$('#conta-confirmar').value){$('#conta-status').textContent='As senhas precisam ser iguais.';return}
+ const cadastro=modoConta==='cadastrar',botao=$('#conta-enviar');
+ if(cadastro&&$('#conta-senha').value!==$('#conta-confirmar').value){$('#conta-status').textContent='As senhas precisam ser iguais.';return}
  botao.disabled=true;$('#conta-alternar').disabled=true;$('#conta-status').textContent='Aguarde…';
  try{
-  const email=$('#conta-email').value.trim(),password=$('#conta-senha').value;
-  if(redefinir){
-   const {error}=await clienteConta.auth.updateUser({password});if(error)throw error;
-   $('#conta-form').reset();$('#conta').close();open();return;
-  }
-  const retorno=enderecoRetorno();
-  const {data,error}=cadastro?await clienteConta.auth.signUp({email,password,options:{data:{nome:$('#conta-nome').value.trim()},...(retorno?{emailRedirectTo:retorno}:{})}}):await clienteConta.auth.signInWithPassword({email,password});
-  if(error)throw error;
+  await clienteConta.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  const email=$('#conta-email').value.trim(),senha=$('#conta-senha').value;
+  const resultado=cadastro?await clienteConta.createUserWithEmailAndPassword(email,senha):await clienteConta.signInWithEmailAndPassword(email,senha);
+  if(cadastro){try{await resultado.user.updateProfile({displayName:$('#conta-nome').value.trim()})}catch(e){/* Conta criada; nome pode ser atualizado depois. */}}
   $('#conta-senha').value='';$('#conta-confirmar').value='';
-  if(data.session){atualizarUsuario(data.session.user);$('#conta').close();open()}
-  else $('#conta-status').textContent='Confira sua caixa de entrada para confirmar o cadastro. Depois, volte e entre na conta.';
+  atualizarUsuario(resultado.user);$('#conta').close();open();
  }catch(e){$('#conta-status').textContent=erroConta(e)}
  finally{botao.disabled=false;$('#conta-alternar').disabled=false}
 };
 $('#sair').onclick=async()=>{
  if(!clienteConta)return;$('#sair').disabled=true;
- try{const {error}=await clienteConta.auth.signOut();if(error)throw error;atualizarUsuario(null)}
- catch(e){alert('Não foi possível sair. Verifique sua conexão.')}
+ try{await clienteConta.signOut();atualizarUsuario(null)}catch(e){alert('Não foi possível sair. Verifique sua conexão.')}
  finally{$('#sair').disabled=false}
 };
 $$('[data-open]').forEach(b=>b.addEventListener('click',e=>{
