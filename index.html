@@ -20,7 +20,7 @@ addEventListener('pageshow',iniciarNaHero);
 <title>Clay</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:ital,wght@0,500;0,700;1,300&display=swap">
 <style>
-:root{--bg:#080808;--g:#17110e;--w:#f5e8d7;--b:#ff5402;--m:#b3a59a;--ln:rgba(245,232,215,.09);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+:root{--bg:#080808;--g:#17110e;--w:#FFFFFF;--b:#ff5402;--m:#FFFFFF;--ln:rgba(245,232,215,.09);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--w);font:16px/1.65 Inter,system-ui,sans-serif;overflow-x:hidden}
@@ -118,7 +118,7 @@ nav.s{background:rgba(8,8,8,.82)}
 h1{line-height:1}h1 img{display:block;width:clamp(230px,34vw,460px);height:auto}
 .hero{isolation:isolate;background:radial-gradient(ellipse at 86% 68%,rgba(255,84,2,.12),transparent 52%),#080808}
 .hero:after{content:"";position:absolute;inset:0;z-index:-1;opacity:0;pointer-events:none}
-.hc{max-width:620px}.tag{color:var(--w);font-style:normal;margin-top:30px}.sub{color:#b3a59a}
+.hc{max-width:620px}.tag{color:var(--w);font-style:normal;margin-top:30px}.sub{color:#FFFFFF}
 .clay-orbit{position:absolute;right:3vw;top:50%;transform:translateY(-50%);width:min(48vw,680px);aspect-ratio:1;pointer-events:none;z-index:0}
 .clay-orbit img{position:absolute;inset:24%;width:52%;height:52%;object-fit:contain;filter:drop-shadow(0 0 34px rgba(255,84,2,.15));transform:rotate(-10deg)}
 .orbit-ring{position:absolute;inset:8%;border-radius:50%;border:3px solid transparent;border-left:12px solid #ff5402;border-bottom:8px solid #ffd09c;transform:rotate(-24deg);box-shadow:-24px 26px 54px rgba(255,84,2,.35),inset 18px -24px 45px rgba(255,84,2,.22);filter:drop-shadow(0 0 18px #ff5402)}
@@ -199,6 +199,60 @@ nav .brand-word{width:72px;height:32px}
 #conta button:disabled{opacity:.5;cursor:wait}#conta-fechar{float:right}#conta-status{margin:0;font-size:14px;min-height:24px}
 #conta [hidden]{display:none!important}#sair{margin-left:auto}
 
+
+/* Keep the navigation overlay fixed until a menu control is selected. */
+html.menu-aberto,html.menu-aberto body{overflow:hidden;overscroll-behavior:none}
+nav .links{height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding:90px 24px 40px}
+
+
+/* Animated orange bands adapted for the static Clay page. */
+.hero{background:#080808}
+.hero:after{display:none}
+#clay-aurora{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hero .hc{z-index:2}
+.hero:before{z-index:1}
+
+#clay-dots{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* White navigation brand over the hero; original colors after it. */
+nav.sobre-hero .brand-symbol,nav.sobre-hero .brand-word{filter:brightness(0) invert(1)}
+nav .brand-symbol,nav .brand-word{transition:filter .3s ease}
+
+
+
+/* Pure white for light interface text and the Clay wordmark. */
+.brand-word,h1 img{filter:brightness(0) invert(1)}
+input::placeholder,textarea::placeholder{color:#FFFFFF;opacity:1}
+
+
+
+/* White star trail around the navigation AI button. */
+.clay-star-button{position:relative;display:inline-flex;align-items:center;justify-content:center;isolation:isolate;overflow:hidden;padding:11px 17px;min-height:44px;border-radius:12px;background:#100e10;color:#FFFFFF;font:500 13px Inter,sans-serif;z-index:60;box-shadow:0 0 0 1px rgba(255,255,255,.18);white-space:nowrap}
+.clay-star-button:before{content:"";position:absolute;inset:-150%;z-index:-2;background:conic-gradient(from 0deg,transparent 0deg,transparent 252deg,rgba(255,255,255,.08) 270deg,#FFFFFF 359deg,transparent 360deg);animation:clay-star-lap 4s linear infinite}
+.clay-star-button:after{content:"";position:absolute;inset:1px;border-radius:11px;background:#100e10;z-index:-1}
+.clay-star-button:hover{box-shadow:0 0 12px rgba(255,255,255,.3)}
+.clay-star-button:hover:before{animation-duration:1.2s}
+.clay-star-button:active{animation:clay-star-pulse .4s ease}
+@keyframes clay-star-lap{to{transform:rotate(360deg)}}
+@keyframes clay-star-pulse{50%{box-shadow:0 0 20px rgba(255,255,255,.6)}}
+@media(max-width:480px){.clay-star-button{font-size:10px;padding:9px 10px;min-height:38px;max-width:135px}nav{padding-inline:4vw}}
+@media(max-width:360px){.clay-star-button{font-size:9px;padding-inline:7px}}
+@media(prefers-reduced-motion:reduce){.clay-star-button:before{animation:none}.clay-star-button:active{animation:none}}
+
+
+/* Transparent AI button with animation confined to its outline. */
+@property --clay-star-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+.clay-star-button{background:transparent}
+.clay-star-button:after{display:none}
+.clay-star-button:before{inset:0;z-index:0;padding:1px;border-radius:inherit;pointer-events:none;background:conic-gradient(from var(--clay-star-angle),transparent 0deg,transparent 252deg,rgba(255,255,255,.08) 270deg,#FFFFFF 359deg,transparent 360deg);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;animation:clay-star-outline 4s linear infinite}
+@keyframes clay-star-outline{to{--clay-star-angle:360deg}}
+
+
+/* Glass finish: translucent surface, background blur and soft reflection. */
+.clay-star-button{background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 55%,rgba(255,255,255,.07));backdrop-filter:blur(12px) saturate(125%);-webkit-backdrop-filter:blur(12px) saturate(125%);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 0 0 1px rgba(255,255,255,.16),0 4px 16px rgba(0,0,0,.12)}
+.clay-star-button:hover{background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.05) 55%,rgba(255,255,255,.1));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 0 12px rgba(255,255,255,.2)}
+
+
 </style>
 </head>
 <body>
@@ -211,9 +265,11 @@ nav .brand-word{width:72px;height:32px}
     <a class="btn" href="#" data-open>Entrar</a>
     <a class="btn p mag" href="#" data-open>Começar gratuitamente</a>
   </div>
+  <a class="clay-star-button" href="#" data-open>Conheça o Clay AI</a>
 </nav>
 <header class="hero" id="top">
-  <div class="clay-orbit" aria-hidden="true"><div class="orbit-ring"></div><img src="assets/clay-symbol-cream.svg" alt=""></div>
+  <canvas id="clay-aurora" aria-hidden="true"></canvas>
+
   <div class="glow"></div>
   <div class="chip" style="right:8vw;top:24%"><i></i>Pesquisando fontes…</div>
   <div class="chip" style="right:22vw;bottom:22%"><i></i>3 hipóteses geradas</div>
@@ -298,9 +354,17 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches,fine=matchMedia('(pointer:fine)').matches,mob=innerWidth<820;
 /* loader + nav */
 setTimeout(()=>$('#ld').classList.add('x'),RM?0:900);
-const nav=$('nav');addEventListener('scroll',()=>nav.classList.toggle('s',scrollY>40),{passive:true});
-$('#menu').onclick=()=>{const o=$('.links').classList.toggle('o');$('#menu').setAttribute('aria-expanded',o);$('#menu').setAttribute('aria-label',o?'Fechar menu':'Abrir menu')};
-$$('.links a').forEach(a=>a.addEventListener('click',()=>{$('.links').classList.remove('o');$('#menu').setAttribute('aria-expanded','false');$('#menu').setAttribute('aria-label','Abrir menu')}));
+const nav=$('nav');
+function atualizarMarcaHero(){const naHero=$('.hero').getBoundingClientRect().bottom>nav.getBoundingClientRect().bottom;nav.classList.toggle('sobre-hero',naHero);nav.classList.toggle('s',!naHero)}
+atualizarMarcaHero();addEventListener('scroll',atualizarMarcaHero,{passive:true});addEventListener('resize',atualizarMarcaHero);
+function alternarMenu(aberto){
+ $('.links').classList.toggle('o',aberto);
+ $('#menu').setAttribute('aria-expanded',String(aberto));
+ $('#menu').setAttribute('aria-label',aberto?'Fechar menu':'Abrir menu');
+ document.documentElement.classList.toggle('menu-aberto',aberto);
+}
+$('#menu').onclick=()=>alternarMenu(!$('.links').classList.contains('o'));
+$$('.links a').forEach(a=>a.addEventListener('click',()=>alternarMenu(false)));
 /* GSAP */
 if(window.gsap&&window.ScrollTrigger&&!RM){
 gsap.registerPlugin(ScrollTrigger);
@@ -418,12 +482,14 @@ $('#sair').onclick=async()=>{
  finally{$('#sair').disabled=false}
 };
 $$('[data-open]').forEach(b=>b.addEventListener('click',e=>{
- e.preventDefault();$('.links').classList.remove('o');$('#menu').setAttribute('aria-expanded','false');$('#menu').setAttribute('aria-label','Abrir menu');
+ e.preventDefault();alternarMenu(false);
  if(usuarioConta){open();return}
  mostrarConta(/Cadastrar|Começar/.test(b.textContent)?'cadastrar':'entrar');
 }));
 
 $('#close').onclick=close;addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 </script>
+<script src="assets/clay-aurora.js"></script>
+
 </body>
 </html>
