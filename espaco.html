@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meu espaço · Clay</title>
+<link rel="icon" href="assets/images/clay-symbol-orange.svg">
+<link rel="stylesheet" href="assets/styles/espaco.css">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+</head>
+<body>
+<header class="workspace-header"><a class="brand" href="index.html?inicio=1" aria-label="Clay, início"><img src="assets/images/clay-symbol-orange.svg" alt=""><img src="assets/images/clay-wordmark-cream.svg" alt="Clay"></a><span id="account-name"></span><a href="index.html?inicio=1">Voltar ao Clay ↗</a><button id="workspace-signout" class="button" hidden>Sair</button></header>
+<main class="workspace">
+ <div id="access-state" class="access-feedback" hidden><p id="access-message" role="status" aria-live="polite"></p><a id="login-link" class="button primary" href="index.html?destino=espaco" hidden>Entrar ou criar conta</a></div>
+ <button id="retry-load" class="button" hidden>Tentar novamente</button>
+ <div id="owner-space" hidden>
+  <nav class="gooey-nav" aria-label="Meu espaço"><span class="gooey-active" aria-hidden="true"></span><span class="gooey-particles" aria-hidden="true"></span><button id="tab-studies" class="active" aria-selected="true" role="tab" aria-controls="studies">Estudos <span>↗</span></button><button id="tab-portfolio" aria-selected="false" role="tab" aria-controls="portfolio">Portfólio <span>✧</span></button></nav>
+  <p id="save-state" class="save-state" role="status" aria-live="polite"></p>
+  <section id="studies" role="tabpanel" aria-labelledby="tab-studies">
+   <div class="section-heading"><div><p class="eyebrow">ESPAÇO PESSOAL · SÓ VOCÊ TEM ACESSO</p><h1>Um passo de cada vez.</h1><p class="muted">Sua trilha, suas aulas e o ponto exato para continuar.</p></div><button class="button primary" id="add-course">＋ Adicionar curso</button></div>
+   <div class="stats"><div><span id="stat-active">0</span><p>em andamento</p></div><div><span id="stat-done">0</span><p>concluídos</p></div><div><span id="stat-lessons">0</span><p>aulas concluídas</p></div><div><span id="stat-platforms">0</span><p>plataformas</p></div></div>
+   <section id="resume-card" class="resume-card" hidden></section>
+   <div class="list-heading"><div><p class="eyebrow">A DIREÇÃO É SUA</p><h2>Trilha de aprendizagem</h2></div><label class="filter-label">Mostrar<select id="course-filter"><option value="all">Todos os cursos</option><option value="active">Em andamento</option><option value="planned">Planejados</option><option value="done">Concluídos</option></select></label></div>
+   <div id="course-list" class="course-list"></div>
+   <p class="footnote">Registre a aula onde parou e cole o link direto. O destino pode exigir login na plataforma do curso.</p>
+  </section>
+  <section id="portfolio" role="tabpanel" aria-labelledby="tab-portfolio" hidden>
+   <div class="section-heading"><div><p class="eyebrow">SUA PRESENÇA PROFISSIONAL</p><h1>Mostre o que você constrói.</h1><p class="muted">Projetos, currículo e aprendizado em um perfil só seu.</p></div><button class="button" id="edit-profile">Editar perfil</button></div>
+   <div class="publish-bar"><div><strong id="publication-label">Perfil ainda privado</strong><p id="publication-help">Publique quando estiver pronto. Apenas este resumo ficará público.</p></div><div class="actions"><button class="button primary" id="publish-profile">Publicar perfil</button><button class="button" id="copy-profile" hidden>Copiar link</button><button class="button danger" id="unpublish-profile" hidden>Retirar do público</button></div></div>
+   <div id="portfolio-preview"></div>
+   <div class="list-heading"><h2>Seus projetos</h2><button class="button" id="add-project">＋ Adicionar projeto</button></div><div id="project-editor-list"></div>
+  </section>
+ </div>
+ <section id="public-space" hidden><p class="eyebrow">PORTFÓLIO · CLAY</p><div id="public-profile"></div></section>
+</main>
+<dialog id="course-dialog"><form id="course-form"><div class="dialog-heading"><h2 id="course-dialog-title">Adicionar curso</h2><button type="button" class="icon-button" data-close aria-label="Fechar">×</button></div><p class="muted">Guarde o caminho até a sua próxima aula.</p>
+ <label>Nome do curso<input name="title" required maxlength="120" placeholder="Ex.: Fundamentos de JavaScript"></label>
+ <div class="form-row"><label>Site ou aplicativo<input name="platform" required maxlength="80" placeholder="Ex.: Alura, Udemy, YouTube"></label><label>Tema / trilha<input name="topic" required maxlength="80" placeholder="Ex.: Desenvolvimento web"></label></div>
+ <label>Situação<select name="status"><option value="planned">Planejado</option><option value="active">Em andamento</option><option value="done">Concluído</option></select></label>
+ <label>Aula onde você parou<input name="lesson" maxlength="180" placeholder="Ex.: Aula 8 — Funções e parâmetros"></label>
+ <label>Link direto dessa aula<input name="url" type="url" maxlength="2000" placeholder="https://…"><small>Use o link da aula, quando a plataforma disponibilizar.</small></label>
+ <div class="form-row"><label>Aulas concluídas<input name="completed" type="number" min="0" max="10000" step="1" value="0" required></label><label>Total de aulas<input name="total" type="number" min="1" max="10000" step="1" placeholder="Opcional"></label></div>
+ <label>Anotações pessoais<textarea name="notes" maxlength="3000" rows="3" placeholder="O que revisar? Qual é o próximo passo?"></textarea></label>
+ <label class="checkbox"><input name="share" type="checkbox" checked> Mostrar o título e o tema no resumo do portfólio</label><p class="footnote">Aula, plataforma, link e anotações permanecem privados.</p>
+ <p class="form-error" role="alert"></p><button class="button primary" type="submit">Salvar curso</button>
+ </form></dialog>
+<dialog id="profile-dialog"><form id="profile-form"><div class="dialog-heading"><h2>Perfil profissional</h2><button type="button" class="icon-button" data-close aria-label="Fechar">×</button></div>
+ <label>Seu nome<input name="name" required maxlength="100"></label><label>Título profissional<input name="headline" required maxlength="160" placeholder="Estudante de Engenharia de Software"></label><label>Sobre você<textarea name="bio" rows="4" maxlength="2000" placeholder="O que você gosta de criar? Onde quer chegar?"></textarea></label><label>Link do currículo<input name="resume" type="url" maxlength="2000" placeholder="https://…"><small>Use um link público para o PDF ou documento do seu currículo.</small></label><div class="form-row"><label>GitHub<input name="github" type="url" maxlength="2000" placeholder="https://github.com/…"></label><label>LinkedIn<input name="linkedin" type="url" maxlength="2000" placeholder="https://linkedin.com/in/…"></label></div><p class="form-error" role="alert"></p><button class="button primary">Salvar perfil</button></form></dialog>
+<dialog id="project-dialog"><form id="project-form"><div class="dialog-heading"><h2>Seu projeto</h2><button type="button" class="icon-button" data-close aria-label="Fechar">×</button></div><label>Nome<input name="title" required maxlength="120"></label><label>Descrição<textarea name="description" maxlength="1200" rows="3" required></textarea></label><label>Tecnologias<input name="tech" maxlength="240" placeholder="Ex.: React, Node.js, PostgreSQL"></label><label>Situação<select name="status"><option value="building">Em desenvolvimento</option><option value="done">Concluído</option></select></label><label>Link do projeto ou repositório<input name="url" type="url" maxlength="2000" placeholder="https://…"></label><p class="form-error" role="alert"></p><button class="button primary">Salvar projeto</button></form></dialog>
+<dialog id="onboarding" aria-labelledby="onboarding-title"><form id="onboarding-form"><nav class="onboarding-steps" aria-label="Etapas da configuração"><button type="button" data-step="0" class="active" aria-current="step"><span class="step-number">1</span> Boas-vindas</button><button type="button" data-step="1"><span class="step-number">2</span> Trilha</button><button type="button" data-step="2"><span class="step-number">3</span> Perfil</button><button type="button" data-step="3"><span class="step-number">4</span> Revisão</button></nav><div class="stepper-viewport"><div id="onboarding-content"></div></div><p class="form-error" role="alert"></p><div class="onboarding-actions"><button type="button" class="button" id="onboarding-back" hidden>Voltar</button><button type="submit" class="button primary" id="onboarding-next">Continuar →</button></div></form></dialog>
+<script>
+document.getElementById('retry-load').onclick=()=>location.reload();
+window.clayLoadingWatchdog=setTimeout(()=>{
+ document.getElementById('access-state').hidden=false;
+ document.getElementById('access-message').textContent='A conexão está demorando mais que o esperado. Verifique sua internet e tente novamente.';
+ document.getElementById('retry-load').hidden=false;
+},8000);
+</script>
+<script defer src="config/clay-config.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+<script defer src="assets/scripts/espaco.js"></script>
+</body></html>

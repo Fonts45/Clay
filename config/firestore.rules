@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) { return request.auth != null && request.auth.uid == uid; }
+    function profileValid(p) {
+      return p.keys().hasAll(['name','headline','bio','resume','github','linkedin'])
+        && p.keys().hasOnly(['name','headline','bio','resume','github','linkedin'])
+        && p.name is string && p.name.size() <= 100
+        && p.headline is string && p.headline.size() <= 160
+        && p.bio is string && p.bio.size() <= 2000
+        && p.resume is string && p.resume.size() <= 2000
+        && p.github is string && p.github.size() <= 2000
+        && p.linkedin is string && p.linkedin.size() <= 2000;
+    }
+    match /learningSpaces/{uid} {
+      allow get: if owner(uid);
+      allow list: if false;
+      allow create, update: if owner(uid)
+        && request.resource.data.keys().hasOnly(['profile','courses','projects','published','initialized','initialTopic','updatedAt'])
+        && profileValid(request.resource.data.profile)
+        && request.resource.data.courses is list && request.resource.data.courses.size() <= 100
+        && request.resource.data.projects is list && request.resource.data.projects.size() <= 40
+        && request.resource.data.published is bool
+        && request.resource.data.initialized is bool
+        && request.resource.data.updatedAt is number;
+      allow delete: if owner(uid);
+    }
+    match /publicPortfolios/{uid} {
+      allow get: if true;
+      allow list: if false;
+      allow create, update: if owner(uid)
+        && request.resource.data.keys().hasOnly(['profile','projects','learning','updatedAt'])
+        && profileValid(request.resource.data.profile)
+        && request.resource.data.projects is list && request.resource.data.projects.size() <= 40
+        && request.resource.data.learning is list && request.resource.data.learning.size() <= 100
+        && request.resource.data.updatedAt is number
+        && getAfter(/databases/$(database)/documents/learningSpaces/$(uid)).data.published == true;
+      allow delete: if owner(uid);
+    }
+  }
+}
