@@ -10,7 +10,26 @@ let db,auth,user=null,state=null,unlisten=null,saving=false,courseId=null,projec
 const writeControls=['#add-course','#edit-profile','#add-project','#publish-profile','#copy-profile','#unpublish-profile'];
 function finishLoading(){clearTimeout(window.clayLoadingWatchdog);clearTimeout(loadTimer);$('#retry-load').hidden=true}
 function accessError(message){$('#access-message').textContent=message;$('#access-state').hidden=false}
+
+function atualizarCarta(){
+ const profile=state?.profile||{};
+ const rail=document.querySelector('.professional-rail');rail.hidden=!user||!!uid;
+ document.getElementById('card-name').textContent=profile.name||user?.displayName||'Seu nome';
+ document.getElementById('card-role').textContent=profile.headline||'Seu título profissional';
+ document.getElementById('card-id').textContent=user?.uid?user.uid.slice(0,12).match(/.{1,4}/g).join(' '):'—';
+ document.getElementById('card-verification').textContent=user?.emailVerified?'◇ Verificado':'◇ Perfil';
+ const photo=profile.photo||user?.photoURL||'',face=document.getElementById('card-face');
+ face.hidden=!photo;if(photo)face.src=photo;else face.removeAttribute('src');
+}
+async function fotoPerfil(){
+ const file=document.getElementById('profile-photo').files[0];if(!file)return state?.profile?.photo||'';
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024)throw Error('Escolha uma imagem JPG, PNG ou WebP de até 8 MB.');
+ const bitmap=await createImageBitmap(file);const canvas=document.createElement('canvas');const ratio=Math.min(1,480/Math.max(bitmap.width,bitmap.height));canvas.width=Math.round(bitmap.width*ratio);canvas.height=Math.round(bitmap.height*ratio);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();const photo=canvas.toDataURL('image/jpeg',.72);if(photo.length>180000)throw Error('Escolha uma foto menor para salvar no perfil.');return photo;
+}
+$('#card-edit').onclick=()=>{if(state)$('#edit-profile').click()};
+
 function loadingShell(){
+ atualizarCarta();
  $('#access-state').hidden=true;$('#owner-space').hidden=false;$('#owner-space').setAttribute('aria-busy','true');
  writeControls.forEach(id=>$(id).disabled=true);$('#account-name').textContent=user.displayName||user.email||'';
  ['active','done','lessons','platforms'].forEach(k=>$('#stat-'+k).textContent='—');
@@ -48,6 +67,7 @@ function renderProfile(data){
 }
 function render(){
  if(!state)return;
+ atualizarCarta();
  const courses=state.courses;
  $('#account-name').textContent=state.profile.name||user?.email||'';
  $('#stat-active').textContent=courses.filter(c=>c.status==='active').length;
@@ -71,7 +91,7 @@ function render(){
 function setTab(index,animate=true){
  const portfolio=index===1;$('.gooey-nav').classList.toggle('portfolio-active',portfolio);
  ['studies','portfolio'].forEach((name,i)=>{const b=$('#tab-'+name);b.classList.toggle('active',i===index);b.setAttribute('aria-selected',String(i===index));b.tabIndex=i===index?0:-1;$('#'+name).hidden=i!==index});
- if(animate&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const area=$('.gooey-particles');area.replaceChildren();for(let i=0;i<15;i++){const dot=document.createElement('i'),angle=Math.random()*Math.PI*2;dot.style.setProperty('--origin',portfolio?'75%':'25%');dot.style.setProperty('--size',`${5+Math.random()*8}px`);dot.style.setProperty('--dx',`${Math.cos(angle)*56}px`);dot.style.setProperty('--dy',`${Math.sin(angle)*26}px`);dot.style.setProperty('--duration',`${600+Math.random()*300}ms`);dot.addEventListener('animationend',()=>dot.remove(),{once:true});area.appendChild(dot)}}
+
 }
 $('.gooey-nav').setAttribute('role','tablist');
 $('#tab-studies').onclick=()=>setTab(0);$('#tab-portfolio').onclick=()=>setTab(1);
@@ -96,7 +116,7 @@ bindForm('#course-form',async data=>{
  if(index<0){if(next.courses.length>=100)throw Error('O limite desta trilha é de 100 cursos.');next.courses.push(entry)}else next.courses[index]=entry;
  await persist(next);
 });
-bindForm('#profile-form',async data=>{checkUrls(data,['resume','github','linkedin']);if(!data.name||!data.headline)throw Error('Preencha seu nome e título profissional.');const next=clone(state);next.profile=data;await persist(next)});
+bindForm('#profile-form',async data=>{checkUrls(data,['resume','github','linkedin']);if(!data.name||!data.headline)throw Error('Preencha seu nome e título profissional.');const next=clone(state);next.profile={...data,photo:await fotoPerfil()};await persist(next)});
 bindForm('#project-form',async data=>{checkUrls(data,['url']);const next=clone(state),entry={...data,id:projectId||crypto.randomUUID()},index=next.projects.findIndex(p=>p.id===projectId);if(index<0){if(next.projects.length>=40)throw Error('O limite é de 40 projetos.');next.projects.push(entry)}else next.projects[index]=entry;await persist(next)});
 $('#owner-space').addEventListener('click',async e=>{
  const b=e.target.closest('button');if(!b||saving||!state)return;
@@ -148,7 +168,7 @@ try{
  if(uid){loadPublic();return}
  auth.onAuthStateChanged(async account=>{
   finishLoading();
-  if(unlisten){unlisten();unlisten=null}user=account;state=null;saving=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('#owner-space').hidden=true;$('#access-state').hidden=true;$('#workspace-signout').hidden=!account;
+  if(unlisten){unlisten();unlisten=null}user=account;state=null;saving=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('#owner-space').hidden=true;$('.professional-rail').hidden=true;$('#access-state').hidden=true;$('#workspace-signout').hidden=!account;
   if(!account){location.replace('index.html?destino=espaco');return}
   $('#login-link').hidden=true;loadingShell();
   const owner=account.uid;

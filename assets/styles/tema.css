@@ -1,0 +1,43 @@
+
+.clay-header-actions{display:flex;align-items:center;gap:12px;z-index:60}
+.clay-theme-toggle{display:grid;place-items:center;position:relative;width:38px;height:38px;border:1px solid rgba(255,255,255,.22);border-radius:50%;background:rgba(255,255,255,.07);backdrop-filter:blur(10px);cursor:pointer;transition:background .25s,transform .25s;padding:9px;flex-shrink:0}
+.clay-theme-toggle:hover{background:rgba(255,255,255,.15);transform:rotate(12deg)}
+.clay-theme-toggle img{position:absolute;width:19px;height:19px;filter:brightness(0) invert(1);transition:opacity .25s,transform .3s}
+.theme-moon{opacity:0;transform:rotate(-35deg) scale(.6)}
+html[data-theme="light"] .theme-sun{opacity:0;transform:rotate(35deg) scale(.6)}
+html[data-theme="light"] .theme-moon{opacity:1;transform:none}
+html[data-theme="light"]{color-scheme:light;--bg:#FAFAFA;--g:#F0EFED;--w:#171717;--m:#454545;--ln:rgba(0,0,0,.12);--surface:#FFFFFF;--line:#DCDCDC;--muted:#555555;--white:#171717}
+html[data-theme="light"] body{background:#FAFAFA;color:#171717}
+html[data-theme="light"] .hero{background:#FAFAFA}
+html[data-theme="light"] #clay-aurora{opacity:.55}
+html[data-theme="light"] .hero:before{background:linear-gradient(to bottom,transparent,#FAFAFA)}
+html[data-theme="light"] nav.s,html[data-theme="light"] .clay-global-nav{background:rgba(250,250,250,.85);border-color:#DDDDDD}
+html[data-theme="light"] nav .links{background:#FAFAFA;color:#171717}
+html[data-theme="light"] #menu{color:#171717}
+html[data-theme="light"] .brand-word,html[data-theme="light"] h1 img{filter:brightness(0)!important}
+html[data-theme="light"] nav.sobre-hero .brand-symbol{filter:none}
+html[data-theme="light"] .clay-star-button{color:#171717;background:linear-gradient(135deg,#ffffff77,#ffffff22);box-shadow:inset 0 1px 0 #FFFFFF,0 0 0 1px #00000022}
+html[data-theme="light"] .clay-theme-toggle{background:#FFFFFF77;border-color:#00000022}
+html[data-theme="light"] .clay-theme-toggle img{filter:brightness(0)}
+html[data-theme="light"] .btn{background:#FFFFFF66;color:#171717;border-color:#00000022}
+html[data-theme="light"] .btn.p{background:var(--b)}
+html[data-theme="light"] #tecnologia{background:linear-gradient(135deg,#FFF0E7,#FAFAFA)}
+html[data-theme="light"] .sub,html[data-theme="light"] .tag{color:#171717}
+html[data-theme="light"] #app main{background:#FAFAFA}
+html[data-theme="light"] #conta,html[data-theme="light"] dialog{background:#FFFFFF;color:#171717;border-color:#DDDDDD}
+html[data-theme="light"] #conta input,html[data-theme="light"] input,html[data-theme="light"] textarea,html[data-theme="light"] select{background:#F4F4F4;color:#171717;border-color:#D5D5D5}
+html[data-theme="light"] input::placeholder,html[data-theme="light"] textarea::placeholder{color:#666666}
+html[data-theme="light"] .box,html[data-theme="light"] .m pre{background:#F0EFED}
+html[data-theme="light"] .stats,html[data-theme="light"] .course-card,html[data-theme="light"] .empty,html[data-theme="light"] .profile-cover,html[data-theme="light"] .project-card,html[data-theme="light"] .resume-card,html[data-theme="light"] .publish-bar,html[data-theme="light"] .onboarding{background:#FFFFFF;border-color:#DDDDDD}
+html[data-theme="light"] .button,html[data-theme="light"] .text-button{background:#FFFFFF;color:#171717;border-color:#DDDDDD}
+html[data-theme="light"] .button.primary{background:#FF5402}
+html[data-theme="light"] .gooey-nav{background:#F0F0F0;border-color:#DDDDDD}
+html[data-theme="light"] .gooey-nav>button{color:#666666}
+html[data-theme="light"] .gooey-nav>button.active{color:#171717}
+@media(max-width:600px){.clay-header-actions{gap:7px}.clay-theme-toggle{width:30px;height:30px}.clay-theme-toggle img{width:16px;height:16px}nav>.logo,.clay-global-nav>.logo{left:29%}nav .brand-word,.clay-global-nav .brand-word{width:55px}nav .brand-symbol,.clay-global-nav .brand-symbol{width:18px;height:24px}.brand-lockup{gap:5px}.clay-star-button{font-size:10px;padding:9px 9px;min-height:36px}#menu{left:3vw;width:36px}}
+@media(prefers-reduced-motion:reduce){.clay-theme-toggle,.clay-theme-toggle img{transition:none}}
+
+/* Global neutral focus treatment, without orange outlines. */
+:root :focus{outline:none!important}
+:root :focus-visible{outline:1px solid rgba(255,255,255,.35)!important;outline-offset:3px}
+html[data-theme="light"] :focus-visible{outline-color:rgba(0,0,0,.3)!important}

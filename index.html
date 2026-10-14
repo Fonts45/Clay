@@ -264,7 +264,24 @@ input::placeholder,textarea::placeholder{color:#FFFFFF;opacity:1}
 .clay-star-button:hover{background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.05) 55%,rgba(255,255,255,.1));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 0 12px rgba(255,255,255,.2)}
 
 
+nav[hidden]{display:none!important}
+
+.hero .cta [hidden]{display:none!important}#manter-campo{display:none!important}
+.clay-specular{--shine-x:50%;--shine-y:0%;--shine-power:.35;position:relative;isolation:isolate;overflow:hidden;display:inline-flex;justify-content:center;align-items:center;min-height:52px;min-width:160px;padding:14px 32px;border:1.5px solid #ffffff55;border-radius:40px;background:linear-gradient(135deg,#ffffff0a,#52525266);backdrop-filter:blur(12px);color:#f5f5f5;font:500 16px Inter,sans-serif;box-shadow:inset 0 1px 0 #ffffff33,0 0 18px #ffffff0a;transition:box-shadow .25s,transform .2s}
+.clay-specular:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle 70px at var(--shine-x) var(--shine-y),#ffffff66,transparent 75%);opacity:var(--shine-power)}
+.clay-specular:hover{box-shadow:inset 0 1px 0 #ffffff77,0 0 22px #ffffff22}.clay-specular:active{transform:scale(.97)}
+html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient(135deg,#ffffffbb,#52525222);border-color:#52525244}
+@media(prefers-reduced-motion:reduce){.clay-specular{transition:none}}
+
+
+/* The trail's phase is continuous; hovering changes only its speed. */
+@property --clay-star-angle{syntax:"<angle>";initial-value:0deg;inherits:true}
+.clay-star-button:before,.clay-star-button:hover:before{animation:none;--clay-star-angle:inherit}
+
 </style>
+<link rel="stylesheet" href="assets/styles/tema.css">
+<script src="assets/scripts/tema.js"></script>
+<link rel="stylesheet" href="assets/styles/prompt.css">
 </head>
 <body>
 <div id="ld"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></div>
@@ -277,7 +294,7 @@ input::placeholder,textarea::placeholder{color:#FFFFFF;opacity:1}
     <a class="btn" href="#" data-open>Entrar</a>
     <a class="btn p mag" href="#" data-open>Começar gratuitamente</a>
   </div>
-  <a class="clay-star-button" href="#" data-open>Conheça o Clay AI</a>
+  <div class="clay-header-actions"><button class="clay-theme-toggle" type="button" aria-label="Ativar modo claro"><img class="theme-sun" src="assets/images/clay-sun.svg" alt=""><img class="theme-moon" src="assets/images/clay-moon.svg" alt=""></button><a class="clay-star-button" href="#" data-open>Conheça o Clay AI</a></div>
 </nav>
 <header class="hero" id="top">
   <canvas id="clay-aurora" aria-hidden="true"></canvas>
@@ -293,6 +310,7 @@ input::placeholder,textarea::placeholder{color:#FFFFFF;opacity:1}
     <div class="cta">
       <a class="btn p mag" href="#" data-open>Entrar</a>
       <a class="btn mag" href="#" data-open>Cadastrar</a>
+      <a id="hero-avancar" class="clay-specular" href="espaco.html" hidden>Avançar</a>
     </div>
   </div>
 </header>
@@ -327,12 +345,18 @@ input::placeholder,textarea::placeholder{color:#FFFFFF;opacity:1}
   <main>
     <div class="bar"><button class="btn" id="sb" aria-label="Abrir barra lateral">☰</button><span id="conta-usuario">Modo de demonstração</span><a class="btn" href="espaco.html">Estudos e portfólio</a><button class="btn" id="sair">Sair da conta</button></div>
     <div id="msgs" aria-live="polite">
-      <div id="wel"><h2>O que vamos descobrir hoje?</h2><p>Pergunte qualquer coisa. Experimente pedir um código.</p></div>
+      <div id="wel"><h2>Vamos aprender o que hoje?</h2><p>Pergunte sobre os seus estudos ou assuntos gerais.</p></div>
     </div>
     <div class="cmp">
       <div class="box">
-        <textarea id="in" rows="1" placeholder="Escreva sua mensagem…" aria-label="Mensagem"></textarea>
-        <button id="send" aria-label="Enviar" disabled>↑</button>
+        <textarea id="in" rows="1" placeholder="Pergunte qualquer coisa" aria-label="Mensagem"></textarea>
+        <div id="prompt-attachments" aria-live="polite"></div>
+<div class="prompt-tools">
+ <button id="prompt-add" type="button" aria-label="Adicionar arquivos" title="Adicionar arquivos">＋</button>
+ <input id="prompt-files" type="file" multiple hidden>
+ <button id="prompt-mic" type="button" aria-label="Ditar mensagem" title="Ditar mensagem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M9 22h6"/></svg></button>
+</div><p id="prompt-tool-status" role="status" hidden></p>
+<button id="send" aria-label="Enviar mensagem" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
       </div>
       <div class="fine">Enter envia · Shift + Enter quebra linha · respostas simuladas</div>
     </div>
@@ -418,28 +442,38 @@ function md(t){const p=t.split(/```(\w*)\n?([\s\S]*?)```/g);let o='';for(let i=0
 const reply=q=>/c[óo]d|code|fun[cç]|script/i.test(q)
 ?"Aqui vai um exemplo em **JavaScript**:\n\n```js\n// Limita chamadas repetidas\nfunction limitarChamadas(funcao, intervalo = 300) {\n  let t;\n  return (...argumentos) => {\n    clearTimeout(t);\n    t = setTimeout(() => funcao(...argumentos), intervalo);\n  };\n}\n```\n\nUse `limitarChamadas` para limitar chamadas em eventos frequentes."
 :`Ótima pergunta. Sobre **"${q.slice(0,60)}"**, um caminho em três passos:\n\n- Defina o objetivo com precisão\n- Reúna as fontes mais confiáveis\n- Teste uma hipótese pequena e itere\n\nPosso aprofundar qualquer etapa. Basta pedir.`;
-let chats=[],cur=null,busy=false;
+let chats=[],cur=null,busy=false,thoughtStarted=0,thoughtChat=null,thoughtTick=null;
+function thoughtLine(seconds,working=false){
+const box=document.createElement('details');box.className='thought-line'+(working?' working':' settled');box.open=working;
+box.innerHTML='<summary><img class="thought-glyph" src="assets/images/clay-symbol-orange.svg" alt="" aria-hidden="true"><span class="thought-label"></span><span class="thought-time"></span><span class="thought-chevron" aria-hidden="true">⌃</span></summary><ol><li>Lendo a pergunta</li><li>Preparando a demonstração</li><li>Organizando a resposta</li></ol>';
+box.querySelector('.thought-label').textContent=working?'Pensamento…':'Pensou por';
+function update(elapsed){box.querySelector('.thought-time').textContent=elapsed.toFixed(1).replace('.',',')+'s';const phase=working?Math.min(2,Math.floor(elapsed/.4)):3;box.querySelectorAll('li').forEach((row,index)=>{row.className=index<phase?'complete':index===phase?'current':'pending'})}
+update(seconds);
+if(working){box.setAttribute('aria-label','Preparando resposta de demonstração');thoughtTick=setInterval(()=>update((performance.now()-thoughtStarted)/1000),100)}
+return box;
+}
 const newChat=()=>{if(cur&&!cur.m.length){draw();return}cur={t:'Nova conversa',m:[]};chats.unshift(cur);draw()};
 function draw(){
+clearInterval(thoughtTick);thoughtTick=null;
 const h=$('#hist'),f=$('#q').value.toLowerCase();h.innerHTML='';
 chats.filter(c=>c.m.length&&c.t.toLowerCase().includes(f)).forEach(c=>{const b=document.createElement('button');b.textContent=c.t;b.className=c===cur?'a':'';b.onclick=()=>{cur=c;draw();$('#side').classList.remove('o')};h.appendChild(b)});
 const m=$('#msgs');m.innerHTML='';
-if(!cur||!cur.m.length&&!busy)m.innerHTML='<div id="wel"><h2>O que vamos descobrir hoje?</h2><p>Pergunte qualquer coisa. Experimente pedir um código.</p></div>';
-(cur?cur.m:[]).forEach(x=>{const d=document.createElement('div');d.className='m '+x.r;d.innerHTML=x.r==='u'?esc(x.t):'<span class="bd">Resposta simulada · demonstração</span>'+md(x.t);m.appendChild(d)});
-if(busy){const d=document.createElement('div');d.className='m';d.innerHTML='<div class="dots" role="status" aria-label="A IA está processando"><i></i><i></i><i></i></div>';m.appendChild(d)}
+if(!cur||!cur.m.length&&!busy)m.innerHTML='<div id="wel"><h2>Vamos aprender o que hoje?</h2><p>Pergunte sobre os seus estudos ou assuntos gerais.</p></div>';
+(cur?cur.m:[]).forEach(x=>{const d=document.createElement('div');d.className='m '+x.r;d.innerHTML=x.r==='u'?esc(x.t):'<span class="bd">Resposta simulada · demonstração</span>'+md(x.t);if(x.r==='a'&&typeof x.thoughtSeconds==='number')d.prepend(thoughtLine(x.thoughtSeconds));m.appendChild(d)});
+if(busy&&cur===thoughtChat){const d=document.createElement('div');d.className='m';d.appendChild(thoughtLine((performance.now()-thoughtStarted)/1000,true));m.appendChild(d)}
 m.scrollTop=m.scrollHeight}
 async function send(){const i=$('#in'),v=i.value.trim();if(!v||busy)return;if(!cur)newChat();const c=cur;
-i.value='';fit();c.m.push({r:'u',t:v});if(c.t==='Nova conversa')c.t=v.slice(0,32);busy=true;draw();
+i.value='';fit();c.m.push({r:'u',t:v});if(c.t==='Nova conversa')c.t=v.slice(0,32);busy=true;thoughtStarted=performance.now();thoughtChat=c;draw();
 await new Promise(r=>setTimeout(r,900+Math.random()*700));
-c.m.push({r:'a',t:reply(v)});busy=false;draw()}
+c.m.push({r:'a',t:reply(v),thoughtSeconds:(performance.now()-thoughtStarted)/1000});busy=false;thoughtChat=null;draw()}
 function fit(){const i=$('#in');i.style.height='auto';i.style.height=Math.min(i.scrollHeight,160)+'px';$('#send').disabled=!i.value.trim()}
 $('#in').addEventListener('input',fit);
 $('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send()}});
 $('#send').onclick=send;$('#new').onclick=newChat;$('#q').oninput=draw;
 $('#cfg').onclick=()=>$('#set').classList.toggle('o');
 $('#sb').onclick=()=>$('#side').classList.toggle('o');
-const open=()=>{$('#app').classList.add('o');document.body.style.overflow='hidden';if(!cur)newChat();else draw();setTimeout(()=>$('#in').focus(),100)};
-const close=()=>{$('#app').classList.remove('o');document.body.style.overflow=''};
+const open=()=>{$('#app').classList.add('o');nav.hidden=true;document.body.style.overflow='hidden';if(!cur)newChat();else draw();setTimeout(()=>$('#in').focus(),100)};
+const close=()=>{$('#app').classList.remove('o');nav.hidden=false;document.body.style.overflow=''};
 
 let clienteConta=null,usuarioConta=null,modoConta='entrar',autenticandoConta=false;
 /* Every password field gets a reveal/hide control; reset hides passwords again. */
@@ -466,13 +500,14 @@ if(window.firebase&&configuracao.firebase?.apiKey){
 function atualizarUsuario(usuario){
  const anterior=usuarioConta?.uid;usuarioConta=usuario||null;
  if(anterior!==usuarioConta?.uid){chats=[];cur=null;draw()}
+ $$('.hero .cta [data-open]').forEach(botao=>botao.hidden=!!usuarioConta);$('#hero-avancar').hidden=!usuarioConta;
  $('#conta-usuario').textContent=usuarioConta?'Conta conectada · '+usuarioConta.email:'Modo de demonstração';
  if(!usuarioConta)close();
 }
-if(clienteConta)clienteConta.onAuthStateChanged(usuario=>{
+if(clienteConta){clienteConta.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});clienteConta.onAuthStateChanged(usuario=>{
  atualizarUsuario(usuario);
- if(usuario&&!autenticandoConta&&new URLSearchParams(location.search).get('inicio')!=='1')location.replace('espaco.html');
-});
+ if(usuario&&!autenticandoConta){const parametros=new URLSearchParams(location.search);if(parametros.get('destino')==='ia')open();}
+});}
 function mostrarConta(modo){
   modoConta=modo;const cadastro=modo==='cadastrar',redefinir=modo==='redefinir',manter=$('#conta-manter').checked;$('#conta-form').reset();$('#conta-manter').checked=manter;
   $('#manter-campo').hidden=redefinir;
@@ -516,7 +551,7 @@ $('#conta-form').onsubmit=async e=>{
  if(cadastro&&$('#conta-senha').value!==$('#conta-confirmar').value){$('#conta-status').textContent='As senhas precisam ser iguais.';return}
  botao.disabled=true;$('#conta-alternar').disabled=true;$('#conta-status').textContent='Aguarde…';autenticandoConta=true;
  try{
-  const persistencia=$('#conta-manter').checked?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION;
+  const persistencia=firebase.auth.Auth.Persistence.LOCAL;
   await clienteConta.setPersistence(persistencia);
   const email=$('#conta-email').value.trim(),senha=$('#conta-senha').value;
   const resultado=cadastro?await clienteConta.createUserWithEmailAndPassword(email,senha):await clienteConta.signInWithEmailAndPassword(email,senha);
@@ -546,5 +581,8 @@ if(new URLSearchParams(location.search).get('destino')==='espaco'){
 </script>
 <script src="assets/scripts/clay-aurora.js"></script>
 
+<script src="assets/scripts/clay-specular.js"></script>
+<script src="assets/scripts/clay-star-motion.js"></script>
+<script src="assets/scripts/prompt-tools.js"></script>
 </body>
 </html>

@@ -7,14 +7,59 @@
 <link rel="stylesheet" href="assets/styles/espaco.css">
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="stylesheet" href="assets/styles/cabecalho.css">
+<link rel="stylesheet" href="assets/styles/tema.css">
+<script src="assets/scripts/tema.js"></script>
+<link rel="stylesheet" href="assets/styles/menu-ramificado.css">
+<link rel="stylesheet" href="assets/styles/magic-bento.css">
+<link rel="stylesheet" href="assets/styles/carta-profissional.css">
 </head>
 <body>
-<header class="workspace-header"><a class="brand" href="index.html?inicio=1" aria-label="Clay, início"><img src="assets/images/clay-symbol-orange.svg" alt=""><img src="assets/images/clay-wordmark-cream.svg" alt="Clay"></a><span id="account-name"></span><a href="index.html?inicio=1">Voltar ao Clay ↗</a><button id="workspace-signout" class="button" hidden>Sair</button></header>
+<nav class="clay-global-nav s">
+  <a class="logo" href="index.html?inicio=1" aria-label="Clay"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></a>
+  <button id="menu" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="links">
+    <a href="index.html?inicio=1">Início</a>
+    <a href="index.html?inicio=1#recursos">Recursos</a><a href="index.html?inicio=1#tecnologia">Tecnologia</a><a href="index.html?inicio=1#sobre">Sobre</a>
+    <a href="espaco.html">Estudos e portfólio</a>
+    
+    
+  </div>
+  <div class="clay-header-actions"><button class="clay-theme-toggle" type="button" aria-label="Ativar modo claro"><img class="theme-sun" src="assets/images/clay-sun.svg" alt=""><img class="theme-moon" src="assets/images/clay-moon.svg" alt=""></button></div>
+</nav>
+
+<aside class="clay-branches" id="clay-branches" aria-label="Navegação do espaço pessoal">
+ <p class="branch-caption">MEU ESPAÇO</p>
+ <div class="branch-group open"><button class="branch-heading" aria-expanded="true" aria-controls="branch-studies">Estudos <span>⌄</span></button><div class="branch-fold" id="branch-studies"><div class="branch-children">
+ <button class="branch-item active" data-tab="studies" data-scroll="studies" aria-current="page"><svg class="branch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h5c2 0 3 1 4 2 1-1 2-2 4-2h5v15h-5c-2 0-3 1-4 2-1-1-2-2-4-2H3zM12 6v15"/></svg><span>Trilha de aprendizagem</span></button>
+ <button class="branch-item" data-tab="studies" data-scroll="resume-card"><svg class="branch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4l13 8-13 8z"/></svg><span>Continuar meus estudos</span></button>
+ </div></div></div>
+ <div class="branch-group"><button class="branch-heading" aria-expanded="false" aria-controls="branch-portfolio">Portfólio <span>⌄</span></button><div class="branch-fold" id="branch-portfolio"><div class="branch-children">
+ <button class="branch-item" data-tab="portfolio" data-scroll="portfolio"><svg class="branch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 12h18M10 12v3h4v-3"/></svg><span>Meu portfólio</span></button>
+ <button class="branch-item" data-tab="portfolio" data-scroll="project-editor-list"><svg class="branch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg><span>Meus projetos</span></button>
+ </div></div></div>
+ <div class="branch-group"><button class="branch-heading" aria-expanded="false" aria-controls="branch-platform">Clay <span>⌄</span></button><div class="branch-fold" id="branch-platform"><div class="branch-children">
+ <a class="branch-item" href="index.html?inicio=1"><svg class="branch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-7 9 7M5 9v12h14V9M9 21v-7h6v7"/></svg><span>Página inicial</span></a><a class="branch-item" href="index.html?destino=ia"><svg class="branch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2 6 7 3-7 3-2 6-2-6-7-3 7-3z"/></svg><span>Clay AI</span></a>
+ </div></div></div>
+ <div class="branch-account"><span id="account-name"></span><button id="workspace-signout" class="button" hidden>Sair da conta</button></div>
+</aside><button class="branch-backdrop" aria-label="Fechar menu lateral" hidden></button>
+
+
+<aside class="professional-rail" aria-label="Carta profissional" hidden>
+ <article class="reflective-card" id="professional-card">
+  <img id="card-face" alt="Foto do perfil profissional" hidden>
+  <div class="card-metal" aria-hidden="true"></div>
+  <div class="card-status"><span id="card-verification">◇ Perfil</span><span><i></i> Ativo</span></div>
+  <div class="card-identity"><h2 id="card-name">Seu nome</h2><p id="card-role">Seu título profissional</p></div>
+  <div class="card-bottom"><div><span>Número de identificação</span><code id="card-id">—</code></div><button id="card-edit" aria-label="Editar perfil e foto"><img src="assets/images/clay-fingerprint.svg" alt="" aria-hidden="true"></button></div>
+ </article>
+</aside>
+
 <main class="workspace">
  <div id="access-state" class="access-feedback" hidden><p id="access-message" role="status" aria-live="polite"></p><a id="login-link" class="button primary" href="index.html?destino=espaco" hidden>Entrar ou criar conta</a></div>
  <button id="retry-load" class="button" hidden>Tentar novamente</button>
  <div id="owner-space" hidden>
-  <nav class="gooey-nav" aria-label="Meu espaço"><span class="gooey-active" aria-hidden="true"></span><span class="gooey-particles" aria-hidden="true"></span><button id="tab-studies" class="active" aria-selected="true" role="tab" aria-controls="studies">Estudos <span>↗</span></button><button id="tab-portfolio" aria-selected="false" role="tab" aria-controls="portfolio">Portfólio <span>✧</span></button></nav>
+  <nav class="gooey-nav" aria-label="Meu espaço"><span class="gooey-active" aria-hidden="true"></span><button id="tab-studies" class="active" aria-selected="true" role="tab" aria-controls="studies">Estudos</button><button id="tab-portfolio" aria-selected="false" role="tab" aria-controls="portfolio">Portfólio</button></nav>
   <p id="save-state" class="save-state" role="status" aria-live="polite"></p>
   <section id="studies" role="tabpanel" aria-labelledby="tab-studies">
    <div class="section-heading"><div><p class="eyebrow">ESPAÇO PESSOAL · SÓ VOCÊ TEM ACESSO</p><h1>Um passo de cada vez.</h1><p class="muted">Sua trilha, suas aulas e o ponto exato para continuar.</p></div><button class="button primary" id="add-course">＋ Adicionar curso</button></div>
@@ -45,7 +90,7 @@
  <p class="form-error" role="alert"></p><button class="button primary" type="submit">Salvar curso</button>
  </form></dialog>
 <dialog id="profile-dialog"><form id="profile-form"><div class="dialog-heading"><h2>Perfil profissional</h2><button type="button" class="icon-button" data-close aria-label="Fechar">×</button></div>
- <label>Seu nome<input name="name" required maxlength="100"></label><label>Título profissional<input name="headline" required maxlength="160" placeholder="Estudante de Engenharia de Software"></label><label>Sobre você<textarea name="bio" rows="4" maxlength="2000" placeholder="O que você gosta de criar? Onde quer chegar?"></textarea></label><label>Link do currículo<input name="resume" type="url" maxlength="2000" placeholder="https://…"><small>Use um link público para o PDF ou documento do seu currículo.</small></label><div class="form-row"><label>GitHub<input name="github" type="url" maxlength="2000" placeholder="https://github.com/…"></label><label>LinkedIn<input name="linkedin" type="url" maxlength="2000" placeholder="https://linkedin.com/in/…"></label></div><p class="form-error" role="alert"></p><button class="button primary">Salvar perfil</button></form></dialog>
+ <label>Foto do perfil<input id="profile-photo" type="file" accept="image/jpeg,image/png,image/webp"><small>A foto será salva com seu perfil.</small></label><label>Seu nome<input name="name" required maxlength="100"></label><label>Título profissional<input name="headline" required maxlength="160" placeholder="Estudante de Engenharia de Software"></label><label>Sobre você<textarea name="bio" rows="4" maxlength="2000" placeholder="O que você gosta de criar? Onde quer chegar?"></textarea></label><label>Link do currículo<input name="resume" type="url" maxlength="2000" placeholder="https://…"><small>Use um link público para o PDF ou documento do seu currículo.</small></label><div class="form-row"><label>GitHub<input name="github" type="url" maxlength="2000" placeholder="https://github.com/…"></label><label>LinkedIn<input name="linkedin" type="url" maxlength="2000" placeholder="https://linkedin.com/in/…"></label></div><p class="form-error" role="alert"></p><button class="button primary">Salvar perfil</button></form></dialog>
 <dialog id="project-dialog"><form id="project-form"><div class="dialog-heading"><h2>Seu projeto</h2><button type="button" class="icon-button" data-close aria-label="Fechar">×</button></div><label>Nome<input name="title" required maxlength="120"></label><label>Descrição<textarea name="description" maxlength="1200" rows="3" required></textarea></label><label>Tecnologias<input name="tech" maxlength="240" placeholder="Ex.: React, Node.js, PostgreSQL"></label><label>Situação<select name="status"><option value="building">Em desenvolvimento</option><option value="done">Concluído</option></select></label><label>Link do projeto ou repositório<input name="url" type="url" maxlength="2000" placeholder="https://…"></label><p class="form-error" role="alert"></p><button class="button primary">Salvar projeto</button></form></dialog>
 <dialog id="onboarding" aria-labelledby="onboarding-title"><form id="onboarding-form"><nav class="onboarding-steps" aria-label="Etapas da configuração"><button type="button" data-step="0" class="active" aria-current="step"><span class="step-number">1</span> Boas-vindas</button><button type="button" data-step="1"><span class="step-number">2</span> Trilha</button><button type="button" data-step="2"><span class="step-number">3</span> Perfil</button><button type="button" data-step="3"><span class="step-number">4</span> Revisão</button></nav><div class="stepper-viewport"><div id="onboarding-content"></div></div><p class="form-error" role="alert"></p><div class="onboarding-actions"><button type="button" class="button" id="onboarding-back" hidden>Voltar</button><button type="submit" class="button primary" id="onboarding-next">Continuar →</button></div></form></dialog>
 <script>
@@ -61,4 +106,10 @@ window.clayLoadingWatchdog=setTimeout(()=>{
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
 <script defer src="assets/scripts/espaco.js"></script>
+<script src="assets/scripts/cabecalho.js"></script>
+<script src="assets/scripts/clay-star-motion.js"></script>
+<script src="assets/scripts/menu-ramificado.js"></script>
+<script src="assets/scripts/magic-bento.js"></script>
+<script src="assets/scripts/carta-profissional.js"></script>
+<a class="clay-ai-floating" href="index.html?destino=ia" aria-label="Abrir Clay AI" title="Abrir Clay AI"><img src="assets/images/clay-symbol-orange.svg" alt=""></a>
 </body></html>
