@@ -1,0 +1,12 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import '../assets/scripts/clay-organizer.js';
+const answer=globalThis.ClayOrganizer.answer;
+const data={courses:[{id:'a',title:'Engenharia de Software',topic:'Tecnologia',status:'active',lesson:'Arquitetura',updatedAt:10},{id:'b',title:'Engenharia de Software Avançada',status:'planned'},{id:'c',title:'Cálculo',status:'done'}],projects:[{id:'x',title:'Meu portfólio React',tech:'JavaScript',status:'active'}]};
+test('comando natural encontra curso em andamento e inclui aula atual',()=>{const r=answer('me leve para o curso de engenharia de software que estou fazendo agr',data);assert.equal(r.actions.length,1);assert.match(r.actions[0].href,/course=a/);assert.match(r.text,/Arquitetura/)});
+test('acentos e maiúsculas não impedem a busca',()=>{assert.match(answer('ABRIR CURSO CALCULO',data).actions[0].href,/course=c/)});
+test('nomes semelhantes apresentam opções sem escolher silenciosamente',()=>{assert.equal(answer('abrir curso de engenharia de software',data).actions.length,2)});
+test('não inventa item quando não encontra e não troca por correspondência parcial',()=>{assert.match(answer('curso engenharia de medicina',data).text,/Não encontrei/);assert.match(answer('curso astronomia',{}).text,/ainda não/)});
+test('retoma o curso ativo e abre projetos por nome ou tecnologia',()=>{assert.match(answer('onde parei',data).actions[0].href,/course=a/);assert.match(answer('abrir projeto javascript',data).actions[0].href,/project=x/)});
+test('saudação e ajuda não fabricam estudos',()=>{assert.equal(answer('oi',data).actions.length,0);assert.equal(answer('ajuda',data).actions.length,2)});
+test('ids são codificados em links locais',()=>{const r=answer('curso teste',{courses:[{id:'x&project=evil',title:'Teste'}]});assert.equal(new URL(r.actions[0].href,'https://clay.example').searchParams.get('course'),'x&project=evil')});

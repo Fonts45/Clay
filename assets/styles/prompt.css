@@ -5,7 +5,7 @@
 #app #in{display:block;width:100%;min-height:28px;max-height:180px;padding:3px 2px;resize:none;background:transparent;border:0;border-radius:0;box-shadow:none;outline:none!important;text-align:left;color:#FFFFFF;font:400 16px/1.5 Inter,system-ui,sans-serif}
 #app #in::placeholder{color:#B7B7B7;opacity:1}
 #app #send{position:absolute;right:12px;bottom:12px;display:grid;place-items:center;width:36px;height:36px;min-width:36px;min-height:36px;padding:8px;border:0;border-radius:50%;background:#FF5402;color:#FFFFFF;transition:background .2s,transform .2s,opacity .2s}
-#app #send svg{width:21px;height:21px}
+#app #send svg{width:21px;height:21px;stroke-width:1.8}
 #app #send:disabled{background:#676767;color:#B8B8B8;opacity:1;cursor:default}
 #app #send:not(:disabled):hover{background:#F97316}
 #app #send:not(:disabled):active{transform:scale(.94)}
@@ -104,3 +104,31 @@ html[data-theme="light"] .thought-line li.current{color:#242226}
 #app #sb{display:inline-flex;order:10;margin-left:auto}
 @media(max-width:820px){#app,#app.sidebar-collapsed{grid-template-columns:minmax(0,1fr)}#app #side{width:min(300px,86%)}#app .bar{gap:6px;flex-wrap:wrap}}
 @media(prefers-reduced-motion:reduce){#app,#app #side{transition:none}}
+
+/* Frase de boas-vindas e sua autoria. */
+#app #wel .welcome-quote{max-width:640px;margin:16px auto 0;padding:0 16px}#app #wel .welcome-quote p{font-size:clamp(14px,1.3vw,17px);line-height:1.6;text-wrap:balance}#app #wel .welcome-quote cite{display:block;margin-top:10px;font-size:12px;font-style:normal;color:inherit;opacity:.8}#app #wel .welcome-quote a{color:inherit;text-decoration:none}#app #wel .welcome-quote a:hover{text-decoration:underline}#app #wel .welcome-quote a:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+/* VoicePill: ondas simuladas, tempo e gesto de cancelamento. */
+#app .prompt-tools .voice-pill{--voice-drag:0px;min-width:28px;height:28px;padding:5px;border-radius:999px;background:#27272a;color:#a1a1aa;gap:0;touch-action:none;user-select:none;transform:translateX(var(--voice-drag));transition:padding .2s,gap .2s,background .2s,transform .2s;overflow:hidden}
+#app .voice-pill svg{width:18px;height:18px;flex:none}
+#app .voice-pill .voice-pill-wave,#app .voice-pill .voice-pill-time,#app .voice-pill .voice-pill-cancel{display:none}
+#app .prompt-tools .voice-pill[aria-pressed="true"]{padding-inline:10px;gap:8px;color:#f5f5f5;background:#27272a}
+#app .voice-pill[aria-pressed="true"] .voice-pill-wave{display:flex;align-items:center;gap:2px;height:16px}
+#app .voice-pill[aria-pressed="true"] .voice-pill-time{display:inline;font-size:10px;font-variant-numeric:tabular-nums;min-width:27px}
+#app .voice-pill-wave i{display:block;width:2px;height:12px;border-radius:2px;background:#f5f5f5;animation:voice-pill-wave .65s ease-in-out infinite alternate}
+#app .voice-pill-wave i:nth-child(2){animation-delay:-.3s;height:8px}#app .voice-pill-wave i:nth-child(3){animation-delay:-.15s;height:16px}#app .voice-pill-wave i:nth-child(4){animation-delay:-.45s;height:10px}#app .voice-pill-wave i:nth-child(5){animation-delay:-.2s;height:6px}
+#app .prompt-tools .voice-pill.is-pressed{transform:translateX(var(--voice-drag)) scale(.95)}
+#app .prompt-tools .voice-pill.is-cancelling{background:#642c32;color:#fff}
+#app .voice-pill.is-cancelling .voice-pill-wave,#app .voice-pill.is-cancelling .voice-pill-time{display:none}
+#app .voice-pill.is-cancelling .voice-pill-cancel{display:inline;font-size:10px}
+#app .voice-pill:focus-visible{outline:2px solid #f5f5f5;outline-offset:3px}#app .voice-pill:disabled{opacity:.4;cursor:not-allowed}
+@keyframes voice-pill-wave{from{transform:scaleY(.2)}to{transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){#app .voice-pill-wave i{animation:none}#app .prompt-tools .voice-pill{transition:none}}
+/* Recolhimento suave da pílula sem remover o conteúdo abruptamente. */
+#app .prompt-tools .voice-pill{gap:0;transition:padding .32s cubic-bezier(.22,1,.36,1),gap .32s cubic-bezier(.22,1,.36,1),background .24s ease,color .24s ease,transform .24s ease}
+#app .voice-pill .voice-pill-wave,#app .voice-pill[aria-pressed="true"] .voice-pill-wave{display:flex;align-items:center;gap:2px;height:16px;max-width:0;opacity:0;overflow:hidden;transform:scaleY(.55);transition:max-width .32s cubic-bezier(.22,1,.36,1),opacity .2s ease,transform .32s ease}
+#app .voice-pill .voice-pill-time,#app .voice-pill[aria-pressed="true"] .voice-pill-time{display:block;min-width:0;max-width:0;opacity:0;overflow:hidden;white-space:nowrap;font-size:10px;font-variant-numeric:tabular-nums;transition:max-width .32s cubic-bezier(.22,1,.36,1),opacity .2s ease}
+#app .voice-pill[aria-pressed="true"] .voice-pill-wave{max-width:18px;opacity:1;transform:scaleY(1)}
+#app .voice-pill[aria-pressed="true"] .voice-pill-time{max-width:42px;opacity:1}
+#app .voice-pill-wave i{flex-shrink:0}
+#app .voice-pill.is-cancelling .voice-pill-wave,#app .voice-pill.is-cancelling .voice-pill-time{max-width:0;opacity:0}
+@media(prefers-reduced-motion:reduce){#app .prompt-tools .voice-pill,#app .voice-pill .voice-pill-wave,#app .voice-pill .voice-pill-time{transition:none}}

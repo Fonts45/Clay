@@ -5,7 +5,9 @@ const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>
 const safeUrl=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}};
 const link=(url,label,cls='button')=>safeUrl(url)?`<a class="${cls}" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`:'';
 const statuses={planned:'Planejado',active:'Em andamento',done:'Concluído'};
-const uid=new URLSearchParams(location.search).get('perfil');
+const route=new URLSearchParams(location.search);
+const uid=route.get('perfil');
+let organizerRouteHandled=false;
 let db,auth,user=null,state=null,unlisten=null,saving=false,courseId=null,projectId=null,step=0,setup={},loadTimer=null;
 const writeControls=['#add-course','#edit-profile','#add-project','#publish-profile','#copy-profile','#unpublish-profile'];
 function finishLoading(){clearTimeout(window.clayLoadingWatchdog);clearTimeout(loadTimer);$('#retry-load').hidden=true}
@@ -80,13 +82,24 @@ function render(){
  const filtered=courses.filter(c=>$('#course-filter').value==='all'||c.status===$('#course-filter').value);
  $('#course-list').innerHTML=filtered.map(c=>{
   const index=courses.indexOf(c),percent=c.total?Math.round(c.completed/c.total*100):0;
-  return `<article class="course-card"><div class="course-number">${String(index+1).padStart(2,'0')}</div><div><div class="course-meta"><span class="badge ${esc(c.status)}">${statuses[c.status]||'Planejado'}</span><span>${esc(c.platform)}</span><span>·</span><span>${esc(c.topic)}</span></div><h3>${esc(c.title)}</h3><p class="lesson">${esc(c.lesson||'Aula atual ainda não registrada')}</p><div class="progress-line">${c.total?`<progress value="${c.completed}" max="${c.total}" aria-label="Progresso de ${esc(c.title)}"></progress>`:''}<span>${c.completed}${c.total?' / '+c.total:''} aulas${c.total?' · '+percent+'%':''}</span></div>${c.notes?`<details class="course-notes"><summary>Anotações pessoais</summary><p>${esc(c.notes)}</p></details>`:''}<div class="actions"><button class="text-button" data-move="${esc(c.id)}" data-direction="-1" ${index===0?'disabled':''} aria-label="Mover ${esc(c.title)} para cima">↑ Subir</button><button class="text-button" data-move="${esc(c.id)}" data-direction="1" ${index===courses.length-1?'disabled':''} aria-label="Mover ${esc(c.title)} para baixo">↓ Descer</button><button class="text-button danger" data-delete-course="${esc(c.id)}">Excluir</button></div></div><div class="course-actions">${link(c.url,'Continuar aula','button primary')}<button class="button" data-edit-course="${esc(c.id)}">Atualizar aula</button></div></article>`;
+  return `<article class="course-card" id="course-${esc(c.id)}" tabindex="-1"><div class="course-number">${String(index+1).padStart(2,'0')}</div><div><div class="course-meta"><span class="badge ${esc(c.status)}">${statuses[c.status]||'Planejado'}</span><span>${esc(c.platform)}</span><span>·</span><span>${esc(c.topic)}</span></div><h3>${esc(c.title)}</h3><p class="lesson">${esc(c.lesson||'Aula atual ainda não registrada')}</p><div class="progress-line">${c.total?`<progress value="${c.completed}" max="${c.total}" aria-label="Progresso de ${esc(c.title)}"></progress>`:''}<span>${c.completed}${c.total?' / '+c.total:''} aulas${c.total?' · '+percent+'%':''}</span></div>${c.notes?`<details class="course-notes"><summary>Anotações pessoais</summary><p>${esc(c.notes)}</p></details>`:''}<div class="actions"><button class="text-button" data-move="${esc(c.id)}" data-direction="-1" ${index===0?'disabled':''} aria-label="Mover ${esc(c.title)} para cima">↑ Subir</button><button class="text-button" data-move="${esc(c.id)}" data-direction="1" ${index===courses.length-1?'disabled':''} aria-label="Mover ${esc(c.title)} para baixo">↓ Descer</button><button class="text-button danger" data-delete-course="${esc(c.id)}">Excluir</button></div></div><div class="course-actions">${link(c.url,'Continuar aula','button primary')}<button class="button" data-edit-course="${esc(c.id)}">Atualizar aula</button></div></article>`;
  }).join('')||`<div class="empty"><h3>${courses.length?'Nenhum curso nesse filtro.':'Sua trilha começa aqui.'}</h3><p>${courses.length?'Escolha outro filtro para ver seus cursos.':'Adicione um curso, registre a aula atual e retome sem procurar de novo.'}</p>${!courses.length?'<button class="button" data-new-course>＋ Primeiro curso</button>':''}</div>`;
  $('#portfolio-preview').innerHTML=renderProfile(publicData(state));
- $('#project-editor-list').innerHTML=state.projects.map(p=>`<div class="project-edit-row"><span>${esc(p.title)}</span><div class="actions"><button class="text-button" data-edit-project="${esc(p.id)}">Editar</button><button class="text-button danger" data-delete-project="${esc(p.id)}">Excluir</button></div></div>`).join('')||'<p class="muted">Adicione projetos reais para compor seu portfólio.</p>';
+ $('#project-editor-list').innerHTML=state.projects.map(p=>`<div class="project-edit-row" id="project-${esc(p.id)}" tabindex="-1"><span>${esc(p.title)}</span><div class="actions"><button class="text-button" data-edit-project="${esc(p.id)}">Editar</button><button class="text-button danger" data-delete-project="${esc(p.id)}">Excluir</button></div></div>`).join('')||'<p class="muted">Adicione projetos reais para compor seu portfólio.</p>';
  $('#publication-label').textContent=state.published?'Seu perfil está público':'Perfil ainda privado';
  $('#publication-help').textContent=state.published?'As alterações salvas atualizam o perfil público automaticamente.':'Publique quando estiver pronto. Apenas este resumo ficará público.';
  $('#publish-profile').hidden=state.published;$('#copy-profile').hidden=!state.published;$('#unpublish-profile').hidden=!state.published;
+ if(!organizerRouteHandled&&!uid){
+  organizerRouteHandled=true;
+  if(route.has('aba')||route.has('course')||route.has('project')){
+   const project=route.has('project')||route.get('aba')==='portfolio';setTab(project?1:0,false);
+   const id=route.get(project?'project':'course');
+   const destination=id?document.getElementById((project?'project-':'course-')+id):document.getElementById(project?'project-editor-list':'studies');
+   if(destination)requestAnimationFrame(()=>{destination.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'center'});destination.focus({preventScroll:true});destination.classList.add('organizer-target')});
+   else notice('Esse item não está mais no Meu espaço. Selecione outro estudo ou projeto.',true);
+  }
+ }
+
 }
 function setTab(index,animate=true){
  const portfolio=index===1;$('.gooey-nav').classList.toggle('portfolio-active',portfolio);

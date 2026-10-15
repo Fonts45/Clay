@@ -219,19 +219,19 @@ const link = gl => {
 
 const canvas=document.getElementById('clay-ai-aurora');if(!canvas)return;
 const gl=canvas.getContext('webgl2',{alpha:true,premultipliedAlpha:true,antialias:false});
-function fallback(){canvas.style.background='linear-gradient(225deg,#FF5402 0%,#ff540266 22%,transparent 60%)'}
+function fallback(){canvas.style.background='linear-gradient(225deg,#FF9600 0%,#FF5402 30%,#7a160099 60%,transparent 85%)'}
 if(!gl){fallback();return}
 const linked=link(gl);if(!linked){fallback();return}const {program,uniforms:u}=linked;
 gl.useProgram(program);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
-const colors=['#FF5402','#FF5402','#FF5402'].map(hex=>toOklch([1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255)));
+const colors=['#7A1600','#FF5402','#FF9600'].map(hex=>toOklch([1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255)));
 const stops=unwrapHues(colors);while(stops.length<MAX_STOPS)stops.push(stops[stops.length-1]);gl.uniform3fv(u.uStops,new Float32Array(stops.flat()));gl.uniform1i(u.uStopCount,3);
-const settings={uAmplitude:1,uBlend:.5,uHeight:.45,uScale:1,uGlow:.6,uBrightness:1,uFlip:0,uOpacity:1,uLightMode:0};Object.entries(settings).forEach(([k,v])=>gl.uniform1f(u[k],v));gl.uniform1i(u.uLayers,1);
+const settings={uAmplitude:1,uBlend:.5,uHeight:.85,uScale:1,uGlow:.8,uBrightness:1,uFlip:0,uOpacity:1,uLightMode:0};Object.entries(settings).forEach(([k,v])=>gl.uniform1f(u[k],v));gl.uniform1i(u.uLayers,1);
 const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;let frame=0,visible=false,last=0,startTime=performance.now();let pointer=[0,0,0],target=[0,0,0];
 function size(){if(!canvas.clientWidth||!canvas.clientHeight)return;let d=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(canvas.clientWidth*d);canvas.height=Math.round(canvas.clientHeight*d);gl.viewport(0,0,canvas.width,canvas.height);gl.uniform2f(u.uResolution,canvas.width,canvas.height)}
 function draw(t){if(!canvas.clientWidth||!canvas.clientHeight)return;const dt=last?Math.min(t-last,50):16.67;last=t;const ease=1-Math.exp(-dt/150);pointer=pointer.map((v,i)=>v+(target[i]-v)*ease);gl.uniform3fv(u.uPointer,pointer);gl.uniform1f(u.uTime,reduced?0:(t-startTime)*.001);const intro=reduced?1:Math.min(1,(t-startTime)/2400);gl.uniform1f(u.uReveal,intro*intro*(3-2*intro));gl.drawArrays(gl.TRIANGLES,0,6)}
 function loop(t){frame=0;if(!visible||document.hidden)return;draw(t);if(!reduced)frame=requestAnimationFrame(loop)}
 function start(){if(!frame&&visible&&!document.hidden)frame=requestAnimationFrame(loop)}
-const hero=canvas.parentElement;hero.addEventListener('pointermove',e=>{if(reduced||e.pointerType==='touch')return;const r=canvas.getBoundingClientRect();target=[(e.clientX-r.left-r.width*.5)/r.height,(e.clientY-r.top)/r.height,1]},{passive:true});hero.addEventListener('pointerleave',()=>target[2]=0);
+const hero=canvas.parentElement;hero.addEventListener('pointermove',e=>{if(reduced||e.pointerType==='touch')return;const r=canvas.getBoundingClientRect();const px=(e.clientX-r.left)/r.width,py=1-(e.clientY-r.top)/r.height;target=[(px-py)*Math.SQRT1_2,0,1]},{passive:true});hero.addEventListener('pointerleave',()=>target[2]=0);
 new ResizeObserver(()=>{size();draw(performance.now())}).observe(canvas);new IntersectionObserver(([entry])=>{const wasVisible=visible;visible=entry.isIntersecting;if(visible&&!wasVisible){startTime=performance.now();last=0}if(!visible&&frame){cancelAnimationFrame(frame);frame=0}else start()}).observe(canvas);document.addEventListener('visibilitychange',start);size();start();
 
 })();

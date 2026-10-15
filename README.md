@@ -19,3 +19,7 @@ Site estático com login, espaço de estudos e portfólio profissional.
 Sirva esta pasta por HTTP(S), mantendo a estrutura de `assets/` e `config/`. O ponto de entrada é `index.html`. As páginas usam Firebase e precisam de conexão à internet.
 
 Para ativar a sincronização de estudos e os perfis públicos, consulte o [guia de configuração](docs/ESTUDOS-SETUP.md). As regras e capturas não precisam ser publicadas como arquivos do site.
+
+## Organizador Clay AI
+
+O chat encontra cursos e projetos cadastrados no Meu espaço por palavras-chave, sem API de IA ou chave OpenAI. Usa o login e o Firestore existentes. Consulte [o guia](docs/CLAY-AI-SETUP.md). Pode ser hospedado como site estático ou servido localmente com `node server.mjs`.

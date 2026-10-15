@@ -11,3 +11,4 @@
 .loading-placeholder{padding:28px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}.loading-placeholder span{display:block;height:12px;border-radius:6px;background:#302b36;margin-bottom:16px;max-width:65%}.loading-placeholder span:nth-child(2){max-width:90%}.loading-placeholder span:nth-child(3){max-width:45%}.loading-placeholder p{color:var(--muted);font-size:13px}#retry-load{display:flex;margin:16px auto}
 
 .access-feedback{padding:12px 0;text-align:center;color:var(--muted);font-size:13px}
+.organizer-target{outline:2px solid #ff5402;outline-offset:5px;scroll-margin-top:100px}
