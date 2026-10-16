@@ -293,6 +293,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 <link rel="stylesheet" href="assets/styles/prompt.css">
 <link rel="stylesheet" href="assets/styles/chat-layout.css">
 <link rel="stylesheet" href="assets/styles/card-nav.css">
+<link rel="stylesheet" href="assets/styles/resource-shredder.css">
 </head>
 <body>
 <div id="ld"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></div>
@@ -325,11 +326,17 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
   </div>
 </header>
 <section class="sec" id="recursos">
-  <div class="lbl rv">Recursos</div>
-  <h2 class="rv">Menos ruído. Mais descoberta.</h2>
-  <div class="row rv"><b>01</b><h3>Conversas com contexto</h3><p>Converse com a IA em linguagem natural e retome qualquer raciocínio no histórico.</p></div>
-  <div class="row rv"><b>02</b><h3>Pesquisa e explicações</h3><p>Respostas organizadas, com código destacado e passos claros.</p></div>
-  <div class="row rv"><b>03</b><h3>Ferramentas inteligentes</h3><p>Uma base pronta para conectar modelos, buscas e automações com segurança.</p></div>
+  <div class="lbl rv resource-eyebrow">ORGANIZAÇÃO</div>
+  <h2 class="rv resource-heading">Do seu jeito</h2>
+  <div class="resource-demo" id="resource-demo" tabindex="-1">
+    <ul class="resource-list" aria-label="Explore os recursos do Clay">
+      <li data-feature="Estudos"><button class="resource-item" aria-expanded="false"><span class="resource-thumb thumb-studies" aria-hidden="true"><i></i><i></i><i></i></span><span class="resource-copy"><strong>Seu espaço de estudos</strong><small>Cursos, aulas e seu próximo passo</small></span><span class="resource-tag">Estudos</span></button><p class="resource-detail" hidden>Organize seus cursos, registre a aula em que parou e acompanhe seu progresso.</p></li>
+      <li data-feature="Portfólio"><button class="resource-item" aria-expanded="false"><span class="resource-thumb thumb-portfolio" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="resource-copy"><strong>Suas ideias em destaque</strong><small>Projetos reunidos em um só lugar</small></span><span class="resource-tag">Portfólio</span></button><p class="resource-detail" hidden>Apresente seus projetos e construa seu portfólio profissional.</p></li>
+      <li data-feature="Perfil"><button class="resource-item" aria-expanded="false"><span class="resource-thumb thumb-profile" aria-hidden="true"><i></i></span><span class="resource-copy"><strong>Uma carta que é sua</strong><small>Foto e identidade profissional</small></span><span class="resource-tag">Perfil</span></button><p class="resource-detail" hidden>Personalize sua carta com foto, nome e título profissional, visível em Estudos e Portfólio.</p></li>
+      <li data-feature="Clay AI"><button class="resource-item" aria-expanded="false"><span class="resource-thumb thumb-ai" aria-hidden="true"><img src="assets/images/clay-symbol-orange.svg" alt=""></span><span class="resource-copy"><strong>Um lugar para perguntar</strong><small>Conheça a interface da Clay AI</small></span><span class="resource-tag">Clay AI</span></button><p class="resource-detail" hidden>Explore a caixa de mensagens e o histórico de conversas. A IA está em modo de demonstração, com respostas simuladas.</p></li>
+    </ul>
+  </div>
+  <p class="resource-status resource-status-sr" id="resource-status" role="status"></p>
 </section>
 <section class="sec" id="tecnologia">
   <div class="px"></div>
@@ -697,5 +704,6 @@ if(new URLSearchParams(location.search).get('destino')==='espaco'){
 <script src="assets/scripts/clay-star-motion.js"></script>
 <script src="assets/scripts/prompt-tools.js"></script>
 <script src="assets/scripts/clay-ai-aurora.js"></script>
+<script src="assets/scripts/resource-shredder.js"></script>
 </body>
 </html>
