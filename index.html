@@ -290,10 +290,13 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 </style>
 <link rel="stylesheet" href="assets/styles/tema.css">
 <script src="assets/scripts/tema.js"></script>
-<link rel="stylesheet" href="assets/styles/prompt.css">
-<link rel="stylesheet" href="assets/styles/chat-layout.css">
+<link rel="stylesheet" href="assets/styles/prompt.css?v=references-2">
+<link rel="stylesheet" href="assets/styles/chat-layout.css?v=space-button-2">
+
 <link rel="stylesheet" href="assets/styles/card-nav.css">
 <link rel="stylesheet" href="assets/styles/resource-shredder.css">
+<link rel="stylesheet" href="assets/styles/animated-shortcuts.css?v=faithful-list-2">
+
 </head>
 <body>
 <div id="ld"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></div>
@@ -362,9 +365,9 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
   <button id="chat-shade" type="button" aria-label="Fechar painel de conversas" tabindex="-1"></button>
   <main>
     <canvas id="clay-ai-aurora" aria-hidden="true"></canvas>
-    <div class="bar"><button class="btn" id="sb" aria-label="Abrir painel de conversas" aria-controls="side" aria-expanded="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path class="sidebar-icon-divider" d="M9 4v16"/></svg></button><span class="chat-product-name">Clay AI </span><a class="chat-home" href="espaco.html">Meu espaço ↗</a></div>
+    <div class="bar"><button class="btn" id="sb" aria-label="Abrir painel de conversas" aria-controls="side" aria-expanded="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path class="sidebar-icon-divider" d="M9 4v16"/></svg></button><span class="chat-product-name">Clay AI </span><a class="chat-home clay-star-button" href="espaco.html">Meu Espaço</a></div>
     <div id="msgs" aria-live="polite">
-      <div id="wel"><h2>Vamos aprender o que hoje?</h2><blockquote class="welcome-quote"><p>“A sabedoria é filha da experiência.”</p><cite>Leonardo da Vinci</cite></blockquote></div>
+      <div id="wel"><h2>Vamos aprender o que hoje?</h2><blockquote class="welcome-quote"><p>“A sabedoria é filha da experiência.”</p><cite><a href="https://pt.wikipedia.org/wiki/Leonardo_da_Vinci" target="_blank" rel="noopener noreferrer" aria-label="Sobre Leonardo da Vinci — abrir em nova aba">Leonardo da Vinci</a></cite></blockquote></div>
     </div>
     <div class="cmp">
       <div class="box">
@@ -416,7 +419,6 @@ const nav=$('nav');
 function atualizarMarcaHero(){const naHero=$('.hero').getBoundingClientRect().bottom>74;if(naHero!==nav.classList.contains('sobre-hero')&&$('.links').classList.contains('o'))alternarMenu(false);nav.classList.toggle('sobre-hero',naHero);nav.classList.toggle('s',!naHero);nav.classList.toggle('card-nav-mode',!naHero)}
 let menuScrollY=0;
 atualizarMarcaHero();addEventListener('scroll',atualizarMarcaHero,{passive:true});addEventListener('resize',atualizarMarcaHero);
-
 function alternarMenu(aberto){
  const raiz=document.documentElement;
  if(nav.classList.contains('card-nav-mode')){
@@ -424,21 +426,11 @@ function alternarMenu(aberto){
   $('#menu').setAttribute('aria-expanded',String(aberto));$('#menu').setAttribute('aria-label',aberto?'Fechar menu':'Abrir menu');return;
  }
  if(aberto===$('.links').classList.contains('o'))return;
- if(aberto){
-  menuScrollY=window.scrollY;
-  raiz.style.setProperty('--menu-scroll-top',`${-menuScrollY}px`);
- }
+ if(aberto){menuScrollY=window.scrollY;raiz.style.setProperty('--menu-scroll-top',(-menuScrollY)+'px')}
  $('.links').classList.toggle('o',aberto);$('.links').inert=!aberto;nav.classList.remove('card-nav-open');
- $('#menu').setAttribute('aria-expanded',String(aberto));
- $('#menu').setAttribute('aria-label',aberto?'Fechar menu':'Abrir menu');
+ $('#menu').setAttribute('aria-expanded',String(aberto));$('#menu').setAttribute('aria-label',aberto?'Fechar menu':'Abrir menu');
  raiz.classList.toggle('menu-aberto',aberto);
- if(!aberto){
-  raiz.style.removeProperty('--menu-scroll-top');
-  const comportamento=raiz.style.scrollBehavior;
-  raiz.style.scrollBehavior='auto';
-  window.scrollTo(0,menuScrollY);
-  raiz.style.scrollBehavior=comportamento;
- }
+ if(!aberto){raiz.style.removeProperty('--menu-scroll-top');const comportamento=raiz.style.scrollBehavior;raiz.style.scrollBehavior='auto';window.scrollTo(0,menuScrollY);raiz.style.scrollBehavior=comportamento}
 }
 $('#menu').onclick=()=>alternarMenu(!$('.links').classList.contains('o'));
 $$('.links a').forEach(a=>a.addEventListener('click',()=>alternarMenu(false)));
@@ -508,13 +500,13 @@ function drawChatHistory(){
 }
 // Traduções livres de trechos das obras indicadas; fontes preservadas no link do autor.
 const welcomeQuotes=[
- {text:'A sabedoria é filha da experiência.',author:'Leonardo da Vinci',work:'Pensamentos sobre arte e vida, §31',source:'https://www.gutenberg.org/files/29904/29904-h/29904-h.htm'},
- {text:'Não basta saber; é preciso aplicar. Não basta querer; é preciso agir.',author:'Johann Wolfgang von Goethe',work:'Máximas e reflexões, §324',source:'https://www.gutenberg.org/cache/epub/33670/pg33670-images.html'},
- {text:'Se enxerguei mais longe, foi por estar sobre os ombros de gigantes.',author:'Isaac Newton',work:'Carta a Robert Hooke, 1676',source:'https://newtonproject.ox.ac.uk/view/texts/normalized/OTHE00018'},
- {text:'Aprendemos a fazer as coisas fazendo-as.',author:'Aristóteles',work:'Ética a Nicômaco, livro II, capítulo 1',source:'https://www.gutenberg.org/cache/epub/8438/pg8438-images.html'},
- {text:'O caminho do progresso não é rápido nem fácil.',author:'Marie Curie',work:'Pierre Curie, notas autobiográficas',source:'https://www.gutenberg.org/cache/epub/69617/pg69617-images.html'},
- {text:'Não se pode esperar construir um mundo melhor sem melhorar os indivíduos.',author:'Marie Curie',work:'Pierre Curie, notas autobiográficas',source:'https://www.gutenberg.org/cache/epub/69617/pg69617-images.html'},
- {text:'Se é o hábito que nos incomoda, busquemos auxílio no hábito contrário.',author:'Epicteto',work:'Discursos, livro I, capítulo 27',source:'https://www.gutenberg.org/files/10661/10661-h/10661-h.htm'}
+ {text:'A sabedoria é filha da experiência.',author:'Leonardo da Vinci',biography:'https://pt.wikipedia.org/wiki/Leonardo_da_Vinci',work:'Pensamentos sobre arte e vida, §31',source:'https://www.gutenberg.org/files/29904/29904-h/29904-h.htm'},
+ {text:'Não basta saber; é preciso aplicar. Não basta querer; é preciso agir.',author:'Johann Wolfgang von Goethe',biography:'https://pt.wikipedia.org/wiki/Johann_Wolfgang_von_Goethe',work:'Máximas e reflexões, §324',source:'https://www.gutenberg.org/cache/epub/33670/pg33670-images.html'},
+ {text:'Se enxerguei mais longe, foi por estar sobre os ombros de gigantes.',author:'Isaac Newton',biography:'https://pt.wikipedia.org/wiki/Isaac_Newton',work:'Carta a Robert Hooke, 1676',source:'https://newtonproject.ox.ac.uk/view/texts/normalized/OTHE00018'},
+ {text:'Aprendemos a fazer as coisas fazendo-as.',author:'Aristóteles',biography:'https://pt.wikipedia.org/wiki/Arist%C3%B3teles',work:'Ética a Nicômaco, livro II, capítulo 1',source:'https://www.gutenberg.org/cache/epub/8438/pg8438-images.html'},
+ {text:'O caminho do progresso não é rápido nem fácil.',author:'Marie Curie',biography:'https://pt.wikipedia.org/wiki/Marie_Curie',work:'Pierre Curie, notas autobiográficas',source:'https://www.gutenberg.org/cache/epub/69617/pg69617-images.html'},
+ {text:'Não se pode esperar construir um mundo melhor sem melhorar os indivíduos.',author:'Marie Curie',biography:'https://pt.wikipedia.org/wiki/Marie_Curie',work:'Pierre Curie, notas autobiográficas',source:'https://www.gutenberg.org/cache/epub/69617/pg69617-images.html'},
+ {text:'Se é o hábito que nos incomoda, busquemos auxílio no hábito contrário.',author:'Epicteto',biography:'https://pt.wikipedia.org/wiki/Epicteto',work:'Discursos, livro I, capítulo 27',source:'https://www.gutenberg.org/files/10661/10661-h/10661-h.htm'}
 ];
 let welcomeQuoteIndex=-1;
 function chooseWelcomeQuote(){
@@ -527,7 +519,7 @@ function chooseWelcomeQuote(){
 function welcomeMarkup(){
  if(welcomeQuoteIndex<0)chooseWelcomeQuote();
  const quote=welcomeQuotes[welcomeQuoteIndex];
- return '<div id="wel"><h2>Vamos aprender o que hoje?</h2><blockquote class="welcome-quote"><p>“'+esc(quote.text)+'”</p><cite><a href="'+quote.source+'" target="_blank" rel="noopener noreferrer" title="'+esc(quote.work)+' · Tradução livre">'+esc(quote.author)+'</a></cite></blockquote></div>';
+ return '<div id="wel"><h2>Vamos aprender o que hoje?</h2><blockquote class="welcome-quote"><p>“'+esc(quote.text)+'”</p><cite><a href="'+(quote.biography||quote.source)+'" target="_blank" rel="noopener noreferrer" aria-label="Sobre '+esc(quote.author)+' — abrir em nova aba">'+esc(quote.author)+'</a></cite></blockquote></div>';
 }
 function userMessage(message,conversation,index){
  const row=document.createElement('div');row.className='user-message';row.tabIndex=0;
@@ -704,6 +696,9 @@ if(new URLSearchParams(location.search).get('destino')==='espaco'){
 <script src="assets/scripts/clay-star-motion.js"></script>
 <script src="assets/scripts/prompt-tools.js"></script>
 <script src="assets/scripts/clay-ai-aurora.js"></script>
-<script src="assets/scripts/resource-shredder.js"></script>
+<script src="assets/scripts/shortcut-logo.js"></script>
+<script src="assets/scripts/shortcut-detection.js"></script>
+<script src="assets/scripts/resource-shredder.js?v=faithful-list-2"></script>
+<script src="assets/scripts/animated-shortcuts.js?v=faithful-list-2"></script>
 </body>
 </html>

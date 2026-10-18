@@ -1,0 +1,30 @@
+/* Estrutura do cabeçalho com fundo integrado ao Meu Espaço. */
+html body>.clay-global-nav,html[data-theme] body>.clay-global-nav{
+ box-sizing:border-box;height:74px;min-height:74px;padding:14px 5vw;
+ background:transparent;
+ border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;color:#fff;
+}
+/* A lateral deixa aparecer o mesmo fundo contínuo da página. */
+html body #clay-branches{background:transparent;border-right:0;box-shadow:none}
+html body>.clay-global-nav>.logo{left:50%;top:21px;transform:translateX(-50%);line-height:1}
+html body>.clay-global-nav .brand-lockup{gap:9px}
+html body>.clay-global-nav .brand-symbol{width:23px;height:30px;filter:brightness(0) invert(1)!important}
+html body>.clay-global-nav .brand-word{width:72px;height:32px;filter:brightness(0) invert(1)!important}
+html body>.clay-global-nav #menu{left:5vw;top:15px;width:44px;height:44px;color:#fff}
+html body>.clay-global-nav .clay-header-actions{position:absolute;right:5vw;top:15px;height:44px}
+html body>.clay-global-nav .clay-star-button{min-height:44px;padding:11px 17px;font:500 13px/1.4 Inter,system-ui,sans-serif;color:#fff;border-radius:12px;background:linear-gradient(135deg,#ffffff24,#ffffff08 55%,#ffffff12);box-shadow:inset 0 1px 0 #ffffff38,0 0 0 1px #ffffff29,0 4px 16px #0000001f}
+/* Compensa os espaços laterais para usar o mesmo eixo central da logo. */
+body.branch-visible .workspace{--workspace-left-rail:240px;--workspace-right-rail:0px}
+body.branch-visible .workspace .gooey-nav,body.branch-visible .workspace #save-state{position:relative;left:calc((var(--workspace-right-rail) - var(--workspace-left-rail))/2)}
+@media(min-width:1200px){body.branch-visible .workspace{--workspace-right-rail:328px}}
+@media(max-width:900px){body.branch-visible .workspace{--workspace-left-rail:200px}}
+@media(max-width:600px){body.branch-visible .workspace{--workspace-left-rail:0px;--workspace-right-rail:0px}}
+@media(max-width:600px){
+ html body>.clay-global-nav #menu{left:3vw;width:36px}
+ html body>.clay-global-nav .clay-header-actions{right:3vw}
+ html body>.clay-global-nav .brand-lockup{gap:5px}
+ html body>.clay-global-nav .brand-symbol{width:18px;height:24px}
+ html body>.clay-global-nav .brand-word{width:55px;height:28px}
+ html body>.clay-global-nav>.logo{top:23px}
+ html body>.clay-global-nav .clay-star-button{padding:11px 8px;font-size:10px}
+}

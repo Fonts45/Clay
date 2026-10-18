@@ -6,6 +6,19 @@ const root=path.dirname(fileURLToPath(import.meta.url));
 http.createServer(async(req,res)=>{
  try{
   if(!['GET','HEAD'].includes(req.method)){res.writeHead(405);res.end();return}
+  const requestUrl=new URL(req.url,'http://localhost');
+  if(requestUrl.pathname==='/api/shortcut-logo'){
+   const domain=requestUrl.searchParams.get('domain')||'';
+   if(domain.length>253||! /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}$/i.test(domain)){res.writeHead(400);res.end();return}
+   try{
+    const upstream=await fetch('https://www.google.com/s2/favicons?domain='+encodeURIComponent(domain)+'&sz=128',{signal:AbortSignal.timeout(5000)});
+    const type=upstream.headers.get('content-type')||'';
+    if(!upstream.ok||!/^image\/(png|x-icon|vnd.microsoft.icon|webp|jpeg)(?:;|$)/i.test(type))throw Error('Logo unavailable');
+    const data=Buffer.from(await upstream.arrayBuffer());if(data.length>1024*1024)throw Error('Logo too large');
+    res.writeHead(200,{'Content-Type':type,'Cache-Control':'public, max-age=86400','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:data);
+   }catch{res.writeHead(502);res.end()}
+   return;
+  }
   const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname),name=pathname==='/'?'/index.html':pathname;
   if(!(/^\/(index|espaco)\.html$/.test(name)||/^\/assets\/[\w./-]+$/.test(name)||name==='/config/clay-config.js')){res.writeHead(404);res.end();return}
   const file=path.resolve(root,'.'+name);if(!file.startsWith(root+path.sep)){res.writeHead(404);res.end();return}

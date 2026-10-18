@@ -7,24 +7,26 @@
 <link rel="stylesheet" href="assets/styles/espaco.css">
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+
 <link rel="stylesheet" href="assets/styles/cabecalho.css">
 <link rel="stylesheet" href="assets/styles/tema.css">
 <script src="assets/scripts/tema.js"></script>
 <link rel="stylesheet" href="assets/styles/menu-ramificado.css">
 <link rel="stylesheet" href="assets/styles/magic-bento.css">
 <link rel="stylesheet" href="assets/styles/carta-profissional.css">
+<link rel="stylesheet" href="assets/styles/espaco-header.css?v=center-axis-4">
+
 </head>
 <body>
-<nav class="clay-global-nav s">
+<nav class="clay-global-nav" aria-label="Navegação principal">
   <a class="logo" href="index.html?inicio=1" aria-label="Clay"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></a>
-  <button id="menu" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="links">
+  <button id="menu" aria-label="Abrir menu" aria-controls="workspace-nav-links" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="links" id="workspace-nav-links">
     <a href="index.html?inicio=1">Início</a>
     <a href="index.html?inicio=1#recursos">Recursos</a><a href="index.html?inicio=1#tecnologia">Tecnologia</a><a href="index.html?inicio=1#sobre">Sobre</a>
     <a href="espaco.html">Estudos e portfólio</a>
-    
-    
   </div>
+  <div class="clay-header-actions"><a class="clay-star-button" href="index.html?destino=ia">Conheça o Clay AI</a></div>
 </nav>
 
 <aside class="clay-branches" id="clay-branches" aria-label="Navegação do espaço pessoal">
@@ -105,10 +107,10 @@ window.clayLoadingWatchdog=setTimeout(()=>{
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
 <script defer src="assets/scripts/espaco.js"></script>
+
 <script src="assets/scripts/cabecalho.js"></script>
 <script src="assets/scripts/clay-star-motion.js"></script>
 <script src="assets/scripts/menu-ramificado.js"></script>
 <script src="assets/scripts/magic-bento.js"></script>
 <script src="assets/scripts/carta-profissional.js"></script>
-<a class="clay-ai-floating" href="index.html?destino=ia" aria-label="Abrir Clay AI" title="Abrir Clay AI"><img src="assets/images/clay-symbol-orange.svg" alt=""></a>
 </body></html>

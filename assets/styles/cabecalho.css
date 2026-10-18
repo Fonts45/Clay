@@ -45,3 +45,4 @@ html.menu-aberto,html.menu-aberto body{overflow:hidden}.workspace{padding-top:11
 html[data-theme="light"] .clay-ai-floating{background:rgba(255,255,255,.9);border-color:rgba(0,0,0,.12)}
 @media(max-width:600px){.clay-ai-floating{right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:52px;height:52px}}
 @media(prefers-reduced-motion:reduce){.clay-ai-floating{transition:none}}
+
