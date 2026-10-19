@@ -22,4 +22,10 @@ Os links de aulas são preenchidos pelo usuário. Detectar a posição automatic
 
 ## Navegação
 
+A opção Perfil do menu abre `perfil.html`, uma página dedicada à criação e edição do perfil, com os estudos e o menu lateral ocultos. Ela reutiliza a estrutura de `espaco.html` e o controlador `assets/scripts/espaco.js`; ao alterar a estrutura compartilhada, mantenha os elementos necessários nas duas páginas. O editor abre durante o carregamento, com Salvar desabilitado até a sincronização. Ela reúne nome de usuário, nome, título, foto, formações, estudos atuais e carreiras de interesse. Os cursos ativos são exibidos como referência. O e-mail vem da conta autenticada, é somente leitura e não é copiado para o portfólio público. O nome de usuário é um nome de exibição, sem reserva de exclusividade. Salvar atualiza o mesmo perfil utilizado pelo card profissional.
+
+Para salvar os novos campos (`username`, `education`, `currentStudies`, `careers`, `pronouns`, `website`, `social3`, `social4` e `company`), publique a versão atualizada de `config/firestore.rules` no Firebase. Os campos são opcionais nas regras para manter a compatibilidade com perfis anteriores.
+
+O e-mail de acesso é alterado pelo botão “Confirmar novo e-mail”, com `verifyBeforeUpdateEmail` do Firebase Auth. A troca só termina após a confirmação pelo link recebido no novo endereço. O e-mail não é incluído no perfil público nem salvo como um campo do Firestore. Se o Firebase solicitar uma sessão recente, entre novamente antes de repetir a troca.
+
 O projeto é HTML/JS estático. A navegação reproduz o comportamento de duas abas e partículas inspirado no exemplo GooeyNav sem adicionar React. Suporta teclado, foco visível e movimento reduzido.

@@ -4,7 +4,16 @@ service cloud.firestore {
     function owner(uid) { return request.auth != null && request.auth.uid == uid; }
     function profileValid(p) {
       return p.keys().hasAll(['name','headline','bio','resume','github','linkedin'])
-        && p.keys().hasOnly(['name','headline','bio','resume','github','linkedin','photo'])
+        && p.keys().hasOnly(['name','headline','bio','resume','github','linkedin','photo','username','education','currentStudies','careers','pronouns','website','social3','social4','company'])
+        && (!('pronouns' in p) || (p.pronouns is string && p.pronouns.size() <= 40))
+        && (!('website' in p) || (p.website is string && p.website.size() <= 2000))
+        && (!('social3' in p) || (p.social3 is string && p.social3.size() <= 2000))
+        && (!('social4' in p) || (p.social4 is string && p.social4.size() <= 2000))
+        && (!('company' in p) || (p.company is string && p.company.size() <= 160))
+        && (!('username' in p) || (p.username is string && (p.username == '' || p.username.matches('^[A-Za-z0-9_.-]{3,40}$'))))
+        && (!('education' in p) || (p.education is string && p.education.size() <= 2000))
+        && (!('currentStudies' in p) || (p.currentStudies is string && p.currentStudies.size() <= 2000))
+        && (!('careers' in p) || (p.careers is string && p.careers.size() <= 1000))
         && p.name is string && p.name.size() <= 100
         && (!('photo' in p) || (p.photo is string && p.photo.size() <= 180000))
         && p.headline is string && p.headline.size() <= 160

@@ -276,6 +276,7 @@ input::placeholder,textarea::placeholder{color:#FFFFFF;opacity:1}
 nav[hidden]{display:none!important}
 
 .hero .cta [hidden]{display:none!important}#manter-campo{display:none!important}
+#hero-avancar{width:200px;max-width:100%}
 .clay-specular{--shine-x:50%;--shine-y:0%;--shine-power:.35;position:relative;isolation:isolate;overflow:hidden;display:inline-flex;justify-content:center;align-items:center;min-height:52px;min-width:160px;padding:14px 32px;border:1.5px solid #ffffff55;border-radius:40px;background:linear-gradient(135deg,#ffffff0a,#52525266);backdrop-filter:blur(12px);color:#f5f5f5;font:500 16px Inter,sans-serif;box-shadow:inset 0 1px 0 #ffffff33,0 0 18px #ffffff0a;transition:box-shadow .25s,transform .2s}
 .clay-specular:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle 70px at var(--shine-x) var(--shine-y),#ffffff66,transparent 75%);opacity:var(--shine-power)}
 .clay-specular:hover{box-shadow:inset 0 1px 0 #ffffff77,0 0 22px #ffffff22}.clay-specular:active{transform:scale(.97)}
@@ -291,12 +292,17 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 <link rel="stylesheet" href="assets/styles/tema.css">
 <script src="assets/scripts/tema.js"></script>
 <link rel="stylesheet" href="assets/styles/prompt.css?v=references-2">
-<link rel="stylesheet" href="assets/styles/chat-layout.css?v=space-button-2">
+<link rel="stylesheet" href="assets/styles/chat-layout.css?v=center-logo-3">
 
 <link rel="stylesheet" href="assets/styles/card-nav.css">
 <link rel="stylesheet" href="assets/styles/resource-shredder.css">
 <link rel="stylesheet" href="assets/styles/animated-shortcuts.css?v=faithful-list-2">
+<link rel="stylesheet" href="assets/styles/border-glow.css">
 
+<link rel="stylesheet" href="assets/styles/account-menu.css?v=chat-account-left-4">
+<link rel="stylesheet" href="assets/styles/navigation.css?v=1">
+<script src="assets/scripts/navigation.js?v=1"></script>
+<link rel="stylesheet" href="assets/styles/header-layout.css?v=conversation-center-2">
 </head>
 <body>
 <div id="ld"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></div>
@@ -308,7 +314,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
     <section class="nav-card"><h2>Seu espaço</h2><a href="#" data-open>↗ Estudos e portfólio</a><a href="#" data-open>↗ Entrar na conta</a></section>
     <section class="nav-card"><h2>Clay</h2><a href="#sobre">↗ Sobre a Clay</a><a href="#" data-open>↗ Começar gratuitamente</a></section>
   </div>
-  <div class="clay-header-actions"><a class="clay-star-button" href="#" data-open>Conheça o Clay AI</a></div>
+  <div class="clay-header-actions"><a class="clay-star-button" href="index.html?destino=ia" data-open>Conheça o Clay AI</a></div>
 </nav>
 <header class="hero" id="top">
   <canvas id="clay-aurora" aria-hidden="true"></canvas>
@@ -324,7 +330,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
     <div class="cta">
       <a class="btn p mag" href="#" data-open>Entrar</a>
       <a class="btn mag" href="#" data-open>Cadastrar</a>
-      <a id="hero-avancar" class="clay-specular" href="espaco.html" hidden>Avançar</a>
+      <a id="hero-avancar" class="clay-star-button" href="espaco.html" hidden>Avançar</a>
     </div>
   </div>
 </header>
@@ -348,8 +354,24 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 </section>
 <section class="sec" id="sobre">
   <div class="lbl rv">Sobre</div>
-  <h2 class="rv">Inovação, inteligência, precisão e confiabilidade.</h2>
-  <div class="cta rv"><a class="btn p mag" href="#" data-open>Começar gratuitamente</a></div>
+  <div class="clay-benefits">
+    <article class="border-glow-card">
+      <span class="edge-light" aria-hidden="true"></span>
+      <div class="border-glow-inner">
+        <svg class="benefit-icon" viewBox="0 0 40 40" fill="currentColor" aria-hidden="true"><path d="M15 2c2 0 2.4 7 5.1 9.8C23 14.6 30 15 30 17s-7 2.4-9.9 5.2C17.4 25 17 32 15 32s-2.4-7-5.2-9.8C7 19.4 0 19 0 17s7-2.4 9.8-5.2C12.6 9 13 2 15 2ZM32 25c1.2 0 1.5 3.6 3 5.1 1.4 1.4 5 1.7 5 2.9s-3.6 1.5-5 3c-1.5 1.4-1.8 5-3 5s-1.5-3.6-3-5c-1.4-1.5-5-1.8-5-3s3.6-1.5 5-2.9c1.5-1.5 1.8-5.1 3-5.1Z"/></svg>
+        <h2>Seus estudos, no seu ritmo.</h2>
+        <p>Reúna cursos, links e anotações em um só lugar. Registre onde parou e retome a próxima aula sem perder tempo procurando.</p>
+      </div>
+    </article>
+    <article class="border-glow-card">
+      <span class="edge-light" aria-hidden="true"></span>
+      <div class="border-glow-inner">
+        <svg class="benefit-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="10" width="29" height="25" rx="5"/><path d="M11 10V6a3 3 0 0 1 3-3h7a3 3 0 0 1 3 3v4M3 21h13m7 0h9M16 19h7v6h-7z"/><path d="m35 2 1.2 3.8L40 7l-3.8 1.2L35 12l-1.2-3.8L30 7l3.8-1.2z" fill="currentColor" stroke="none"/></svg>
+        <h2>Seu talento ganha espaço.</h2>
+        <p>Organize seus projetos e sua trajetória em um portfólio pessoal. Escolha o que compartilhar e mostre o que você está construindo.</p>
+      </div>
+    </article>
+  </div>
 </section>
 <footer><span><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></span><span>© 2026 Clay</span><span>Protótipo · modo de demonstração</span></footer>
 
@@ -365,7 +387,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
   <button id="chat-shade" type="button" aria-label="Fechar painel de conversas" tabindex="-1"></button>
   <main>
     <canvas id="clay-ai-aurora" aria-hidden="true"></canvas>
-    <div class="bar"><button class="btn" id="sb" aria-label="Abrir painel de conversas" aria-controls="side" aria-expanded="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path class="sidebar-icon-divider" d="M9 4v16"/></svg></button><span class="chat-product-name">Clay AI </span><a class="chat-home clay-star-button" href="espaco.html">Meu Espaço</a></div>
+    <div class="bar"><button class="btn" id="sb" aria-label="Abrir painel de conversas" aria-controls="side" aria-expanded="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path class="sidebar-icon-divider" d="M9 4v16"/></svg></button><span class="chat-product-name">Clay AI </span><a class="chat-header-logo" href="index.html?inicio=1" aria-label="Clay — página inicial"><img class="chat-header-symbol" src="assets/images/clay-symbol-cream.svg" alt=""><img class="chat-header-wordmark" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></a><div class="chat-header-actions" aria-label="Conta"><a class="chat-home clay-star-button" href="espaco.html">Meu Espaço</a></div></div>
     <div id="msgs" aria-live="polite">
       <div id="wel"><h2>Vamos aprender o que hoje?</h2><blockquote class="welcome-quote"><p>“A sabedoria é filha da experiência.”</p><cite><a href="https://pt.wikipedia.org/wiki/Leonardo_da_Vinci" target="_blank" rel="noopener noreferrer" aria-label="Sobre Leonardo da Vinci — abrir em nova aba">Leonardo da Vinci</a></cite></blockquote></div>
     </div>
@@ -583,8 +605,9 @@ document.addEventListener('click',e=>{if(!e.target.closest('.chat-account')){$('
 $('.chat-account').addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#chat-account-menu').hidden){e.stopPropagation();$('#chat-account-menu').hidden=true;$('#chat-account-button').setAttribute('aria-expanded','false');$('#chat-account-button').focus()}});
 $('#cfg').onclick=()=>$('#set').classList.toggle('o');
 $('#sb').onclick=()=>setChatSidebar($('#app').classList.contains('sidebar-collapsed'));
-const open=()=>{const url=new URL(location.href);url.searchParams.set('destino','ia');url.hash='';history.replaceState(history.state,'',url.pathname+url.search);document.documentElement.classList.remove('resume-ai');if(!$('#app').classList.contains('o'))chooseWelcomeQuote();$('#app').classList.add('o');nav.hidden=true;document.body.style.overflow='hidden';if(!cur)newChat();else draw();setTimeout(()=>$('#in').focus(),100)};
-const close=()=>{document.documentElement.classList.remove('resume-ai');const url=new URL(location.href);if(url.searchParams.get('destino')==='ia'){url.searchParams.delete('destino');history.replaceState(history.state,'',url.pathname+url.search+url.hash)}$('#app').classList.remove('o');nav.hidden=false;document.body.style.overflow=''};
+const open=()=>window.clayTransition(()=>{const url=new URL(location.href);url.searchParams.set('destino','ia');url.hash='';history.replaceState(history.state,'',url.pathname+url.search);document.documentElement.classList.remove('resume-ai');if(!$('#app').classList.contains('o'))chooseWelcomeQuote();$('#app').classList.add('o');document.documentElement.classList.add('clay-ai-active');document.dispatchEvent(new Event('clay:navigation'));nav.hidden=true;document.body.style.overflow='hidden';if(!cur)newChat();else draw();requestAnimationFrame(()=>{if($('#app').classList.contains('o'))$('#in').focus({preventScroll:true})})});
+const close=()=>{if(!$('#app').classList.contains('o')&&!document.documentElement.classList.contains('resume-ai'))return;return window.clayTransition(()=>{document.documentElement.classList.remove('resume-ai','clay-ai-active');document.dispatchEvent(new Event('clay:navigation'));const url=new URL(location.href);if(url.searchParams.get('destino')==='ia'){url.searchParams.delete('destino');history.replaceState(history.state,'',url.pathname+url.search+url.hash)}$('#app').classList.remove('o');nav.hidden=false;document.body.style.overflow='';nav.querySelector('.logo')?.focus({preventScroll:true})})};
+$$('.chat-brand,.chat-header-logo').forEach(link=>link.addEventListener('click',event=>{if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();close()}));
 
 let clienteConta=null,usuarioConta=null,modoConta='entrar',autenticandoConta=false;
 /* Every password field gets a reveal/hide control; reset hides passwords again. */
@@ -669,7 +692,8 @@ $('#conta-form').onsubmit=async e=>{
   if(cadastro){try{await resultado.user.updateProfile({displayName:$('#conta-nome').value.trim()})}catch(e){/* Conta criada; nome pode ser atualizado depois. */}}
   $('#conta-senha').value='';$('#conta-confirmar').value='';
   atualizarUsuario(resultado.user);$('#conta').close();
-  location.href='espaco.html';
+  if(new URLSearchParams(location.search).get('destino')==='ia')open();
+  else location.href=new URLSearchParams(location.search).get('aba')==='perfil'?'perfil.html':'espaco.html';
  }catch(e){$('#conta-status').textContent=erroConta(e)}
  finally{botao.disabled=false;$('#conta-alternar').disabled=false;autenticandoConta=false}
 };
@@ -680,6 +704,7 @@ $('#sair').onclick=async()=>{
 };
 $$('[data-open]').forEach(b=>b.addEventListener('click',e=>{
  e.preventDefault();alternarMenu(false);
+ const destination=new URL(location.href);destination.searchParams.set('destino',b.classList.contains('clay-star-button')?'ia':'espaco');destination.hash='';history.replaceState(history.state,'',destination.pathname+destination.search);
  if(usuarioConta){if(b.classList.contains('clay-star-button'))open();else location.href='espaco.html';return}
  mostrarConta(/Cadastrar|Começar/.test(b.textContent)?'cadastrar':'entrar');
 }));
@@ -690,15 +715,16 @@ if(new URLSearchParams(location.search).get('destino')==='espaco'){
  else mostrarConta('entrar');
 }
 </script>
-<script src="assets/scripts/clay-aurora.js"></script>
+<script src="assets/scripts/clay-aurora.js?v=visibility-2"></script>
 
-<script src="assets/scripts/clay-specular.js"></script>
-<script src="assets/scripts/clay-star-motion.js"></script>
+<script src="assets/scripts/clay-star-motion.js?v=visibility-2"></script>
 <script src="assets/scripts/prompt-tools.js"></script>
 <script src="assets/scripts/clay-ai-aurora.js"></script>
 <script src="assets/scripts/shortcut-logo.js"></script>
 <script src="assets/scripts/shortcut-detection.js"></script>
 <script src="assets/scripts/resource-shredder.js?v=faithful-list-2"></script>
 <script src="assets/scripts/animated-shortcuts.js?v=faithful-list-2"></script>
+<script src="assets/scripts/border-glow.js"></script>
+<script src="assets/scripts/account-menu.js?v=chat-account-5"></script>
 </body>
 </html>

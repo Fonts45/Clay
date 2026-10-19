@@ -1,0 +1,51 @@
+.profile-editor{padding:4px 0 40px;font-family:Arial,Helvetica,sans-serif;color:#f0f6fc;--muted:#919da9;--line:#3d444d}
+.profile-editor #profile-back{display:none}
+.profile-editor .profile-intro{margin:0 0 18px;border-bottom:1px solid #30363d;padding-bottom:10px}
+.profile-editor h1{font-size:24px;font-weight:400;line-height:30px;margin:0}
+.profile-editor form{display:grid;grid-template-columns:minmax(0,603px) minmax(200px,1fr);column-gap:36px;row-gap:22px;padding:0;border:0;border-radius:0;background:transparent;align-items:start}
+.profile-fields{display:grid;gap:18px;min-width:0}
+.profile-editor label{display:grid;gap:8px;font-size:14px;font-weight:600;color:#f0f6fc;line-height:18px;max-width:440px}
+.profile-editor input,.profile-editor textarea,.profile-editor select{box-sizing:border-box;width:100%;min-height:32px;padding:5px 12px;border:1px solid #3d444d;border-radius:6px;background:#151b23;color:#f0f6fc;font:14px/20px Arial,Helvetica,sans-serif;box-shadow:none}
+.profile-editor textarea[name=bio]{height:75px;min-height:75px;resize:vertical}
+.profile-editor input:focus,.profile-editor textarea:focus,.profile-editor select:focus{outline:2px solid #4493f8;outline-offset:-1px}
+.profile-editor small{font-size:12px;line-height:18px;color:#919da9;font-weight:400;max-width:603px}
+.profile-fields>label:has(small){max-width:603px}
+.profile-fields>label>input,.profile-fields>label>textarea{max-width:440px}
+.profile-editor input[readonly]{opacity:1;cursor:default;background:#0d1117}
+.profile-editor .profile-email-change{justify-self:start;padding:5px 10px;border:1px solid #3d444d;border-radius:6px;background:#212830;color:#f0f6fc;font:12px/20px Arial,sans-serif;cursor:pointer}
+.profile-editor #profile-email-feedback:empty{display:none}
+.profile-editor fieldset{min-width:0;border:0;padding:0;margin:0;display:grid;gap:8px}
+.profile-editor legend{font-size:14px;font-weight:600;margin-bottom:8px;padding:0;color:#f0f6fc}
+.profile-editor .profile-social-field{display:grid;grid-template-columns:16px minmax(0,1fr);align-items:center;gap:8px;max-width:none;font-weight:400}
+.profile-social-field>span{font-size:16px;color:#9198a1;font-weight:700;text-align:center}
+.profile-editor .profile-social-field input{height:28px;min-height:28px;font-size:12px}
+.profile-photo-column h2{font-size:14px;line-height:18px;font-weight:600;margin:0 0 8px}
+.profile-editor .profile-photo-row{position:relative;display:block;width:200px}
+.profile-editor .profile-photo-preview{display:grid;place-items:center;width:200px;height:200px;border-radius:50%;overflow:hidden;color:#fff;background:linear-gradient(135deg,#ffffff24,#ffffff08 55%,#ffffff12),#211c17;border:1px solid #ffffff29;box-shadow:inset 0 1px 0 #ffffff38,0 0 0 1px #ffffff0d}
+.profile-photo-preview svg{display:block;width:76px;height:76px}
+.profile-editor button.profile-photo-preview{padding:0;cursor:pointer;appearance:none}
+.profile-editor button.profile-photo-preview:focus-visible{outline:2px solid #4493f8;outline-offset:4px}
+.profile-photo-preview img{width:100%;height:100%;object-fit:cover}
+.profile-editor #profile-photo-control{position:absolute;left:8px;bottom:8px}
+.profile-editor .profile-photo-edit{display:block;position:relative;overflow:hidden;border:1px solid #3d444d;border-radius:6px;padding:5px 9px;background:#0d1117;color:#f0f6fc;font-size:14px;font-weight:400;line-height:20px;cursor:pointer}
+.profile-photo-edit input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.profile-photo-edit:focus-within{outline:2px solid #4493f8;outline-offset:2px}
+.profile-photo-edit small{display:none}
+.profile-additional{grid-column:1/-1;border-top:1px solid #30363d;padding-top:18px;color:#919da9;font-size:13px}
+.profile-additional summary{cursor:pointer;color:#f0f6fc;margin-bottom:16px}
+.profile-additional>fieldset,.profile-additional>label,.profile-additional>.form-row{margin-bottom:18px}
+.profile-editor .profile-course-list{display:flex;flex-wrap:wrap;gap:8px}
+.profile-course-list span{border:1px solid #3d444d;border-radius:6px;padding:6px 10px;font-size:12px}
+.profile-course-list p{font-size:12px;color:#919da9;margin:0}
+.profile-editor .profile-save-row{grid-column:1/-1;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid #30363d;padding-top:18px}
+.profile-editor .profile-save-row p{margin:0;font-size:12px;color:#919da9}
+.profile-editor .profile-save-row button{border-radius:6px;background:#238636;border:1px solid #ffffff1a;color:#fff;padding:7px 14px;font-size:14px}
+.profile-editor .form-error{grid-column:1/-1}.profile-editor .form-error:empty{display:none}
+body.profile-editing .gooey-nav{display:none}
+html.profile-page #clay-branches,html.profile-page .professional-rail,html.profile-page .gooey-nav,html.profile-page #studies,html.profile-page #portfolio{display:none!important}
+html.profile-page body{background:#0d1117}
+html.profile-page body.branch-visible .workspace{box-sizing:border-box;width:min(100%,976px);max-width:976px;margin:0 auto;padding:110px 24px 60px!important}
+html.profile-page #save-state:empty{display:none}
+html.profile-page #save-state{margin:0 0 12px;min-height:0}
+html.profile-page .profile-editor{scroll-margin-top:100px}
+@media(max-width:700px){.profile-editor form{grid-template-columns:minmax(0,1fr);gap:24px}.profile-photo-column{grid-row:1}.profile-editor label{max-width:none}.profile-fields>label>input,.profile-fields>label>textarea{max-width:none}.profile-editor .form-row{grid-template-columns:1fr}html.profile-page body.branch-visible .workspace{padding:100px 18px 40px!important}}

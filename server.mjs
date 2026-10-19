@@ -20,7 +20,7 @@ http.createServer(async(req,res)=>{
    return;
   }
   const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname),name=pathname==='/'?'/index.html':pathname;
-  if(!(/^\/(index|espaco)\.html$/.test(name)||/^\/assets\/[\w./-]+$/.test(name)||name==='/config/clay-config.js')){res.writeHead(404);res.end();return}
+  if(!(/^\/(index|espaco|perfil)\.html$/.test(name)||/^\/assets\/[\w./-]+$/.test(name)||name==='/config/clay-config.js')){res.writeHead(404);res.end();return}
   const file=path.resolve(root,'.'+name);if(!file.startsWith(root+path.sep)){res.writeHead(404);res.end();return}
   const data=await readFile(file),types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.ico':'image/x-icon','.webp':'image/webp','.jpg':'image/jpeg','.woff2':'font/woff2'};
   res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:data);

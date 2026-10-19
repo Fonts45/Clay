@@ -1,0 +1,53 @@
+/* Magic Bento: composição de seis painéis conforme a referência. */
+#studies>.study-bento{--mb-ink:#f4f4f5;--mb-muted:#f4f4f58c;--mb-surface:linear-gradient(150deg,#1c1a21,#121116);--mb-edge:#ffffff14;--mb-well:#ffffff05;--mb-tile:linear-gradient(180deg,#3a3644,#27242f);display:grid;grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,200px);gap:12px;width:100%;max-width:760px;margin:0 auto;padding:0;border:0;background:transparent;border-radius:0;color:var(--mb-ink)}
+.study-bento .magic-bento__card{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid var(--mb-edge);border-radius:20px;background:var(--mb-surface);box-shadow:inset 0 1px 0 #ffffff04;overflow:hidden;isolation:isolate;color:var(--mb-ink)}
+.study-bento .mb-analysis{grid-column:1;grid-row:1}.study-bento .mb-panel{grid-column:2;grid-row:1}
+.study-bento .mb-plan{grid-column:3/span 2;grid-row:1/span 2}.study-bento .mb-journey{grid-column:1/span 2;grid-row:2/span 2}
+.study-bento .mb-platforms{grid-column:3;grid-row:3}.study-bento .mb-privacy{grid-column:4;grid-row:3}
+.study-bento span{font-size:inherit}
+.study-bento .mb-figure{display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:15px;font-weight:600;line-height:18px;letter-spacing:-.02em}
+.study-bento .mb-figure small{font-size:11px;font-weight:400;color:var(--mb-muted);overflow:hidden;text-overflow:ellipsis}
+.study-bento .mb-visual{position:relative;display:flex;flex:1;min-height:0;flex-direction:column;justify-content:center}
+.study-bento .mb-text{margin-top:auto;display:flex;flex-direction:column;gap:4px;min-width:0}
+.study-bento .mb-text h3{margin:0;color:var(--mb-ink);font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:20px}
+.study-bento .mb-text p{margin:0;color:var(--mb-muted);font-size:13px;line-height:1.45;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.study-bento .mb-chart{width:100%;height:100%;max-height:78px;overflow:visible}.study-bento .mb-area{fill:#ffffff24}.study-bento .mb-line{fill:none;stroke:#f4f4f5;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.study-bento .mb-bars{flex-direction:row;align-items:flex-end;justify-content:normal;gap:5px;padding-top:4px}
+.study-bento .mb-bars i{display:block;flex:1;height:calc(var(--h)*100%);min-height:3px;border-radius:3px 3px 2px 2px;background:#ffffff2e;transform-origin:bottom;animation:study-bar-grow .76s cubic-bezier(.34,1.4,.64,1) both}
+.study-bento .mb-bars i[data-peak]{background:#f4f4f5}
+.study-bento .mb-document{position:relative;display:flex;flex-direction:column;overflow:hidden;padding:16px 16px 22px;border-radius:10px;background:var(--mb-well);box-shadow:inset 0 0 0 1px #ffffff12;width:100%;min-height:184px}
+.study-bento .mb-document strong{font-size:13px;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.study-bento .mb-doc-lines{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.study-bento .mb-doc-lines i{display:block;position:relative;width:var(--w);height:6px;background:#ffffff1c;border-radius:3px}
+.study-bento .mb-doc-lines i:nth-child(5){margin-top:8px}
+.study-bento .mb-selected-line:after{content:'';position:absolute;inset:-4px 25% -4px 15%;border-radius:3px;background:#ffffff29}
+.study-bento .mb-cursor{position:absolute;display:flex;align-items:start;color:#eee;font-size:17px;line-height:1;pointer-events:none;rotate:16deg}
+.study-bento .mb-cursor b{margin:11px 0 0 -3px;padding:3px 7px;border-radius:7px;font-size:10px;line-height:12px;color:#17151b;background:#d8d7dd;rotate:-16deg}
+.study-bento .mb-cursor-a{top:40px;left:25%}.study-bento .mb-cursor-b{top:86px;left:72%}.study-bento .mb-cursor-b b{background:#fff}
+.study-bento .mb-trigger{display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:8px;border-radius:10px;background:var(--mb-tile);box-shadow:inset 0 0 0 1px #ffffff12,inset 0 1px 0 #ffffff1f,0 4px 10px -4px #000b}
+.study-bento .mb-trigger>div{min-width:0}.study-bento .mb-trigger strong{display:block;font-size:13px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.study-bento .mb-trigger small{display:block;font-size:11px;line-height:15px;color:var(--mb-muted)}
+.study-bento .mb-glyph{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:8px;background:#ffffff0a;font-size:21px}
+.study-bento .mb-steps{list-style:none;position:relative;margin:0;padding:3px 12px 3px 14px;border-radius:10px;background:var(--mb-well);box-shadow:inset 0 0 0 1px #ffffff12}
+.study-bento .mb-steps:before{content:'';position:absolute;left:21px;top:16px;bottom:16px;width:1px;background:#ffffff26}
+.study-bento .mb-steps li{position:relative;display:flex;align-items:center;gap:10px;height:33px;font-size:13px;line-height:16px}
+.study-bento .mb-steps li>span{display:grid;place-items:center;width:16px;height:16px;flex:none;border-radius:50%;background:#f4f4f5;color:#17151b;font-size:11px}
+.study-bento .mb-steps li[data-pending]>span{background:transparent;color:transparent;border:1.5px dashed #ffffff55}
+.study-bento .mb-steps small{margin-left:auto;color:var(--mb-muted);font-size:12px;font-variant-numeric:tabular-nums}
+.study-bento .mb-hub{position:relative;width:100%;height:94px;max-width:180px;margin:auto}
+.study-bento .mb-hub svg{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#ffffff22;stroke-width:1}
+.study-bento .mb-node{position:absolute;display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--mb-tile);box-shadow:inset 0 0 0 1px #ffffff12,inset 0 1px 0 #ffffff1f;font-size:14px;transform:translate(-50%,-50%)}
+.study-bento .mb-node-a{left:19%;top:23%}.study-bento .mb-node-b{left:81%;top:23%}.study-bento .mb-node-c{left:19%;top:77%}.study-bento .mb-node-d{left:81%;top:77%}.study-bento .mb-node-center{left:50%;top:50%;width:30px;height:30px;font-size:24px}
+.study-bento .mb-settings{gap:8px}.study-bento .mb-setting{display:flex;align-items:center;gap:8px;height:32px;flex:none;padding:0 8px 0 10px;background:var(--mb-tile);border-radius:8px;box-shadow:inset 0 0 0 1px #ffffff12,inset 0 1px 0 #ffffff1f;font-size:12px;white-space:nowrap}
+.study-bento .mb-switch{position:relative;flex:none;width:26px;height:16px;margin-left:auto;border-radius:8px;background:#f4f4f5}
+.study-bento .mb-switch:after{content:'';position:absolute;top:2px;left:12px;width:12px;height:12px;border-radius:50%;background:#27242f;transition:left .32s cubic-bezier(.34,1.4,.64,1)}
+.study-bento .mb-switch[data-off]{background:#ffffff26}.study-bento .mb-switch[data-off]:after{left:2px;background:#f4f4f5}
+.study-bento .mb-card-action{position:absolute;inset:0;width:100%;height:100%;background:none;border:0;border-radius:inherit;cursor:pointer}
+.study-bento .mb-card-action:focus-visible{box-shadow:inset 0 0 0 2px #ffffff66}
+@keyframes study-bar-grow{from{scale:1 0}to{scale:1 1}}
+@media(max-width:760px){#studies>.study-bento{grid-template-rows:repeat(3,190px);gap:10px}.study-bento .magic-bento__card{padding:12px;gap:8px}.study-bento .mb-figure{flex-wrap:wrap;gap:2px}.study-bento .mb-figure small{font-size:10px}.study-bento .mb-setting{font-size:10px;padding-inline:6px;gap:4px}}
+@media(max-width:600px){#studies>.study-bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:180px 300px 300px 200px}.study-bento .mb-plan{grid-column:1/-1;grid-row:2}.study-bento .mb-journey{grid-column:1/-1;grid-row:3}.study-bento .mb-platforms{grid-column:1;grid-row:4}.study-bento .mb-privacy{grid-column:2;grid-row:4}}
+html[data-theme="light"] #studies>.study-bento{--mb-ink:#27272a;--mb-muted:#27272a99;--mb-surface:linear-gradient(150deg,#fff,#f6f6f8);--mb-edge:#18181b14;--mb-well:#18181b05;--mb-tile:linear-gradient(180deg,#fff,#eeeef2)}
+html[data-theme="light"] .study-bento .mb-doc-lines i,html[data-theme="light"] .study-bento .mb-bars i{background:#27272a26}
+html[data-theme="light"] .study-bento .mb-line{stroke:#27272a}html[data-theme="light"] .study-bento .mb-area{fill:#27272a14}
+@media(prefers-reduced-motion:reduce){.study-bento .mb-bars i{animation:none}.study-bento .mb-switch:after{transition:none}}

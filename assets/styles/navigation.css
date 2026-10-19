@@ -1,0 +1,14 @@
+/* Native transitions keep links immediate and animate only the captured surfaces. */
+@view-transition{navigation:auto}
+::view-transition-group(root){animation-duration:180ms;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-old(root){animation:clay-page-out 130ms ease-out both}
+::view-transition-new(root){animation:clay-page-in 180ms cubic-bezier(.22,1,.36,1) both}
+@keyframes clay-page-out{to{opacity:0}}
+@keyframes clay-page-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+#app.o{animation:none}
+html.clay-ai-active .hero,html.clay-ai-active .hero *{animation-play-state:paused!important}
+html.clay-ai-active body>.glow{visibility:hidden}
+@media(prefers-reduced-motion:reduce){
+ @view-transition{navigation:none}
+ ::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation:none!important}
+}

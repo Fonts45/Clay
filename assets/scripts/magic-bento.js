@@ -1,6 +1,6 @@
 (()=>{
 const root=document.getElementById('owner-space');if(!root)return;
-const selector='.stats>div,.course-card,.project-card,.resume-card,.profile-cover,.publish-bar,.empty,.loading-placeholder';
+const selector='.magic-bento__card,.stats>div,.course-card,.project-card,.resume-card,.profile-cover,.publish-bar,.empty,.loading-placeholder';
 const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function prepare(){root.querySelectorAll(selector).forEach((card,index)=>{if(card.classList.contains('bento-card'))return;card.classList.add('bento-card');if(!reduced){card.style.setProperty('--intro-delay',Math.min(index,5)*45+'ms');card.classList.add('bento-enter')}})}
 prepare();new MutationObserver(prepare).observe(root,{childList:true,subtree:true});

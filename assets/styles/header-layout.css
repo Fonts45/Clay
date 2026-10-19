@@ -1,0 +1,47 @@
+/* Shared proportions; the Clay AI header follows the conversation area's width. */
+:root{--clay-header-height:74px;--clay-header-edge:5vw;--clay-header-center-y:37px;--clay-header-actions-y:15px;--clay-header-cta-width:150px;--clay-header-control-height:44px;--clay-header-avatar:44px;--clay-header-gap:12px;--clay-header-symbol-width:23px;--clay-header-word-width:72px}
+html body>nav,html body>nav.card-nav-mode,html[data-theme] body>.clay-global-nav{
+ box-sizing:border-box;top:0;left:0;right:0;width:100%;height:var(--clay-header-height);min-height:var(--clay-header-height);padding:0 var(--clay-header-edge);transform:none;border-radius:0;border-width:0;
+}
+html body>nav>.logo,html body>nav.has-account-menu>.logo,html body>nav.clay-global-nav>.logo,html body>nav.card-nav-mode>.logo,html #app .chat-header-logo{
+ display:flex;align-items:center;justify-content:center;left:50%;top:var(--clay-header-center-y);width:max-content;height:32px;margin:0;transform:translate(-50%,-50%);line-height:1;transition:none;flex:none;
+}
+html body>nav>.logo{position:absolute}
+html #app .chat-header-logo{position:absolute;z-index:60;gap:9px}
+html body>nav.has-account-menu .brand-lockup{display:flex;align-items:center;gap:9px}
+html body>nav.has-account-menu .brand-symbol,html #app .chat-header-symbol{width:var(--clay-header-symbol-width);height:30px;object-fit:contain}
+html body>nav.has-account-menu .brand-word,html #app .chat-header-wordmark{width:var(--clay-header-word-width);height:32px;object-fit:contain}
+html body>nav .clay-header-actions,html #app .chat-header-actions{
+ display:flex;align-items:center;gap:var(--clay-header-gap);right:var(--clay-header-edge);top:var(--clay-header-actions-y);height:var(--clay-header-control-height);margin:0;transition:none;z-index:60;
+}
+html body>nav .clay-header-actions{position:absolute}
+html #app .chat-header-actions{position:absolute}
+html body>nav .clay-header-actions .clay-star-button,html #app .chat-home.clay-star-button{
+ box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 var(--clay-header-cta-width);width:var(--clay-header-cta-width);min-width:var(--clay-header-cta-width);max-width:none;height:var(--clay-header-control-height);min-height:var(--clay-header-control-height);padding:0 12px;margin:0;border:0;border-radius:12px;font:500 13px/1.4 Inter,system-ui,sans-serif;white-space:nowrap;
+}
+html body>nav .clay-account-toggle,html #app .chat-header-actions .clay-account-toggle{width:var(--clay-header-avatar);height:var(--clay-header-avatar);flex-shrink:0}
+html body>nav.has-account-menu #menu{left:var(--clay-header-edge);top:15px;width:44px;height:44px;transition:none}
+html #app{--chat-header-height:var(--clay-header-height);transition:grid-template-columns 220ms cubic-bezier(.22,1,.36,1)}
+html #app #side{transition:transform 220ms cubic-bezier(.22,1,.36,1)}
+html #app .bar{position:relative;height:var(--clay-header-height);min-height:var(--clay-header-height);padding-inline:var(--clay-header-edge)}
+html body>nav.card-nav-mode.card-nav-open{height:260px}
+html body>nav.card-nav-mode .links{top:var(--clay-header-height);left:var(--clay-header-edge);right:var(--clay-header-edge);width:auto}
+@media(max-width:1100px){html #app .chat-product-name{display:none}}
+@media(max-width:768px){html body>nav.card-nav-mode.card-nav-open{height:min(590px,100dvh)}}
+@media(max-width:600px){
+ :root{--clay-header-edge:3vw;--clay-header-cta-width:124px;--clay-header-control-height:38px;--clay-header-avatar:36px;--clay-header-gap:8px;--clay-header-actions-y:18px;--clay-header-symbol-width:18px;--clay-header-word-width:55px}
+ html body>nav .clay-header-actions .clay-star-button,html #app .chat-home.clay-star-button{font-size:11px}
+ html body>nav.has-account-menu .brand-lockup,html #app .chat-header-logo{gap:5px}
+ html body>nav.has-account-menu .brand-symbol,html #app .chat-header-symbol{height:24px}
+ html body>nav.has-account-menu .brand-word,html #app .chat-header-wordmark{height:28px}
+ html body>nav.has-account-menu #menu{width:36px}
+ html #app .chat-header-actions .clay-account-menu{top:74px}
+}
+/* A second row keeps the same anchors on small phones without overlapping controls. */
+@media(max-width:460px){
+ :root{--clay-header-height:112px;--clay-header-center-y:28px;--clay-header-actions-y:62px}
+ html body>nav.has-account-menu #menu{top:10px}
+ html body>nav .clay-account-menu,html #app .chat-header-actions .clay-account-menu{top:108px}
+ html body.branch-visible .workspace{padding-top:148px!important}
+}
+@media(prefers-reduced-motion:reduce){html #app,html #app #side{transition:none}}
