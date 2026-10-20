@@ -45,3 +45,20 @@ html body>nav.card-nav-mode .links{top:var(--clay-header-height);left:var(--clay
  html body.branch-visible .workspace{padding-top:148px!important}
 }
 @media(prefers-reduced-motion:reduce){html #app,html #app #side{transition:none}}
+
+/* A navegação da landing se recolhe ao sair da hero. */
+html body>nav:has(+.hero){left:50%;right:auto;transform:translateX(-50%);transition:width .6s cubic-bezier(.22,1,.36,1),top .6s cubic-bezier(.22,1,.36,1),height .45s cubic-bezier(.22,1,.36,1),min-height .45s,border-radius .6s,background .4s,border-color .4s,box-shadow .4s}
+html body>nav.card-nav-mode:has(+.hero){--clay-header-height:60px;--clay-header-center-y:30px;--clay-header-actions-y:7px;--clay-header-edge:8px;--clay-header-control-height:44px;top:14px;left:50%;right:auto;width:min(800px,calc(100% - 32px));height:60px;min-height:60px;padding:0 8px;transform:translateX(-50%);border:1px solid #ffffff20;border-radius:18px;background:rgba(35,32,43,.88);box-shadow:inset 0 1px 0 #ffffff08,0 10px 35px #0003;backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%)}
+html body>nav.card-nav-mode:has(+.hero) .clay-header-actions{right:7px;top:7px;height:44px;transition:right .6s,top .5s}
+html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:260px}
+html body>nav.card-nav-mode:has(+.hero) .links{top:60px;left:0;right:0;width:auto}
+@media(max-width:768px){html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:min(590px,calc(100dvh - 28px));overflow-y:auto}}
+@media(prefers-reduced-motion:reduce){html body>nav:has(+.hero),html body>nav.card-nav-mode:has(+.hero) #menu,html body>nav.card-nav-mode:has(+.hero) .clay-header-actions{transition:none}}
+/* Mantém os controles da hero durante a transformação da barra. */
+html body>nav.card-nav-mode:has(+.hero) #menu{left:14px;top:8px;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;gap:5px;transition:left .6s,top .5s}
+html body>nav.card-nav-mode:has(+.hero) .clay-account-toggle{display:grid}
+html body>nav.card-nav-mode:has(+.hero){overflow:visible}
+html body>nav.card-nav-mode:has(+.hero) .clay-account-menu{top:calc(100% + 12px)}
+@media(max-width:600px){html body>nav.card-nav-mode:has(+.hero){--clay-header-control-height:38px}html body>nav.card-nav-mode:has(+.hero) .clay-header-actions{top:10px;height:38px}html body>nav.card-nav-mode:has(+.hero) #menu{width:36px}}
+@media(max-width:460px){html body>nav.card-nav-mode:has(+.hero){width:calc(100% - 20px);height:112px;min-height:112px;--clay-header-center-y:28px}html body>nav.card-nav-mode:has(+.hero) #menu{top:6px;left:8px}html body>nav.card-nav-mode:has(+.hero) .clay-header-actions{top:62px;right:10px}html body>nav.card-nav-mode:has(+.hero) .links{top:112px}html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:min(642px,calc(100dvh - 28px));overflow-y:auto}}
+@media(prefers-reduced-motion:reduce){html body>nav.card-nav-mode:has(+.hero) #menu{transition:none}}
