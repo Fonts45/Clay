@@ -1,0 +1,22 @@
+/* Dock inferior do Meu Espaço — referência escura, botões de 50px. */
+.workspace { padding-bottom: 132px; }
+.space-dock-anchor { position:fixed; z-index:45; left:0; right:0; bottom:12px; display:flex; justify-content:center; pointer-events:none; padding:0 12px; }
+body.branch-visible .space-dock-anchor { left:240px; }
+.space-dock { display:flex; align-items:center; gap:10px; padding:8px; width:max-content; max-width:100%; border:1px solid rgba(255,255,255,.14); border-radius:24px; background:rgba(38,35,46,.76); box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 22px 44px -20px #000c,0 6px 16px -8px #0008; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); pointer-events:auto; }
+.space-dock-item { position:relative; display:grid; place-items:center; flex:0 0 50px; width:50px; height:50px; padding:0; border:0; background:none; color:#f4f4f5; text-decoration:none; border-radius:15px; }
+.space-dock-tile { display:grid; place-items:center; width:100%; height:100%; border:1px solid rgba(255,255,255,.09); border-radius:15px; background:linear-gradient(180deg,#3a3644 0%,#27242f 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px -4px #000b; transform-origin:50% 100%; transition:transform .22s cubic-bezier(.2,1.25,.4,1),filter .15s; }
+.space-dock-item svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.65; stroke-linecap:round; stroke-linejoin:round; }
+.space-dock-item:hover .space-dock-tile,.space-dock-item:focus-visible .space-dock-tile { transform:translateY(-7px) scale(1.12); }
+.space-dock-item:active .space-dock-tile { filter:brightness(.75); transform:translateY(-2px) scale(.97); }
+.space-dock-label { position:absolute; bottom:calc(100% + 17px); left:50%; transform:translateX(-50%) translateY(4px); padding:6px 10px; border:1px solid #ffffff1c; border-radius:8px; background:#2a2731; color:#f4f4f5; font:12px/1.3 system-ui,sans-serif; white-space:nowrap; opacity:0; visibility:hidden; pointer-events:none; transition:opacity .15s,transform .15s; }
+.space-dock-item:hover .space-dock-label,.space-dock-item:focus-visible .space-dock-label { opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
+.space-dock-badge { position:absolute; z-index:1; top:-7px; right:-7px; display:grid; place-items:center; min-width:19px; height:19px; padding:0 4px; border-radius:999px; background:#ff5402; color:#fff; font:600 12px/1 system-ui,sans-serif; }
+.space-dock-badge--dot { min-width:11px; width:11px; height:11px; top:-2px; right:-2px; padding:0; }
+#space-dock-dialog { width:min(480px,calc(100% - 32px)); }
+.space-dock-panel { display:grid; gap:16px; }
+.space-dock-panel audio,.space-dock-panel img { max-width:100%; width:100%; }
+.space-dock-panel img { max-height:45vh; object-fit:contain; border-radius:12px; }
+.space-dock-results { display:grid; gap:8px; max-height:40vh; overflow:auto; }
+@media(max-width:900px) { body.branch-visible .space-dock-anchor { left:0; } }
+@media(max-width:540px) { .space-dock-anchor { bottom:max(12px,env(safe-area-inset-bottom)); padding:0 10px; } .space-dock { gap:clamp(4px,1.6vw,10px); padding:7px; border-radius:21px; } .space-dock-item { flex-basis:clamp(30px,8.5vw,50px); width:clamp(30px,8.5vw,50px); height:clamp(36px,8.5vw,50px); } .space-dock-tile { border-radius:12px; } .space-dock-item svg { width:21px; height:21px; } }
+@media(prefers-reduced-motion:reduce) { .space-dock-tile,.space-dock-label { transition:none; } .space-dock-item:hover .space-dock-tile,.space-dock-item:focus-visible .space-dock-tile { transform:none; } }

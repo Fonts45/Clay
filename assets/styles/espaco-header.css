@@ -15,7 +15,7 @@ html body>.clay-global-nav .clay-header-actions{position:absolute;right:5vw;top:
 html body>.clay-global-nav .clay-star-button{min-height:44px;padding:11px 17px;font:500 13px/1.4 Inter,system-ui,sans-serif;color:#fff;border-radius:12px;background:linear-gradient(135deg,#ffffff24,#ffffff08 55%,#ffffff12);box-shadow:inset 0 1px 0 #ffffff38,0 0 0 1px #ffffff29,0 4px 16px #0000001f}
 /* Compensa os espaços laterais para usar o mesmo eixo central da logo. */
 body.branch-visible .workspace{--workspace-left-rail:240px;--workspace-right-rail:0px}
-body.branch-visible .workspace .gooey-nav,body.branch-visible .workspace #save-state{position:relative;left:calc((var(--workspace-right-rail) - var(--workspace-left-rail))/2)}
+body.branch-visible .workspace .gooey-nav,body.branch-visible .workspace #save-state,body.branch-visible .workspace #retry-load,body.branch-visible .workspace #access-state{position:relative;left:calc((var(--workspace-right-rail) - var(--workspace-left-rail))/2)}
 @media(min-width:1200px){body.branch-visible .workspace{--workspace-right-rail:328px}}
 @media(max-width:900px){body.branch-visible .workspace{--workspace-left-rail:200px}}
 @media(max-width:600px){body.branch-visible .workspace{--workspace-left-rail:0px;--workspace-right-rail:0px}}
