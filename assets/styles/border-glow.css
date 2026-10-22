@@ -13,3 +13,25 @@ html[data-theme="light"] #sobre .border-glow-inner p{color:#242127aa}
 /* Transições suaves de luminosidade; sem movimentar o conteúdo. */
 #sobre .border-glow-card:before,#sobre .border-glow-card:after,#sobre .edge-light{transition:opacity 180ms ease-out}
 @media(prefers-reduced-motion:reduce){#sobre .border-glow-card{transition:none}#sobre .border-glow-card:before,#sobre .border-glow-card:after,#sobre .edge-light{transition:none}}
+
+/* Elevação suave dos cards, preservando o brilho das bordas. */
+#sobre .border-glow-card{transition:transform 350ms cubic-bezier(.22,1,.36,1),box-shadow 180ms ease-out}
+@media(hover:hover) and (pointer:fine){#sobre .border-glow-card:hover{transform:translateY(-8px)}}
+@media(prefers-reduced-motion:reduce){#sobre .border-glow-card{transition:none}#sobre .border-glow-card:hover{transform:none}}
+/* Dois cards lado a lado em qualquer largura. */
+@media(max-width:760px){
+ #sobre .clay-benefits{grid-template-columns:repeat(2,minmax(0,1fr));max-width:960px;gap:14px}
+ #sobre .border-glow-card{border-radius:22px}
+ #sobre .border-glow-inner{padding:20px;min-height:0;height:100%}
+ #sobre .benefit-icon{width:28px;height:28px;margin-bottom:14px}
+ #sobre .border-glow-inner h2{font-size:18px;line-height:1.25;overflow-wrap:anywhere}
+ #sobre .border-glow-inner p{font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+}
+@media(max-width:480px){
+ #sobre .clay-benefits{gap:10px}
+ #sobre .border-glow-card{border-radius:18px}
+ #sobre .border-glow-inner{padding:16px 12px}
+ #sobre .benefit-icon{width:24px;height:24px;margin-bottom:12px}
+ #sobre .border-glow-inner h2{font-size:15px;letter-spacing:-.025em}
+ #sobre .border-glow-inner p{font-size:11px;line-height:1.45}
+}

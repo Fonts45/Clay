@@ -81,6 +81,8 @@ html body>nav.card-nav-mode:has(+.hero)>.logo{top:7px}
 @property --landing-nav-offset{syntax:'<length>';inherits:true;initial-value:0px}
 html body>nav:has(+.hero){--landing-nav-offset:0px;top:var(--landing-nav-offset);transition:--landing-nav-offset .6s cubic-bezier(.22,1,.36,1),width .6s cubic-bezier(.22,1,.36,1),height .45s cubic-bezier(.22,1,.36,1),min-height .45s,border-radius .6s,background .4s,box-shadow .4s}
 html body>nav.card-nav-mode:has(+.hero){--landing-nav-offset:14px;top:var(--landing-nav-offset)}
-html body>nav:has(+.hero)>.logo,html body>nav.card-nav-mode:has(+.hero)>.logo{top:calc(21px - var(--landing-nav-offset))}
-@media(max-width:460px){html body>nav:has(+.hero)>.logo,html body>nav.card-nav-mode:has(+.hero)>.logo{top:calc(12px - var(--landing-nav-offset))}}
+html body>nav:has(+.hero)>.logo,html body>nav.card-nav-mode:has(+.hero)>.logo{top:calc(21px - var(--landing-nav-offset)/2)}
+@media(max-width:460px){html body>nav:has(+.hero)>.logo,html body>nav.card-nav-mode:has(+.hero)>.logo{top:12px}}
 @media(prefers-reduced-motion:reduce){html body>nav:has(+.hero){transition:none}}
+/* Oculta a marca do cabeçalho da landing em telas compactas. */
+@media(max-width:600px){html body>nav:has(+.hero)>.logo,html body>nav.card-nav-mode:has(+.hero)>.logo{display:none}}

@@ -49,3 +49,22 @@ html.profile-page #save-state:empty{display:none}
 html.profile-page #save-state{margin:0 0 12px;min-height:0}
 html.profile-page .profile-editor{scroll-margin-top:100px}
 @media(max-width:700px){.profile-editor form{grid-template-columns:minmax(0,1fr);gap:24px}.profile-photo-column{grid-row:1}.profile-editor label{max-width:none}.profile-fields>label>input,.profile-fields>label>textarea{max-width:none}.profile-editor .form-row{grid-template-columns:1fr}html.profile-page body.branch-visible .workspace{padding:100px 18px 40px!important}}
+
+/* Foto à esquerda e somente os campos públicos selecionados à direita. */
+.profile-editor form{grid-template-columns:200px minmax(0,603px)}
+.profile-editor .profile-photo-column{grid-column:1;grid-row:1}
+.profile-editor .profile-fields{grid-column:2;grid-row:1}
+@media(max-width:700px){.profile-editor form{grid-template-columns:minmax(0,1fr)}.profile-editor .profile-photo-column{grid-column:1;grid-row:1}.profile-editor .profile-fields{grid-column:1;grid-row:2}}
+/* Título alinhado ao centro do círculo de 200px. */
+.profile-photo-column h2{width:200px;max-width:100%;text-align:center}
+
+.profile-editor .profile-recrop{width:200px;margin-top:12px;font-size:12px;white-space:normal}
+.photo-crop-dialog{width:min(440px,calc(100% - 24px));padding:24px}
+.photo-crop-dialog h2{font-size:22px;margin:0}
+.photo-crop-dialog p{font-size:13px;color:#a29ea9}
+.photo-crop-dialog canvas{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:12px;touch-action:none;cursor:grab;background:#211c17}
+.photo-crop-dialog canvas:active{cursor:grabbing}
+.photo-crop-dialog label{margin-top:16px}
+.photo-crop-dialog input[type=range]{padding:0;accent-color:#ff5402}
+.photo-crop-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}
+.photo-crop-actions .button{font-size:12px;padding:9px 12px}

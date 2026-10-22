@@ -20,3 +20,8 @@ body.branch-visible .space-dock-anchor { left:240px; }
 @media(max-width:900px) { body.branch-visible .space-dock-anchor { left:0; } }
 @media(max-width:540px) { .space-dock-anchor { bottom:max(12px,env(safe-area-inset-bottom)); padding:0 10px; } .space-dock { gap:clamp(4px,1.6vw,10px); padding:7px; border-radius:21px; } .space-dock-item { flex-basis:clamp(30px,8.5vw,50px); width:clamp(30px,8.5vw,50px); height:clamp(36px,8.5vw,50px); } .space-dock-tile { border-radius:12px; } .space-dock-item svg { width:21px; height:21px; } }
 @media(prefers-reduced-motion:reduce) { .space-dock-tile,.space-dock-label { transition:none; } .space-dock-item:hover .space-dock-tile,.space-dock-item:focus-visible .space-dock-tile { transform:none; } }
+
+/* Botões soltos, centralizados no eixo da página e elevados do rodapé. */
+.space-dock-anchor,body.branch-visible .space-dock-anchor{left:0;right:0;bottom:40px}
+.space-dock{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+@media(max-width:540px){.space-dock-anchor,body.branch-visible .space-dock-anchor{bottom:calc(28px + env(safe-area-inset-bottom,0px))}.space-dock{padding:0;border-radius:0}}

@@ -26,7 +26,7 @@ const profileFields=document.createElement('div');profileFields.className='profi
 const profilePhoto=document.createElement('aside');profilePhoto.className='profile-photo-column';profilePhoto.innerHTML='<h2>Foto de perfil</h2>';
 profilePhoto.appendChild(profileForm.querySelector('.profile-photo-row'));
 const moveField=(name,title,help)=>{const field=profileForm.elements.namedItem(name).closest('label');field.firstChild.textContent=title;profileFields.appendChild(field);if(help)field.insertAdjacentHTML('beforeend','<small>'+help+'</small>');return field};
-moveField('name','Nome','Seu nome poderá aparecer no seu perfil público do Clay.');
+moveField('name','Nome');
 const emailField=$('#profile-account-email').closest('label');emailField.firstChild.textContent='E-mail da conta';profileFields.appendChild(emailField);
 emailField.insertAdjacentHTML('beforeend','<button type="button" class="profile-email-change">Confirmar novo e-mail</button><small id="profile-email-feedback" role="status" aria-live="polite"></small>');
 emailField.querySelector('button').addEventListener('click',async()=>{
@@ -40,7 +40,8 @@ emailField.querySelector('button').addEventListener('click',async()=>{
  catch(error){feedback.textContent=error.code==='auth/requires-recent-login'?'Entre novamente na sua conta e tente trocar o e-mail outra vez.':error.code==='auth/email-already-in-use'?'Este endereço já está sendo usado por outra conta.':error.code==='auth/invalid-email'?'Digite um endereço de e-mail válido.':'Não foi possível enviar a confirmação. Verifique a conexão e tente novamente.'}
  finally{button.disabled=false}
 });
-moveField('bio','Biografia','Conte um pouco sobre você, seus interesses e o que está construindo.');
+moveField('bio','Biografia');
+profileForm.elements.namedItem('bio').placeholder='Conte sobre você.';
 profileFields.insertAdjacentHTML('beforeend','<label>Pronomes<select name="pronouns"><option value="">Não especificar</option><option value="ele/dele">ele/dele</option><option value="ela/dela">ela/dela</option><option value="elu/delu">elu/delu</option><option value="outros">outros</option></select></label><label>URL<input name="website" type="url" maxlength="2000"></label><fieldset class="profile-socials"><legend>Contas de redes sociais</legend></fieldset>');
 const socialFields=profileFields.querySelector('.profile-socials');
 ['linkedin','github'].forEach((name,index)=>{const field=profileForm.elements.namedItem(name).closest('label');field.className='profile-social-field';field.firstChild.textContent='';field.insertAdjacentHTML('afterbegin','<span aria-hidden="true">'+(index===0?'in':'↗')+'</span>');field.querySelector('input').setAttribute('aria-label',index===0?'LinkedIn':'GitHub');field.querySelector('input').placeholder='Link para o perfil social '+(index+1);socialFields.appendChild(field)});
@@ -48,14 +49,18 @@ const socialFields=profileFields.querySelector('.profile-socials');
 profileFields.insertAdjacentHTML('beforeend','<label>Empresa<input name="company" maxlength="160"><small>Informe a empresa ou organização da qual você faz parte.</small></label>');
 const additional=document.createElement('details');additional.className='profile-additional';additional.innerHTML='<summary>Formação e informações profissionais</summary>';
 for(const field of [...profileForm.children]){if(field.matches('fieldset,.form-row,label'))additional.appendChild(field)}
-profileForm.prepend(profileFields,profilePhoto);profileForm.querySelector('.form-error').before(additional);
+profileForm.prepend(profilePhoto,profileFields);profileForm.querySelector('.form-error').before(additional);
+// O editor público mostra apenas os campos escolhidos; mantém os dados anteriores.
+emailField.hidden=true;
+profileFields.querySelector('[name="pronouns"]').closest('label').hidden=true;
+additional.hidden=true;
 $('#profile-photo-control').hidden=true;
 const photoPreviewButton=document.createElement('button');photoPreviewButton.type='button';photoPreviewButton.id='profile-photo-preview';photoPreviewButton.className='profile-photo-preview';photoPreviewButton.setAttribute('aria-label','Trocar foto de perfil');photoPreviewButton.title='Selecionar uma foto do computador';
 $('#profile-photo-preview').replaceWith(photoPreviewButton);
 photoPreviewButton.addEventListener('click',()=>$('#profile-photo').click());
 const profileSave=profileForm.querySelector('button.primary');profileSave.type='submit';profileSave.id='profile-save';
 const profileSaveRow=document.createElement('div');profileSaveRow.className='profile-save-row';profileSave.before(profileSaveRow);profileSaveRow.appendChild(profileSave);profileSaveRow.insertAdjacentHTML('beforeend','<p id="profile-save-feedback" role="status" aria-live="polite">Seu card profissional acompanha as informações salvas aqui.</p>');
-let profilePhotoPreviewUrl=null,profileDirty=false;
+let profilePhotoPreviewUrl=null,profileDirty=false,croppedProfilePhoto=null,profileCropSource=null;
 function markProfileEdited(event){profileDirty=true;if(event.target.matches('input,textarea,select'))event.target.dataset.profileEdited='true'}
 profileForm.addEventListener('input',markProfileEdited);
 profileForm.addEventListener('change',markProfileEdited);
@@ -63,7 +68,14 @@ profileForm.addEventListener('invalid',event=>{const details=event.target.closes
 profileForm.elements.namedItem('headline').required=false;
 function updateProfilePhoto(photo){const preview=$('#profile-photo-preview');preview.replaceChildren();if(photo&&photo!==user?.photoURL){const image=document.createElement('img');image.src=photo;image.alt='Sua foto de perfil';image.onerror=()=>{preview.innerHTML=profilePhotoPlaceholder};preview.appendChild(image)}else preview.innerHTML=profilePhotoPlaceholder}
 const profilePhotoPlaceholder='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.56" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
-$('#profile-photo').addEventListener('change',()=>{if(profilePhotoPreviewUrl)URL.revokeObjectURL(profilePhotoPreviewUrl);const file=$('#profile-photo').files[0];profilePhotoPreviewUrl=file&&['image/jpeg','image/png','image/webp'].includes(file.type)?URL.createObjectURL(file):null;updateProfilePhoto(profilePhotoPreviewUrl||state?.profile?.photo||user?.photoURL)});
+async function enquadrarFoto(source){
+ try{const cropped=await window.ClayPhotoCrop.open(source);if(!cropped)return;profileCropSource=source;croppedProfilePhoto=cropped;profileDirty=true;updateProfilePhoto(cropped)}
+ catch(error){$('#profile-save-feedback').textContent=error.message||'Não foi possível abrir a imagem.'}
+}
+$('#profile-photo').addEventListener('change',async()=>{const file=$('#profile-photo').files[0];if(file)await enquadrarFoto(file);$('#profile-photo').value=''});
+const recropButton=document.createElement('button');recropButton.type='button';recropButton.className='button profile-recrop';recropButton.textContent='Ajustar enquadramento';
+profilePhoto.appendChild(recropButton);
+recropButton.onclick=()=>{const source=profileCropSource||croppedProfilePhoto||state?.profile?.photo||user?.photoURL;if(source)enquadrarFoto(source);else $('#profile-photo').click()};
 function openProfile(){
  if(!user)return;
  const profile=state?.profile||{name:user.displayName||'',headline:''};
@@ -96,6 +108,7 @@ function atualizarCarta(){
  face.hidden=!photo;if(photo)face.src=photo;else face.removeAttribute('src');
 }
 async function fotoPerfil(){
+ if(croppedProfilePhoto)return croppedProfilePhoto;
  const file=document.getElementById('profile-photo').files[0];if(!file)return state?.profile?.photo||'';
  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024)throw Error('Escolha uma imagem JPG, PNG ou WebP de até 8 MB.');
  const bitmap=await createImageBitmap(file);const canvas=document.createElement('canvas');const ratio=Math.min(1,480/Math.max(bitmap.width,bitmap.height));canvas.width=Math.round(bitmap.width*ratio);canvas.height=Math.round(bitmap.height*ratio);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();const photo=canvas.toDataURL('image/jpeg',.72);if(photo.length>180000)throw Error('Escolha uma foto menor para salvar no perfil.');return photo;
@@ -112,7 +125,20 @@ function loadingShell(){
  $('#resume-card').hidden=true;$('#course-list').innerHTML='<div class="loading-placeholder"><span></span><span></span><span></span><p>Sincronizando sua trilha…</p></div>';
  $('#portfolio-preview').innerHTML='<div class="loading-placeholder"><span></span><span></span><p>Carregando seu perfil…</p></div>';$('#project-editor-list').replaceChildren();
  $('#publication-label').textContent='Verificando seu perfil';$('#publication-help').textContent='Aguarde a sincronização da sua conta.';notice('Buscando os dados da sua conta…');
- loadTimer=setTimeout(()=>{if(!state){notice('O banco ainda não respondeu. Confira a conexão e a ativação do Firestore; seus dados não foram substituídos.',true);$('#retry-load').hidden=false}},8000);
+ loadTimer=setTimeout(async()=>{
+ if(state)return;
+ const owner=user?.uid;
+ let message='Não foi possível conectar ao banco. Seus dados não foram alterados.';
+ try{
+  const project=window.CLAY_CONFIG.firebase.projectId;
+  const response=await fetch('https://firestore.googleapis.com/v1/projects/'+encodeURIComponent(project)+'/databases/(default)/documents/learningSpaces/diagnostic-nonexistent',{signal:AbortSignal.timeout(4000)});
+  const data=await response.json();
+  if(data.error?.details?.some(detail=>detail.reason==='SERVICE_DISABLED'))message='O Firestore deste projeto está desativado no Google Cloud. Ative o serviço e configure o banco no Firebase para carregar e salvar seu perfil e seus estudos.';
+ }catch{}
+ if(state||!owner||user?.uid!==owner)return;
+ notice(message,true);$('#owner-space').setAttribute('aria-busy','false');$('#retry-load').hidden=false;
+ $('#course-list').replaceChildren();$('#portfolio-preview').replaceChildren();
+ },8000);
 }
 $('#workspace-signout').onclick=async()=>{const b=$('#workspace-signout');b.disabled=true;try{await auth.signOut();location.replace('index.html')}catch{notice('Não foi possível sair. Verifique sua conexão e tente novamente.',true)}finally{b.disabled=false}};
 const blank=()=>({profile:{name:user?.displayName||'',headline:'Estudante de Engenharia de Software',bio:'',resume:'',github:'',linkedin:''},courses:[],projects:[],published:false,initialized:false});
@@ -270,7 +296,7 @@ try{
    if(!doc.exists&&doc.metadata.fromCache)return;
    finishLoading();state=doc.exists?{...blank(),...doc.data()}:blank();$('#access-state').hidden=true;$('#owner-space').hidden=false;$('#owner-space').setAttribute('aria-busy','false');writeControls.forEach(id=>$(id).disabled=false);render();notice(doc.metadata.fromCache?'Dados em memória · verificando atualizações…':'Dados da sua conta carregados');
    if(route.get('aba')!=='perfil'&&!state.initialized&&!$('#onboarding').open){step=0;setup={topic:state.initialTopic||'Engenharia de Software',name:state.profile.name,headline:state.profile.headline};onboarding();$('#onboarding').showModal()}
-  },e=>{if(user?.uid!==owner)return;finishLoading();$('#owner-space').setAttribute('aria-busy','false');if(!state){$('#owner-space').hidden=true;$('#access-state').hidden=false}$('#access-message').textContent=failure(e);notice(failure(e),true);$('#retry-load').hidden=false});
+  },e=>{if(user?.uid!==owner)return;finishLoading();$('#owner-space').setAttribute('aria-busy','false');if(!state){$('#owner-space').hidden=false;$('#access-state').hidden=false;$('#course-list').replaceChildren();$('#portfolio-preview').replaceChildren()}$('#access-message').textContent=failure(e);notice(failure(e),true);$('#retry-load').hidden=false});
  });
 }catch{finishLoading();accessError('Não foi possível conectar. Confira a conexão e tente novamente.');$('#login-link').hidden=!!uid;$('#retry-load').hidden=false}
 })();

@@ -45,3 +45,7 @@ html[data-theme="light"] :focus-visible{outline-color:rgba(0,0,0,.3)!important}
 /* Clean vector border; no overlapping CSS masks on the glass CTA. */
 .clay-star-button::before,.clay-star-button::after{display:none!important}
 .clay-star-outline-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:inherit;overflow:hidden}
+
+/* Textos que recebem foco por navegação não exibem moldura de formulário. */
+:root :is(h1,h2,h3,h4,h5,h6,p,article,section,div)[tabindex="-1"]:focus,
+:root :is(h1,h2,h3,h4,h5,h6,p,article,section,div)[tabindex="-1"]:focus-visible{outline:none!important}

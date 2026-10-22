@@ -289,7 +289,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 .clay-star-button:before,.clay-star-button:hover:before{animation:none;--clay-star-angle:inherit}
 
 </style>
-<link rel="stylesheet" href="assets/styles/tema.css">
+<link rel="stylesheet" href="assets/styles/tema.css?v=text-focus-2">
 <script src="assets/scripts/tema.js"></script>
 <link rel="stylesheet" href="assets/styles/prompt.css?v=references-2">
 <link rel="stylesheet" href="assets/styles/chat-layout.css?v=center-logo-3">
@@ -297,12 +297,12 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 <link rel="stylesheet" href="assets/styles/card-nav.css">
 <link rel="stylesheet" href="assets/styles/resource-shredder.css">
 <link rel="stylesheet" href="assets/styles/animated-shortcuts.css?v=faithful-list-2">
-<link rel="stylesheet" href="assets/styles/border-glow.css?v=7">
+<link rel="stylesheet" href="assets/styles/border-glow.css?v=9">
 
 <link rel="stylesheet" href="assets/styles/account-menu.css?v=chat-account-left-4">
 <link rel="stylesheet" href="assets/styles/navigation.css?v=1">
 <script src="assets/scripts/navigation.js?v=1"></script>
-<link rel="stylesheet" href="assets/styles/header-layout.css?v=hero-cardnav-6">
+<link rel="stylesheet" href="assets/styles/header-layout.css?v=hero-cardnav-8">
 </head>
 <body>
 <div id="ld"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></div>
@@ -353,7 +353,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
   <p class="big rv">Uma interface construída com <em>precisão</em>: chaves de acesso nunca chegam ao navegador, as respostas passam por uma <em>camada de servidor</em> e cada interação é pensada para ser rápida, acessível e confiável.</p>
 </section>
 <section class="sec" id="sobre">
-  <div class="lbl rv">Sobre</div>
+  
   <div class="clay-benefits">
     <article class="border-glow-card">
       <span class="edge-light" aria-hidden="true"></span>
@@ -640,7 +640,7 @@ function atualizarUsuario(usuario){
 }
 if(clienteConta){clienteConta.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});clienteConta.onAuthStateChanged(usuario=>{
  atualizarUsuario(usuario);
- if(usuario&&!autenticandoConta){const parametros=new URLSearchParams(location.search);if(parametros.get('destino')==='ia')open();}
+ if(usuario&&!autenticandoConta){const parametros=new URLSearchParams(location.search);if(parametros.get('destino')==='ia')open();else if(parametros.get('destino')==='espaco')location.replace(parametros.get('aba')==='perfil'?'perfil.html':'espaco.html');}
 });}
 function mostrarConta(modo){
   modoConta=modo;const cadastro=modo==='cadastrar',redefinir=modo==='redefinir',manter=$('#conta-manter').checked;$('#conta-form').reset();$('#conta-manter').checked=manter;
