@@ -52,6 +52,16 @@ const githubField=profileForm.elements.namedItem('github').closest('label');gith
 const linkedinField=profileForm.elements.namedItem('linkedin').closest('label');linkedinField.className='profile-social-field';linkedinField.firstChild.textContent='';linkedinField.insertAdjacentHTML('afterbegin','<span aria-hidden="true">in</span>');linkedinField.querySelector('input').setAttribute('aria-label','LinkedIn');linkedinField.querySelector('input').placeholder='Link do LinkedIn';socialFields.appendChild(linkedinField);
 socialFields.insertAdjacentHTML('beforeend','<label class="profile-social-field"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span><input name="social3" type="url" maxlength="2000" aria-label="Instagram" placeholder="Link do Instagram"></label><label class="profile-social-field"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg></span><input name="website" type="url" maxlength="2000" aria-label="Site" placeholder="Link do seu site"></label>');
 
+const creatorWebsiteField=socialFields.querySelector('[name="website"]').closest('label');
+const creatorWebsiteIcon=creatorWebsiteField.querySelector('span');
+const defaultWebsiteIcon=creatorWebsiteIcon.innerHTML;
+const creatorTitle=document.createElement('small');creatorTitle.className='profile-creator-title';creatorTitle.textContent='Criador do Clay';creatorTitle.hidden=true;creatorWebsiteField.appendChild(creatorTitle);
+function updateCreatorWebsiteStyle(){
+ const creator=String(user?.email||'').trim().toLowerCase()==='d964068@gmail.com';
+ creatorWebsiteField.classList.toggle('profile-social-field--creator',creator);
+ creatorTitle.hidden=!creator;
+ creatorWebsiteIcon.innerHTML=creator?'<img class="profile-creator-logo" src="assets/images/clay-symbol-orange.svg?v=restored-logo-6" alt="">':defaultWebsiteIcon;
+}
 function normalizeSocialLink(value,domain,label){
  const text=String(value||'').trim();if(!text)return '';
  const message='Use um link do '+label+': https://'+domain+'/seu-perfil ou '+domain+'/seu-perfil.';
@@ -106,6 +116,7 @@ async function enquadrarFoto(source){
 }
 $('#profile-photo').addEventListener('change',async()=>{const file=$('#profile-photo').files[0];if(file)await enquadrarFoto(file);$('#profile-photo').value=''});
 function openProfile(){
+ updateCreatorWebsiteStyle();
  if(profileEditor.hidden&&!dedicatedProfile)window.clayRememberProfileOrigin?.();
  if(!user)return;
  const profile=state?.profile||{name:user.displayName||'',headline:''};
@@ -316,7 +327,7 @@ try{
  if(uid){loadPublic();return}
  auth.onAuthStateChanged(async account=>{
   finishLoading();
-  if(unlisten){unlisten();unlisten=null}user=account;state=null;saving=false;profileDirty=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('#owner-space').hidden=true;$('.professional-rail').hidden=true;$('#access-state').hidden=true;$('#workspace-signout').hidden=!account;
+  if(unlisten){unlisten();unlisten=null}user=account;updateCreatorWebsiteStyle();state=null;saving=false;profileDirty=false;document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('#owner-space').hidden=true;$('.professional-rail').hidden=true;$('#access-state').hidden=true;$('#workspace-signout').hidden=!account;
   if(!account){location.replace('index.html?destino=espaco'+(route.get('aba')==='perfil'?'&aba=perfil':''));return}
   $('#login-link').hidden=true;loadingShell();
   const owner=account.uid;

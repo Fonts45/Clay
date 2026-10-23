@@ -33,3 +33,7 @@ html[data-theme="light"] #resource-demo .resource-list{scrollbar-color:#18181b29
 html[data-theme="light"] #resource-demo .animated-shortcuts-ring{background:transparent}
 @media(max-width:480px){#resource-demo .resource-item{gap:10px}#resource-demo .resource-tag{font-size:10px}#resource-demo .resource-copy strong{font-size:13px}}
 @media(prefers-reduced-motion:reduce){#resource-demo .resource-list li,#resource-demo .animated-shortcuts-ring,#resource-demo .resource-item{transition:none}}
+
+/* Durante o arraste, o fundo acompanha apenas o card movido. */
+#resource-demo .resource-list li.resource-drag-slot{background:transparent;box-shadow:none;border-color:transparent}
+#resource-demo:has(.resource-drag-slot) .animated-shortcuts-ring{visibility:hidden;opacity:0;transition:none}

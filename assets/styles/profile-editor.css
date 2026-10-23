@@ -96,3 +96,13 @@ body.profile-editing #save-state:empty{display:none}
 
 /* Área estável para a biografia completa, sem redimensionamento manual. */
 .profile-editor textarea[name=bio]{height:140px;min-height:140px;max-height:140px;resize:none;overflow-y:auto}
+
+/* Destaque de autoria restrito à conta identificada no Firebase Auth. */
+.profile-editor .profile-social-field--creator{row-gap:6px}
+.profile-editor .profile-social-field--creator>.profile-creator-title{grid-column:2;grid-row:1;color:#ff5402;font-size:12px;font-weight:700;letter-spacing:.025em}
+.profile-editor .profile-social-field--creator>span{grid-column:1;grid-row:2;color:#ff5402}
+.profile-editor .profile-social-field--creator input{grid-column:2;grid-row:2;background:#ff5402;color:#0c0b0d;border:1px solid #ff842e;font-weight:600;box-shadow:0 0 12px #ff54025c,0 0 24px #ff54022e;animation:clay-creator-glow 3s ease-in-out infinite}
+.profile-editor .profile-social-field--creator input::placeholder{color:#0c0b0db3}
+@keyframes clay-creator-glow{0%,100%{box-shadow:0 0 10px #ff54024d,0 0 22px #ff540226}50%{box-shadow:0 0 16px #ff540280,0 0 30px #ff540245}}
+@media(prefers-reduced-motion:reduce){.profile-editor .profile-social-field--creator input{animation:none}}
+.profile-social-field .profile-creator-logo{display:block;width:16px;height:20px;object-fit:contain;filter:none}
