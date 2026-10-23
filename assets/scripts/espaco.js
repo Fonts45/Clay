@@ -41,11 +41,32 @@ emailField.querySelector('button').addEventListener('click',async()=>{
  finally{button.disabled=false}
 });
 moveField('bio','Biografia');
-profileForm.elements.namedItem('bio').placeholder='Conte sobre você.';
-profileFields.insertAdjacentHTML('beforeend','<label>Pronomes<select name="pronouns"><option value="">Não especificar</option><option value="ele/dele">ele/dele</option><option value="ela/dela">ela/dela</option><option value="elu/delu">elu/delu</option><option value="outros">outros</option></select></label><label>URL<input name="website" type="url" maxlength="2000"></label><fieldset class="profile-socials"><legend>Contas de redes sociais</legend></fieldset>');
+profileFields.querySelector('[name="bio"]').placeholder='Conte sobre você.';
+const biography=profileFields.querySelector('[name="bio"]');biography.maxLength=600;
+const biographyCount=document.createElement('small');biographyCount.id='profile-bio-count';biographyCount.className='profile-bio-count';biographyCount.textContent='0 / 600 caracteres';biography.setAttribute('aria-describedby','profile-bio-count');biography.closest('label').appendChild(biographyCount);
+function updateBiographyCount(){const length=biography.value.length;biographyCount.textContent=length+' / 600 caracteres';biography.setCustomValidity(length>600?'A biografia deve ter no máximo 600 caracteres.':'')}
+biography.addEventListener('input',updateBiographyCount);
+profileFields.insertAdjacentHTML('beforeend','<label>Pronomes<select name="pronouns"><option value="">Não especificar</option><option value="ele/dele">ele/dele</option><option value="ela/dela">ela/dela</option><option value="elu/delu">elu/delu</option><option value="outros">outros</option></select></label><fieldset class="profile-socials"><legend>Contas de redes sociais</legend></fieldset>');
 const socialFields=profileFields.querySelector('.profile-socials');
-['linkedin','github'].forEach((name,index)=>{const field=profileForm.elements.namedItem(name).closest('label');field.className='profile-social-field';field.firstChild.textContent='';field.insertAdjacentHTML('afterbegin','<span aria-hidden="true">'+(index===0?'in':'↗')+'</span>');field.querySelector('input').setAttribute('aria-label',index===0?'LinkedIn':'GitHub');field.querySelector('input').placeholder='Link para o perfil social '+(index+1);socialFields.appendChild(field)});
-[3,4].forEach(index=>socialFields.insertAdjacentHTML('beforeend','<label class="profile-social-field"><span aria-hidden="true">↗</span><input name="social'+index+'" type="url" maxlength="2000" aria-label="Perfil social '+index+'" placeholder="Link para o perfil social '+index+'"></label>'));
+const githubField=profileForm.elements.namedItem('github').closest('label');githubField.className='profile-social-field';githubField.firstChild.textContent='';githubField.insertAdjacentHTML('afterbegin','<span aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.82c.85 0 1.71.11 2.51.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></span>');githubField.querySelector('input').setAttribute('aria-label','GitHub');githubField.querySelector('input').placeholder='Link do GitHub';socialFields.appendChild(githubField);
+const linkedinField=profileForm.elements.namedItem('linkedin').closest('label');linkedinField.className='profile-social-field';linkedinField.firstChild.textContent='';linkedinField.insertAdjacentHTML('afterbegin','<span aria-hidden="true">in</span>');linkedinField.querySelector('input').setAttribute('aria-label','LinkedIn');linkedinField.querySelector('input').placeholder='Link do LinkedIn';socialFields.appendChild(linkedinField);
+socialFields.insertAdjacentHTML('beforeend','<label class="profile-social-field"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span><input name="social3" type="url" maxlength="2000" aria-label="Instagram" placeholder="Link do Instagram"></label><label class="profile-social-field"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg></span><input name="website" type="url" maxlength="2000" aria-label="Site" placeholder="Link do seu site"></label>');
+
+function normalizeSocialLink(value,domain,label){
+ const text=String(value||'').trim();if(!text)return '';
+ const message='Use um link do '+label+': https://'+domain+'/seu-perfil ou '+domain+'/seu-perfil.';
+ let url;try{url=new URL(/^[a-z][a-z0-9+.-]*:/i.test(text)?text:'https://'+text)}catch{throw Error(message)}
+ if(url.protocol!=='https:'||url.username||url.password||url.port||!([domain,...(domain==='github.com'?[]:['www.'+domain])].includes(url.hostname))||text.includes('\\'))throw Error(message);
+ return url.href;
+}
+function normalizeProfileLinks(data){
+ for(const [name,domain,label] of [['github','github.com','GitHub'],['linkedin','linkedin.com','LinkedIn'],['social3','instagram.com','Instagram']])if(Object.hasOwn(data,name))data[name]=normalizeSocialLink(data[name],domain,label);
+}
+for(const [name,domain,label] of [['github','github.com','GitHub'],['linkedin','linkedin.com','LinkedIn'],['social3','instagram.com','Instagram']]){
+ const input=socialFields.querySelector('[name="'+name+'"]');input.type='text';input.inputMode='url';input.autocapitalize='none';input.spellcheck=false;
+ const validate=()=>{try{normalizeSocialLink(input.value,domain,label);input.setCustomValidity('')}catch(error){input.setCustomValidity(error.message)}};
+ input.addEventListener('input',validate);input.addEventListener('blur',()=>{validate();if(!input.validity.valid)input.reportValidity()});
+}
 profileFields.insertAdjacentHTML('beforeend','<label>Empresa<input name="company" maxlength="160"><small>Informe a empresa ou organização da qual você faz parte.</small></label>');
 const additional=document.createElement('details');additional.className='profile-additional';additional.innerHTML='<summary>Formação e informações profissionais</summary>';
 for(const field of [...profileForm.children]){if(field.matches('fieldset,.form-row,label'))additional.appendChild(field)}
@@ -59,24 +80,33 @@ const photoPreviewButton=document.createElement('button');photoPreviewButton.typ
 $('#profile-photo-preview').replaceWith(photoPreviewButton);
 photoPreviewButton.addEventListener('click',()=>$('#profile-photo').click());
 const profileSave=profileForm.querySelector('button.primary');profileSave.type='submit';profileSave.id='profile-save';
-const profileSaveRow=document.createElement('div');profileSaveRow.className='profile-save-row';profileSave.before(profileSaveRow);profileSaveRow.appendChild(profileSave);profileSaveRow.insertAdjacentHTML('beforeend','<p id="profile-save-feedback" role="status" aria-live="polite">Seu card profissional acompanha as informações salvas aqui.</p>');
+const profileSaveRow=document.createElement('div');profileSaveRow.className='profile-save-row';profileSave.before(profileSaveRow);profileSaveRow.appendChild(profileSave);profileSaveRow.insertAdjacentHTML('beforeend','<p id="profile-save-feedback" role="status" aria-live="polite"></p>');
 let profilePhotoPreviewUrl=null,profileDirty=false,croppedProfilePhoto=null,profileCropSource=null;
+let profileFeedbackTimer=null,profileFeedbackAnimation=null;
+function fadeProfileConfirmation(){
+ clearTimeout(profileFeedbackTimer);profileFeedbackAnimation?.cancel();
+ const feedback=$('#profile-save-feedback');const message=feedback.textContent;
+ profileFeedbackTimer=setTimeout(()=>{
+  if(feedback.textContent!==message)return;
+  const animation=feedback.animate([{opacity:1},{opacity:0}],{duration:matchMedia('(prefers-reduced-motion: reduce)').matches?0:900,easing:'ease-in-out',fill:'forwards'});
+  profileFeedbackAnimation=animation;
+  animation.finished.then(()=>{if(feedback.textContent===message)feedback.textContent='';animation.cancel();if(profileFeedbackAnimation===animation)profileFeedbackAnimation=null}).catch(()=>{});
+ },10000);
+}
 function markProfileEdited(event){profileDirty=true;if(event.target.matches('input,textarea,select'))event.target.dataset.profileEdited='true'}
 profileForm.addEventListener('input',markProfileEdited);
 profileForm.addEventListener('change',markProfileEdited);
 profileForm.addEventListener('invalid',event=>{const details=event.target.closest('details');if(details)details.open=true},true);
 profileForm.elements.namedItem('headline').required=false;
-function updateProfilePhoto(photo){const preview=$('#profile-photo-preview');preview.replaceChildren();if(photo&&photo!==user?.photoURL){const image=document.createElement('img');image.src=photo;image.alt='Sua foto de perfil';image.onerror=()=>{preview.innerHTML=profilePhotoPlaceholder};preview.appendChild(image)}else preview.innerHTML=profilePhotoPlaceholder}
+function updateProfilePhoto(photo){const preview=$('#profile-photo-preview');preview.replaceChildren();if(photo&&photo!==user?.photoURL){const image=document.createElement('img');image.src=photo;image.alt='Sua foto de perfil';image.onerror=()=>{preview.innerHTML=profilePhotoPlaceholder};preview.appendChild(image);const edit=document.createElement('span');edit.className='profile-photo-pencil';edit.setAttribute('aria-hidden','true');edit.innerHTML='<img class="profile-edit-original" src="assets/images/profile-edit-original.png?v=5" alt="">';preview.appendChild(edit)}else preview.innerHTML=profilePhotoPlaceholder}
 const profilePhotoPlaceholder='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.56" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
 async function enquadrarFoto(source){
  try{const cropped=await window.ClayPhotoCrop.open(source);if(!cropped)return;profileCropSource=source;croppedProfilePhoto=cropped;profileDirty=true;updateProfilePhoto(cropped)}
  catch(error){$('#profile-save-feedback').textContent=error.message||'Não foi possível abrir a imagem.'}
 }
 $('#profile-photo').addEventListener('change',async()=>{const file=$('#profile-photo').files[0];if(file)await enquadrarFoto(file);$('#profile-photo').value=''});
-const recropButton=document.createElement('button');recropButton.type='button';recropButton.className='button profile-recrop';recropButton.textContent='Ajustar enquadramento';
-profilePhoto.appendChild(recropButton);
-recropButton.onclick=()=>{const source=profileCropSource||croppedProfilePhoto||state?.profile?.photo||user?.photoURL;if(source)enquadrarFoto(source);else $('#profile-photo').click()};
 function openProfile(){
+ if(profileEditor.hidden&&!dedicatedProfile)window.clayRememberProfileOrigin?.();
  if(!user)return;
  const profile=state?.profile||{name:user.displayName||'',headline:''};
  if(!profileDirty){fill(profileForm,profile);$('#profile-account-email').value=user.email||'';updateProfilePhoto(profile.photo||user.photoURL)}
@@ -86,8 +116,8 @@ function openProfile(){
   if(!profileDirty)delete input.dataset.profileEdited;
   if(profileDirty&&!input.dataset.profileEdited&&input.name&&input.type!=='file'&&Object.hasOwn(profile,input.name))input.value=profile[input.name]??'';
  });
- $('#profile-save-feedback').textContent=state?'Seu card profissional acompanha as informações salvas aqui.':'Carregando seu perfil salvo…';
- profileSave.disabled=!state;
+ $('#profile-save-feedback').textContent=state?'':'Carregando seu perfil salvo…';
+ profileSave.disabled=!state;updateBiographyCount();
  const active=(state?.courses||[]).filter(course=>course.status==='active');$('#profile-current-courses').innerHTML=active.length?active.map(course=>'<span>'+esc(course.title)+' · '+esc(course.topic)+'</span>').join(''):'<p>Os cursos em andamento aparecem aqui quando adicionados à sua trilha.</p>';
  $('#studies').hidden=true;$('#portfolio').hidden=true;profileEditor.hidden=false;document.body.classList.add('profile-editing');
  const url=new URL(location.href);if(!dedicatedProfile)url.searchParams.set('aba','perfil');url.searchParams.delete('course');url.searchParams.delete('project');url.hash='';history.replaceState(null,'',url);
@@ -234,7 +264,7 @@ bindForm('#course-form',async data=>{
  if(index<0){if(next.courses.length>=100)throw Error('O limite desta trilha é de 100 cursos.');next.courses.push(entry)}else next.courses[index]=entry;
  await persist(next);
 });
-bindForm('#profile-form',async data=>{checkUrls(data,['resume','github','linkedin','website','social3','social4']);if(!data.name)throw Error('Preencha seu nome.');if(data.username&&!/^[A-Za-z0-9_.-]{3,40}$/.test(data.username))throw Error('Confira o nome de usuário: use de 3 a 40 letras, números, pontos, hífens ou sublinhados.');const next=clone(state);next.profile={...state.profile,...data,photo:await fotoPerfil()};await persist(next);profileDirty=false;$('#profile-photo').value='';updateProfilePhoto(next.profile.photo||user?.photoURL);$('#profile-save-feedback').textContent='Perfil salvo. Seu card profissional foi atualizado.'});
+bindForm('#profile-form',async data=>{if((data.bio||'').length>600)throw Error('A biografia deve ter no máximo 600 caracteres.');normalizeProfileLinks(data);checkUrls(data,['resume','github','linkedin','website','social3','social4']);if(!data.name)throw Error('Preencha seu nome.');if(data.username&&!/^[A-Za-z0-9_.-]{3,40}$/.test(data.username))throw Error('Confira o nome de usuário: use de 3 a 40 letras, números, pontos, hífens ou sublinhados.');const next=clone(state);next.profile={...state.profile,...data,photo:await fotoPerfil()};await persist(next);profileDirty=false;$('#profile-photo').value='';updateProfilePhoto(next.profile.photo||user?.photoURL);$('#profile-save-feedback').textContent='Perfil salvo. Seu card profissional foi atualizado.';fadeProfileConfirmation()});
 bindForm('#project-form',async data=>{checkUrls(data,['url']);const next=clone(state),entry={...data,id:projectId||crypto.randomUUID()},index=next.projects.findIndex(p=>p.id===projectId);if(index<0){if(next.projects.length>=40)throw Error('O limite é de 40 projetos.');next.projects.push(entry)}else next.projects[index]=entry;await persist(next)});
 $('#owner-space').addEventListener('click',async e=>{
  const b=e.target.closest('button');if(!b||saving||!state)return;
@@ -278,7 +308,7 @@ $('#onboarding-form').onsubmit=async e=>{
 async function loadPublic(){
  $('#access-message').textContent='Carregando portfólio…';
  if(!/^[A-Za-z0-9_-]{1,128}$/.test(uid)){finishLoading();accessError('Link de perfil inválido.');return }
- try{const doc=await db.collection('publicPortfolios').doc(uid).get();finishLoading();if(!doc.exists){accessError('Este perfil não foi publicado ou foi retirado do público.');return}$('#public-profile').innerHTML=renderProfile(doc.data());$('#access-state').hidden=true;$('#public-space').hidden=false;document.title=(doc.data().profile.name||'Portfólio')+' · Clay'}catch(e){finishLoading();accessError(failure(e));$('#retry-load').hidden=false}
+ try{const doc=await db.collection('publicPortfolios').doc(uid).get();finishLoading();if(!doc.exists){accessError('Este perfil não foi publicado ou foi retirado do público.');return}$('#public-profile').innerHTML=renderProfile(doc.data());$('#access-state').hidden=true;$('#public-space').hidden=false;document.title='Clay'}catch(e){finishLoading();accessError(failure(e));$('#retry-load').hidden=false}
 }
 try{
  if(!window.firebase?.firestore||!window.CLAY_CONFIG?.firebase?.projectId)throw Error('Firebase indisponível');
@@ -294,7 +324,7 @@ try{
    if(user?.uid!==owner)return;
    if(doc.metadata.hasPendingWrites)return;
    if(!doc.exists&&doc.metadata.fromCache)return;
-   finishLoading();state=doc.exists?{...blank(),...doc.data()}:blank();$('#access-state').hidden=true;$('#owner-space').hidden=false;$('#owner-space').setAttribute('aria-busy','false');writeControls.forEach(id=>$(id).disabled=false);render();notice(doc.metadata.fromCache?'Dados em memória · verificando atualizações…':'Dados da sua conta carregados');
+   finishLoading();state=doc.exists?{...blank(),...doc.data()}:blank();$('#access-state').hidden=true;$('#owner-space').hidden=false;$('#owner-space').setAttribute('aria-busy','false');writeControls.forEach(id=>$(id).disabled=false);render();notice(doc.metadata.fromCache?'Dados em memória · verificando atualizações…':'');
    if(route.get('aba')!=='perfil'&&!state.initialized&&!$('#onboarding').open){step=0;setup={topic:state.initialTopic||'Engenharia de Software',name:state.profile.name,headline:state.profile.headline};onboarding();$('#onboarding').showModal()}
   },e=>{if(user?.uid!==owner)return;finishLoading();$('#owner-space').setAttribute('aria-busy','false');if(!state){$('#owner-space').hidden=false;$('#access-state').hidden=false;$('#course-list').replaceChildren();$('#portfolio-preview').replaceChildren()}$('#access-message').textContent=failure(e);notice(failure(e),true);$('#retry-load').hidden=false});
  });

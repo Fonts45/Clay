@@ -17,7 +17,7 @@ service cloud.firestore {
         && p.name is string && p.name.size() <= 100
         && (!('photo' in p) || (p.photo is string && p.photo.size() <= 180000))
         && p.headline is string && p.headline.size() <= 160
-        && p.bio is string && p.bio.size() <= 2000
+        && p.bio is string && p.bio.size() <= 600
         && p.resume is string && p.resume.size() <= 2000
         && p.github is string && p.github.size() <= 2000
         && p.linkedin is string && p.linkedin.size() <= 2000;

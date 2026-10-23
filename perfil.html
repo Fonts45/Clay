@@ -2,8 +2,8 @@
 <html lang="pt-BR" class="profile-page">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meu perfil · Clay</title>
-<link rel="icon" href="assets/images/clay-symbol-orange.svg">
+<title>Clay</title>
+<link rel="icon" href="assets/images/clay-symbol-orange.svg?v=restored-logo-6">
 <link rel="stylesheet" href="assets/styles/espaco.css">
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
@@ -18,14 +18,15 @@
 <link rel="stylesheet" href="assets/styles/study-bento.css">
 
 <link rel="stylesheet" href="assets/styles/account-menu.css?v=chat-account-3">
-<link rel="stylesheet" href="assets/styles/profile-editor.css?v=photo-crop-9">
+<link rel="stylesheet" href="assets/styles/profile-editor.css?v=bio-fixed-21">
 <link rel="stylesheet" href="assets/styles/navigation.css?v=1">
 <script src="assets/scripts/navigation.js?v=1"></script>
 <link rel="stylesheet" href="assets/styles/header-layout.css?v=conversation-center-2">
+<script defer src="assets/scripts/profile-return.js?v=1"></script>
 </head>
 <body>
 <nav class="clay-global-nav" aria-label="Navegação principal">
-  <a class="logo" href="index.html?inicio=1" aria-label="Clay"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></a>
+  <a class="logo" href="index.html?inicio=1" aria-label="Clay"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg?v=restored-logo-6" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></a>
   <button id="menu" aria-label="Abrir menu" aria-controls="workspace-nav-links" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="links" id="workspace-nav-links">
     <a href="index.html?inicio=1">Início</a>
@@ -97,7 +98,7 @@
  <p class="form-error" role="alert"></p><button class="button primary" type="submit">Salvar curso</button>
  </form></dialog>
 <dialog id="profile-dialog"><form id="profile-form"><div class="dialog-heading"><h2>Perfil profissional</h2><button type="button" class="icon-button" data-close aria-label="Fechar">×</button></div>
- <label>Foto do perfil<input id="profile-photo" type="file" accept="image/jpeg,image/png,image/webp"><small>A foto será salva com seu perfil.</small></label><label>Seu nome<input name="name" required maxlength="100"></label><label>Título profissional<input name="headline" required maxlength="160" placeholder="Estudante de Engenharia de Software"></label><label>Sobre você<textarea name="bio" rows="4" maxlength="2000" placeholder="Conte sobre você."></textarea></label><label>Link do currículo<input name="resume" type="url" maxlength="2000" placeholder="https://…"><small>Use um link público para o PDF ou documento do seu currículo.</small></label><div class="form-row"><label>GitHub<input name="github" type="url" maxlength="2000" placeholder="https://github.com/…"></label><label>LinkedIn<input name="linkedin" type="url" maxlength="2000" placeholder="https://linkedin.com/in/…"></label></div><p class="form-error" role="alert"></p><button class="button primary">Salvar perfil</button></form></dialog>
+ <label>Foto do perfil<input id="profile-photo" type="file" accept="image/jpeg,image/png,image/webp"><small>A foto será salva com seu perfil.</small></label><label>Seu nome<input name="name" required maxlength="100"></label><label>Título profissional<input name="headline" required maxlength="160" placeholder="Estudante de Engenharia de Software"></label><label>Sobre você<textarea name="bio" rows="4" maxlength="600" placeholder="Conte sobre você."></textarea></label><label>Link do currículo<input name="resume" type="url" maxlength="2000" placeholder="https://…"><small>Use um link público para o PDF ou documento do seu currículo.</small></label><div class="form-row"><label>GitHub<input name="github" type="url" maxlength="2000" placeholder="https://github.com/…"></label><label>LinkedIn<input name="linkedin" type="url" maxlength="2000" placeholder="https://linkedin.com/in/…"></label></div><p class="form-error" role="alert"></p><button class="button primary">Salvar perfil</button></form></dialog>
 <dialog id="project-dialog"><form id="project-form"><div class="dialog-heading"><h2>Seu projeto</h2><button type="button" class="icon-button" data-close aria-label="Fechar">×</button></div><label>Nome<input name="title" required maxlength="120"></label><label>Descrição<textarea name="description" maxlength="1200" rows="3" required></textarea></label><label>Tecnologias<input name="tech" maxlength="240" placeholder="Ex.: React, Node.js, PostgreSQL"></label><label>Situação<select name="status"><option value="building">Em desenvolvimento</option><option value="done">Concluído</option></select></label><label>Link do projeto ou repositório<input name="url" type="url" maxlength="2000" placeholder="https://…"></label><p class="form-error" role="alert"></p><button class="button primary">Salvar projeto</button></form></dialog>
 <dialog id="onboarding" aria-labelledby="onboarding-title"><form id="onboarding-form"><nav class="onboarding-steps" aria-label="Etapas da configuração"><button type="button" data-step="0" class="active" aria-current="step"><span class="step-number">1</span> Boas-vindas</button><button type="button" data-step="1"><span class="step-number">2</span> Trilha</button><button type="button" data-step="2"><span class="step-number">3</span> Perfil</button><button type="button" data-step="3"><span class="step-number">4</span> Revisão</button></nav><div class="stepper-viewport"><div id="onboarding-content"></div></div><p class="form-error" role="alert"></p><div class="onboarding-actions"><button type="button" class="button" id="onboarding-back" hidden>Voltar</button><button type="submit" class="button primary" id="onboarding-next">Continuar →</button></div></form></dialog>
 <script>
@@ -113,7 +114,7 @@ window.clayLoadingWatchdog=setTimeout(()=>{
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
 <script defer src="assets/scripts/photo-crop.js?v=1"></script>
-<script defer src="assets/scripts/espaco.js?v=loading-diagnostic-13"></script>
+<script defer src="assets/scripts/espaco.js?v=profile-fade-28"></script>
 
 <script src="assets/scripts/cabecalho.js"></script>
 <script src="assets/scripts/clay-star-motion.js"></script>

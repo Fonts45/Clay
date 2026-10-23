@@ -68,3 +68,31 @@ html.profile-page .profile-editor{scroll-margin-top:100px}
 .photo-crop-dialog input[type=range]{padding:0;accent-color:#ff5402}
 .photo-crop-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}
 .photo-crop-actions .button{font-size:12px;padding:9px 12px}
+/* Tratamento apenas da prévia de edição; não altera o arquivo salvo. */
+.profile-editor .profile-photo-preview{position:relative}
+.profile-editor .profile-photo-preview img{filter:blur(2px) brightness(.62);transform:scale(1.04)}
+.profile-photo-pencil{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:#fff}
+.profile-photo-pencil svg{width:44px;height:44px;filter:drop-shadow(0 2px 5px #0006)}
+/* Imagem renderizada diretamente do PDF original, sem redesenho. */
+.profile-editor .profile-photo-pencil .profile-edit-original{display:block;width:56px;height:68px;object-fit:contain;filter:none;transform:none;border-radius:0}
+
+/* Ícone centralizado pelo desenho e com maior destaque. */
+.profile-editor .profile-photo-pencil{inset:0;display:grid;place-items:center}
+.profile-editor .profile-photo-pencil .profile-edit-original{width:33.44px;height:33.44px;object-fit:contain;object-position:center;filter:none;transform:none}
+
+.profile-editor #profile-save-feedback:empty{display:none}
+
+/* Perfil sem divisórias e sem espaço para mensagens vazias. */
+.profile-editor .profile-intro,.profile-editor .profile-save-row{border:0}
+body.profile-editing #save-state:empty{display:none}
+
+.profile-social-field>span svg{display:block;width:16px;height:16px}
+
+/* Mantém a cor do botão Salvar em todos os estados. */
+.profile-editor .profile-save-row #profile-save,.profile-editor .profile-save-row #profile-save:hover,.profile-editor .profile-save-row #profile-save:focus,.profile-editor .profile-save-row #profile-save:active{background:#238636;color:#fff;border-color:#ffffff1a}
+
+.profile-editor .profile-bio-count{display:block;width:100%;max-width:440px;text-align:right;font-size:12px;font-weight:400}
+@media(max-width:700px){.profile-editor .profile-bio-count{max-width:none}}
+
+/* Área estável para a biografia completa, sem redimensionamento manual. */
+.profile-editor textarea[name=bio]{height:140px;min-height:140px;max-height:140px;resize:none;overflow-y:auto}
