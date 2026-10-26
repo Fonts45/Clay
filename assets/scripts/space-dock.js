@@ -91,8 +91,9 @@
     dialog.showModal();
   }
   labels.forEach((label, index) => {
+    if (index === 3 || index === 4) return;
     const item = document.createElement(index === 0 || index === 3 ? 'a' : 'button');
-    item.className = 'space-dock-item'; item.setAttribute('aria-label', label);
+    item.dataset.dockIndex = String(index); item.className = 'space-dock-item'; item.setAttribute('aria-label', label);
     if (item.tagName === 'A') item.href = index === 0 ? 'index.html?inicio=1' : 'index.html?destino=ia';
     else { item.type = 'button'; item.setAttribute('aria-haspopup', 'dialog'); item.onclick = () => openPanel(index, item); }
     item.innerHTML = '<span class="space-dock-tile"><svg viewBox="0 0 24 24" aria-hidden="true">' + icons[index] + '</svg></span><span class="space-dock-label" aria-hidden="true">' + label + '</span>';
@@ -102,7 +103,7 @@
   document.addEventListener('clay:dock-badges', event => {
     const counts = event.detail || {};
     [2, 3].forEach(index => {
-      const button = dock.children[index]; button.querySelector('.space-dock-badge')?.remove();
+      const button = dock.querySelector('[data-dock-index="' + index + '"]'); if (!button) return; button.querySelector('.space-dock-badge')?.remove();
       const count = counts[index === 2 ? 'inbox' : 'chat'];
       button.setAttribute('aria-label', labels[index]);
       if (!(count === true || Number(count) > 0)) return;

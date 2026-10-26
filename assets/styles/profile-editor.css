@@ -106,3 +106,11 @@ body.profile-editing #save-state:empty{display:none}
 @keyframes clay-creator-glow{0%,100%{box-shadow:0 0 10px #ff54024d,0 0 22px #ff540226}50%{box-shadow:0 0 16px #ff540280,0 0 30px #ff540245}}
 @media(prefers-reduced-motion:reduce){.profile-editor .profile-social-field--creator input{animation:none}}
 .profile-social-field .profile-creator-logo{display:block;width:16px;height:20px;object-fit:contain;filter:none}
+
+/* Ampliação discreta do lápis, mantendo o centro da foto. */
+.profile-editor .profile-photo-pencil .profile-edit-original{transition:transform 280ms cubic-bezier(.22,1,.36,1);transform-origin:center}
+@media(hover:hover) and (pointer:fine){.profile-editor .profile-photo-preview:hover .profile-photo-pencil .profile-edit-original{transform:scale(1.12)}}
+.profile-editor .profile-photo-preview:focus-visible .profile-photo-pencil .profile-edit-original{transform:scale(1.12)}
+@media(prefers-reduced-motion:reduce){.profile-editor .profile-photo-pencil .profile-edit-original{transition:none}}
+.profile-editor #profile-editor-title{font-weight:700}
+

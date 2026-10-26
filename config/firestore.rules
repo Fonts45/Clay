@@ -28,12 +28,34 @@ service cloud.firestore {
       allow create, update: if owner(uid)
         && request.resource.data.keys().hasOnly(['profile','courses','projects','published','initialized','initialTopic','updatedAt'])
         && profileValid(request.resource.data.profile)
+        && (!('username' in request.resource.data.profile) || request.resource.data.profile.username == '' || (request.resource.data.profile.username.matches('[a-z0-9_.-]{3,40}') && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.profile.username)).data.uid == uid))
         && request.resource.data.courses is list && request.resource.data.courses.size() <= 100
         && request.resource.data.projects is list && request.resource.data.projects.size() <= 40
-        && request.resource.data.published is bool
+        && request.resource.data.published == true
         && request.resource.data.initialized is bool
         && request.resource.data.updatedAt is number;
       allow delete: if owner(uid);
+    }
+    // Reserva única, consistente com o perfil salvo na mesma transação.
+    match /presence/{uid}/sessions/{session} {
+      allow read: if request.auth != null;
+      allow create, update: if owner(uid)
+        && request.resource.data.keys().hasOnly(['online','lastSeen'])
+        && request.resource.data.online is bool
+        && request.resource.data.lastSeen == request.time;
+      allow delete: if owner(uid);
+    }
+    match /usernames/{handle} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if request.auth != null && handle.matches('[a-z0-9_.-]{3,40}')
+        && request.resource.data.keys().hasOnly(['uid']) && request.resource.data.uid == request.auth.uid
+        && getAfter(/databases/$(database)/documents/learningSpaces/$(request.auth.uid)).data.profile.username == handle;
+      allow update: if request.auth != null && resource.data.uid == request.auth.uid
+        && request.resource.data == resource.data
+        && getAfter(/databases/$(database)/documents/learningSpaces/$(request.auth.uid)).data.profile.username == handle;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid
+        && getAfter(/databases/$(database)/documents/learningSpaces/$(request.auth.uid)).data.profile.username != handle;
     }
     match /publicPortfolios/{uid} {
       allow get: if true;

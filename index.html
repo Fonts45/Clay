@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<link rel="stylesheet" href="assets/styles/loading.css?v=2"><script src="assets/scripts/loading.js?v=1"></script>
 <script>
 // Recarregar ou abrir o site novamente sempre começa pela hero.
 const entradaUrl=new URL(location.href);
@@ -322,6 +323,23 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 #tecnologia .platform-description strong{font-weight:600}
 @media(max-width:600px){#tecnologia .platform-description{font-size:clamp(18px,4.5vw,24px);line-height:1.5;text-wrap:pretty}#tecnologia .platform-description>span{display:contents}}
 </style>
+<script src="assets/scripts/presence.js?v=1"></script>
+<link rel="stylesheet" href="assets/styles/clay-ai-floating.css?v=3"><script src="assets/scripts/clay-ai-floating.js?v=1"></script>
+<style>
+body>nav.card-nav-mode .links{grid-template-columns:repeat(4,minmax(0,1fr))}
+body>nav.card-nav-mode .nav-card{min-height:110px;justify-content:center;align-items:center;padding:16px}
+body>nav.card-nav-mode .nav-card a{font-size:16px;text-decoration:none}
+html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:190px}
+.landing-support-dialog{width:min(440px,calc(100% - 32px));box-sizing:border-box;padding:28px;border:1px solid #ffffff20;border-radius:22px;background:#19161e;color:#f5f5f5;box-shadow:0 20px 70px #0008}
+.landing-support-dialog::backdrop{background:#0009;backdrop-filter:blur(5px)}
+.landing-support-dialog h2{font-size:22px;line-height:1.3;margin:0 0 12px}
+.landing-support-dialog p{font-size:14px;line-height:1.6;color:#b9b4c0;margin:0 0 24px}
+.landing-support-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.landing-support-actions .btn{border-radius:12px;font-size:13px;padding:10px 14px}
+.landing-support-actions a{background:#ff5402;color:#0c0b0d;border-color:#ff5402}
+@media(max-width:768px){body>nav.card-nav-mode .links{grid-template-columns:repeat(2,minmax(0,1fr))}body>nav.card-nav-mode .nav-card{min-height:90px}html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:270px}}
+@media(max-width:460px){html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:322px}}
+</style>
 </head>
 <body>
 <div id="ld"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg?v=restored-logo-6" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></div>
@@ -329,9 +347,10 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
   <a class="logo" href="#top" aria-label="Clay"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg?v=restored-logo-6" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></a>
   <button id="menu" aria-controls="landing-nav-links" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="links" id="landing-nav-links" inert>
-    <section class="nav-card"><h2>Explore</h2><a href="#recursos">Recursos</a><a href="#tecnologia">Tecnologia</a></section>
-    <section class="nav-card"><h2>Seu espaço</h2><a href="#" data-open>Estudos e portfólio</a><a href="#" data-open>Entrar na conta</a></section>
-    <section class="nav-card"><h2>Clay</h2><a href="#sobre">Sobre a Clay</a><a href="#" data-open>Começar gratuitamente</a></section>
+    <section class="nav-card"><a href="#top">Início</a></section>
+    <section class="nav-card"><a href="#recursos">Organização</a></section>
+    <section class="nav-card"><a href="#tecnologia">Sobre</a></section>
+    <section class="nav-card"><a href="#suporte" id="landing-support-link">Suporte</a></section>
   </div>
   <div class="clay-header-actions"><a class="clay-star-button" href="index.html?destino=ia" data-open>Conheça o Clay AI</a></div>
 </nav>
@@ -650,7 +669,7 @@ const configuracao=window.CLAY_CONFIG||{};
 if(window.firebase&&configuracao.firebase?.apiKey){
  try{firebase.initializeApp(configuracao.firebase);clienteConta=firebase.auth();clienteConta.languageCode='pt-BR'}catch(e){}
 }
-function atualizarUsuario(usuario){
+function atualizarUsuario(usuario){globalThis.clayAIShortcut?.setUser(usuario?.uid||null);globalThis.clayPresence?.setUser(usuario?.uid||null);
  const anterior=usuarioConta?.uid;usuarioConta=usuario||null;
  if(anterior!==usuarioConta?.uid){chats=[];cur=null;draw()}
  $$('.hero .cta [data-open]').forEach(botao=>botao.hidden=!!usuarioConta);$('#hero-avancar').hidden=!usuarioConta;
@@ -702,7 +721,7 @@ $('#conta-form').onsubmit=async e=>{
  e.preventDefault();if(!clienteConta)return;
  const cadastro=modoConta==='cadastrar',botao=$('#conta-enviar');
  if(cadastro&&$('#conta-senha').value!==$('#conta-confirmar').value){$('#conta-status').textContent='As senhas precisam ser iguais.';return}
- botao.disabled=true;$('#conta-alternar').disabled=true;$('#conta-status').textContent='Aguarde…';autenticandoConta=true;
+ botao.disabled=true;$('#conta-alternar').disabled=true;$('#conta-status').textContent='Aguarde…';autenticandoConta=true;globalThis.clayLoading?.begin('account');
  try{
   const persistencia=firebase.auth.Auth.Persistence.LOCAL;
   await clienteConta.setPersistence(persistencia);
@@ -714,7 +733,7 @@ $('#conta-form').onsubmit=async e=>{
   if(new URLSearchParams(location.search).get('destino')==='ia')open();
   else location.href=new URLSearchParams(location.search).get('aba')==='perfil'?'perfil.html':'espaco.html';
  }catch(e){$('#conta-status').textContent=erroConta(e)}
- finally{botao.disabled=false;$('#conta-alternar').disabled=false;autenticandoConta=false}
+ finally{botao.disabled=false;$('#conta-alternar').disabled=false;autenticandoConta=false;globalThis.clayLoading?.end('account')}
 };
 $('#sair').onclick=async()=>{
  if(!clienteConta)return;$('#sair').disabled=true;
@@ -745,5 +764,16 @@ if(new URLSearchParams(location.search).get('destino')==='espaco'){
 <script src="assets/scripts/animated-shortcuts.js?v=faithful-list-2"></script>
 <script src="assets/scripts/border-glow.js?v=5"></script>
 <script src="assets/scripts/account-menu.js?v=chat-account-5"></script>
+<script>
+(() => {
+ const support=document.getElementById('landing-support-link');
+ const dialog=document.createElement('dialog');dialog.className='landing-support-dialog';dialog.setAttribute('aria-labelledby','landing-support-title');
+ dialog.innerHTML='<h2 id="landing-support-title">Falar com o gestor do Clay</h2><p>Deseja abrir o WhatsApp para receber atendimento diretamente com o criador do site?</p><div class="landing-support-actions"><button type="button" class="btn">Cancelar</button><a class="btn" href="https://wa.me/5524981446822" target="_blank" rel="noopener noreferrer">Ir para o WhatsApp</a></div>';
+ document.body.append(dialog);
+ support.addEventListener('click',event=>{event.preventDefault();dialog.showModal()});
+ dialog.querySelector('button').onclick=()=>dialog.close();
+ dialog.querySelector('a').addEventListener('click',()=>dialog.close());
+})();
+</script>
 </body>
 </html>

@@ -25,3 +25,5 @@ body.branch-visible .space-dock-anchor { left:240px; }
 .space-dock-anchor,body.branch-visible .space-dock-anchor{left:0;right:0;bottom:40px}
 .space-dock{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
 @media(max-width:540px){.space-dock-anchor,body.branch-visible .space-dock-anchor{bottom:calc(28px + env(safe-area-inset-bottom,0px))}.space-dock{padding:0;border-radius:0}}
+/* Centro da barra alinhado ao eixo vertical da página. */
+.space-dock-anchor,body.branch-visible .space-dock-anchor{left:50%;right:auto;width:max-content;max-width:100%;box-sizing:border-box;transform:translateX(-50%)}

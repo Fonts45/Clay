@@ -1,0 +1,11 @@
+.clay-ai-floating{position:fixed;right:40px;bottom:40px;z-index:44;display:grid;place-items:center;width:62px;height:62px;box-sizing:border-box;padding:0;overflow:hidden;border:1px solid #ff540245;border-radius:50%;background:#19151e;box-shadow:0 6px 22px #0005,0 0 18px #ff540222;text-decoration:none;transition:transform 250ms cubic-bezier(.22,1,.36,1),box-shadow 250ms ease}
+.clay-ai-floating[hidden]{display:none!important}
+.clay-ai-floating>img{position:absolute;left:50%;top:50%;display:block;width:26px;height:44px;max-width:none;max-height:none;object-fit:contain;object-position:center;transform:translate(-50%,-50%);pointer-events:none}
+@media(hover:hover){.clay-ai-floating:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 8px 26px #0006,0 0 24px #ff540245}}
+.clay-ai-floating:focus-visible{outline:2px solid #ff5402;outline-offset:4px}
+@media(max-width:600px){.clay-ai-floating{right:24px;bottom:calc(28px + env(safe-area-inset-bottom,0px));width:52px;height:52px;padding:0}}
+@media(prefers-reduced-motion:reduce){.clay-ai-floating{transition:none}.clay-ai-floating:hover{transform:none}}
+@media(max-width:600px){.clay-ai-floating>img{width:22px;height:36px}}
+
+/* Acesso flutuante somente com a logo, sem círculo ou fundo. */
+a.clay-ai-floating,a.clay-ai-floating:hover,html[data-theme="light"] a.clay-ai-floating{border:0;border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;overflow:visible}

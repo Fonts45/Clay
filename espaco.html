@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<link rel="stylesheet" href="assets/styles/loading.css?v=2"><script src="assets/scripts/loading.js?v=1"></script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Clay</title>
 <link rel="icon" href="assets/images/clay-symbol-orange.svg?v=restored-logo-6">
@@ -11,19 +12,20 @@
 <link rel="stylesheet" href="assets/styles/cabecalho.css">
 <link rel="stylesheet" href="assets/styles/tema.css?v=text-focus-2">
 <script src="assets/scripts/tema.js"></script>
-<link rel="stylesheet" href="assets/styles/menu-ramificado.css">
+<link rel="stylesheet" href="assets/styles/menu-ramificado.css?v=profile-search-4">
 <link rel="stylesheet" href="assets/styles/magic-bento.css">
-<link rel="stylesheet" href="assets/styles/carta-profissional.css">
+<link rel="stylesheet" href="assets/styles/carta-profissional.css?v=presence-5">
 <link rel="stylesheet" href="assets/styles/espaco-header.css?v=center-axis-5">
 <link rel="stylesheet" href="assets/styles/study-bento.css">
 
 <link rel="stylesheet" href="assets/styles/account-menu.css?v=chat-account-3">
-<link rel="stylesheet" href="assets/styles/profile-editor.css?v=creator-logo-23">
+<link rel="stylesheet" href="assets/styles/profile-editor.css?v=identity-restored-27">
 <link rel="stylesheet" href="assets/styles/navigation.css?v=1">
 <script src="assets/scripts/navigation.js?v=1"></script>
 <link rel="stylesheet" href="assets/styles/header-layout.css?v=conversation-center-2">
-<link rel="stylesheet" href="assets/styles/space-dock.css?v=2">
+<link rel="stylesheet" href="assets/styles/space-dock.css?v=center-axis-3">
 <script defer src="assets/scripts/profile-return.js?v=1"></script>
+<link rel="stylesheet" href="assets/styles/clay-ai-floating.css?v=3"><script src="assets/scripts/clay-ai-floating.js?v=1"></script>
 </head>
 <body>
 <nav class="clay-global-nav" aria-label="Navegação principal">
@@ -58,9 +60,9 @@
  <article class="reflective-card" id="professional-card">
   <img id="card-face" alt="Foto do perfil profissional" hidden>
   <div class="card-metal" aria-hidden="true"></div>
-  <div class="card-status"><span id="card-verification">◇ Perfil</span><span><i></i> Ativo</span></div>
-  <div class="card-identity"><h2 id="card-name">Seu nome</h2><p id="card-role">Seu título profissional</p></div>
-  <div class="card-bottom"><div><span>Número de identificação</span><code id="card-id">—</code></div><button id="card-edit" aria-label="Editar perfil e foto"><img src="assets/images/clay-fingerprint.svg" alt="" aria-hidden="true"></button></div>
+  <div class="card-status"><span id="card-verification">◇ Perfil</span><span id="card-presence" aria-live="polite"><i aria-hidden="true"></i><span>Offline</span></span></div>
+  <div class="card-identity"><h2 id="card-name">Seu nome</h2><p id="card-role">Sua área de atuação ou estudos</p></div>
+  <div class="card-bottom"><div><span>Nome de usuário</span><code id="card-id">—</code></div><button id="card-edit" aria-label="Editar perfil e foto"><img src="assets/images/clay-fingerprint.svg" alt="" aria-hidden="true"></button></div>
  </article>
 </aside>
 
@@ -80,7 +82,7 @@
   </section>
   <section id="portfolio" role="tabpanel" aria-labelledby="tab-portfolio" hidden>
    <div class="section-heading"><div><p class="eyebrow">SUA PRESENÇA PROFISSIONAL</p><h1>Mostre o que você constrói.</h1><p class="muted">Projetos, currículo e aprendizado em um perfil só seu.</p></div><button class="button" id="edit-profile">Editar perfil</button></div>
-   <div class="publish-bar"><div><strong id="publication-label">Perfil ainda privado</strong><p id="publication-help">Publique quando estiver pronto. Apenas este resumo ficará público.</p></div><div class="actions"><button class="button primary" id="publish-profile">Publicar perfil</button><button class="button" id="copy-profile" hidden>Copiar link</button><button class="button danger" id="unpublish-profile" hidden>Retirar do público</button></div></div>
+   <div class="profile-public-actions"><button class="button" id="copy-profile">Copiar link do perfil</button></div>
    <div id="portfolio-preview"></div>
    <div class="list-heading"><h2>Seus projetos</h2><button class="button" id="add-project">＋ Adicionar projeto</button></div><div id="project-editor-list"></div>
   </section>
@@ -104,7 +106,7 @@
 <dialog id="onboarding" aria-labelledby="onboarding-title"><form id="onboarding-form"><nav class="onboarding-steps" aria-label="Etapas da configuração"><button type="button" data-step="0" class="active" aria-current="step"><span class="step-number">1</span> Boas-vindas</button><button type="button" data-step="1"><span class="step-number">2</span> Trilha</button><button type="button" data-step="2"><span class="step-number">3</span> Perfil</button><button type="button" data-step="3"><span class="step-number">4</span> Revisão</button></nav><div class="stepper-viewport"><div id="onboarding-content"></div></div><p class="form-error" role="alert"></p><div class="onboarding-actions"><button type="button" class="button" id="onboarding-back" hidden>Voltar</button><button type="submit" class="button primary" id="onboarding-next">Continuar →</button></div></form></dialog>
 <script>
 document.getElementById('retry-load').onclick=()=>location.reload();
-window.clayLoadingWatchdog=setTimeout(()=>{
+window.clayLoadingWatchdog=setTimeout(()=>{globalThis.clayLoading?.end('workspace');
  document.getElementById('access-state').hidden=false;
  document.getElementById('access-message').textContent='A conexão está demorando mais que o esperado. Verifique sua internet e tente novamente.';
  document.getElementById('retry-load').hidden=false;
@@ -115,16 +117,17 @@ window.clayLoadingWatchdog=setTimeout(()=>{
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
 <script defer src="assets/scripts/photo-crop.js?v=1"></script>
-<script defer src="assets/scripts/espaco.js?v=creator-logo-30"></script>
+<script defer src="assets/scripts/presence.js?v=1"></script>
+<script defer src="assets/scripts/espaco.js?v=always-public-45"></script>
 
 <script src="assets/scripts/cabecalho.js"></script>
 <script src="assets/scripts/clay-star-motion.js"></script>
-<script src="assets/scripts/menu-ramificado.js"></script>
+<script src="assets/scripts/menu-ramificado.js?v=reference-branches-2"></script>
 <script src="assets/scripts/magic-bento.js?v=reference-grid-2"></script>
 <script src="assets/scripts/study-bento.js"></script>
 <script src="assets/scripts/carta-profissional.js"></script>
 <script src="assets/scripts/account-menu.js?v=chat-account-5"></script>
-<script src="assets/scripts/space-dock.js?v=1"></script>
+<script src="assets/scripts/space-dock.js?v=remove-chat-music-2"></script>
 </body></html>
 
 
