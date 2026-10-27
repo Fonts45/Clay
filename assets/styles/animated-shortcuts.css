@@ -37,3 +37,7 @@ html[data-theme="light"] #resource-demo .animated-shortcuts-ring{background:tran
 /* Durante o arraste, o fundo acompanha apenas o card movido. */
 #resource-demo .resource-list li.resource-drag-slot{background:transparent;box-shadow:none;border-color:transparent}
 #resource-demo:has(.resource-drag-slot) .animated-shortcuts-ring{visibility:hidden;opacity:0;transition:none}
+
+/* Ícone enviado, branco e sem o quadrado de fundo. */
+#resource-demo .resource-thumb.shortcut-thumb--empty{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0}
+#resource-demo .resource-thumb.shortcut-thumb--empty img{position:static;inset:auto;display:block;width:26px;height:22px;object-fit:contain;background:transparent;border:0;border-radius:0;filter:brightness(0) invert(1)}

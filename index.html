@@ -309,7 +309,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 
 <link rel="stylesheet" href="assets/styles/card-nav.css">
 <link rel="stylesheet" href="assets/styles/resource-shredder.css">
-<link rel="stylesheet" href="assets/styles/animated-shortcuts.css?v=drag-no-background-3">
+<link rel="stylesheet" href="assets/styles/animated-shortcuts.css?v=folder-icon-4">
 <link rel="stylesheet" href="assets/styles/border-glow.css?v=9">
 
 <link rel="stylesheet" href="assets/styles/account-menu.css?v=chat-account-left-4">
@@ -324,7 +324,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 @media(max-width:600px){#tecnologia .platform-description{font-size:clamp(18px,4.5vw,24px);line-height:1.5;text-wrap:pretty}#tecnologia .platform-description>span{display:contents}}
 </style>
 <script src="assets/scripts/presence.js?v=1"></script>
-<link rel="stylesheet" href="assets/styles/clay-ai-floating.css?v=3"><script src="assets/scripts/clay-ai-floating.js?v=1"></script>
+<link rel="stylesheet" href="assets/styles/clay-ai-floating.css?v=3"><script src="assets/scripts/clay-ai-floating.js?v=3"></script>
 <style>
 body>nav.card-nav-mode .links{grid-template-columns:repeat(4,minmax(0,1fr))}
 body>nav.card-nav-mode .nav-card{min-height:110px;justify-content:center;align-items:center;padding:16px}
@@ -340,6 +340,23 @@ html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:190px}
 @media(max-width:768px){body>nav.card-nav-mode .links{grid-template-columns:repeat(2,minmax(0,1fr))}body>nav.card-nav-mode .nav-card{min-height:90px}html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:270px}}
 @media(max-width:460px){html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:322px}}
 </style>
+<style>
+/* A área clicável ocupa todo o card do menu. */
+body>nav.card-nav-mode .nav-card{padding:0;position:relative}
+body>nav.card-nav-mode .nav-card>a{display:flex;align-items:center;justify-content:center;align-self:stretch;flex:1;width:100%;min-height:110px;box-sizing:border-box;padding:16px;border-radius:inherit;cursor:pointer}
+@media(max-width:768px){body>nav.card-nav-mode .nav-card>a{min-height:90px}}
+</style>
+<style>
+/* Menu sem contorno retangular no controle e sem sublinhados. */
+html body>nav #menu,html body>nav #menu:hover,html body>nav #menu:focus,html body>nav #menu:focus-visible,html body>nav #menu:active{outline:none!important;border:0!important;box-shadow:none!important;background:transparent}
+html body>nav .links a,html body>nav .links a:hover,html body>nav .links a:focus,html body>nav .links a:focus-visible,html body>nav .links a:active{text-decoration:none!important}
+</style>
+<style>
+body>nav .links .landing-menu-label{display:inline-block;transform:scale(1);transform-origin:center;transition:transform 240ms cubic-bezier(.22,1,.36,1)}
+@media(hover:hover) and (pointer:fine){body>nav .links a:hover .landing-menu-label{transform:scale(1.08)}}
+body>nav .links a:focus-visible .landing-menu-label{transform:scale(1.08)}
+@media(prefers-reduced-motion:reduce){body>nav .links .landing-menu-label{transition:none}}
+</style>
 </head>
 <body>
 <div id="ld"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg?v=restored-logo-6" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></div>
@@ -347,10 +364,10 @@ html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:190px}
   <a class="logo" href="#top" aria-label="Clay"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg?v=restored-logo-6" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></a>
   <button id="menu" aria-controls="landing-nav-links" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="links" id="landing-nav-links" inert>
-    <section class="nav-card"><a href="#top">Início</a></section>
-    <section class="nav-card"><a href="#recursos">Organização</a></section>
-    <section class="nav-card"><a href="#tecnologia">Sobre</a></section>
-    <section class="nav-card"><a href="#suporte" id="landing-support-link">Suporte</a></section>
+    <section class="nav-card"><a href="#top"><span class="landing-menu-label">Início</span></a></section>
+    <section class="nav-card"><a href="#recursos"><span class="landing-menu-label">Organização</span></a></section>
+    <section class="nav-card"><a href="#tecnologia"><span class="landing-menu-label">Sobre</span></a></section>
+    <section class="nav-card"><a href="#suporte" id="landing-support-link"><span class="landing-menu-label">Suporte</span></a></section>
   </div>
   <div class="clay-header-actions"><a class="clay-star-button" href="index.html?destino=ia" data-open>Conheça o Clay AI</a></div>
 </nav>
@@ -760,7 +777,7 @@ if(new URLSearchParams(location.search).get('destino')==='espaco'){
 <script src="assets/scripts/clay-ai-aurora.js"></script>
 <script src="assets/scripts/shortcut-logo.js"></script>
 <script src="assets/scripts/shortcut-detection.js"></script>
-<script src="assets/scripts/resource-shredder.js?v=faithful-list-2"></script>
+<script src="assets/scripts/resource-shredder.js?v=folder-icon-3"></script>
 <script src="assets/scripts/animated-shortcuts.js?v=faithful-list-2"></script>
 <script src="assets/scripts/border-glow.js?v=5"></script>
 <script src="assets/scripts/account-menu.js?v=chat-account-5"></script>

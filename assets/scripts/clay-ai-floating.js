@@ -1,13 +1,13 @@
 /* Acesso ao Clay AI liberado por Avançar, separado do editor de perfil. */
 (() => {
  const key='clay-ai-floating-entry';let uid=null,button=null,entered=null;
- try{entered=sessionStorage.getItem(key)}catch{}
- function update(){if(!button)return;const editing=location.pathname.endsWith('/perfil.html')||document.body.classList.contains('profile-editing');button.hidden=!uid||entered!==uid||editing}
- window.clayAIShortcut={setUser(id){uid=id||null;if(!uid){entered=null;try{sessionStorage.removeItem(key)}catch{}}update()}};
+ try{entered=localStorage.getItem(key)||sessionStorage.getItem(key)}catch{}
+ function update(){if(!button)return;const editing=location.pathname.endsWith('/perfil.html')||document.body.classList.contains('profile-editing');const landing=!/\/(espaco|perfil)\.html$/.test(location.pathname)&&!document.documentElement.classList.contains('clay-ai-active');button.hidden=!uid||entered!==uid||editing||landing}
+ window.clayAIShortcut={setUser(id){const previous=uid;uid=id||null;if(!uid&&previous){entered=null;try{sessionStorage.removeItem(key);localStorage.removeItem(key)}catch{}}else if(uid){try{entered=localStorage.getItem(key)||sessionStorage.getItem(key)||entered}catch{}}update()}};
  document.addEventListener('click',event=>{
   const advance=event.target.closest?.('#hero-avancar');
   if(!advance||!uid||event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
-  entered=uid;try{sessionStorage.setItem(key,uid)}catch{}update();
+  entered=uid;try{sessionStorage.setItem(key,uid);localStorage.setItem(key,uid)}catch{}update();
  },true);
  function mount(){
   if(button)return;
@@ -22,4 +22,6 @@
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
  document.addEventListener('clay:navigation',update);
+ window.addEventListener('pageshow',update);
+ window.addEventListener('storage',event=>{if(event.key===key){entered=event.newValue;update()}});
 })();
