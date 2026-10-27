@@ -8,7 +8,7 @@ function atualizarLinha(){
  panel.querySelectorAll('.branch-children').forEach(area=>{
   let line=area.querySelector('.branch-selection-line');if(!line){line=document.createElement('span');line.className='branch-selection-line';line.setAttribute('aria-hidden','true');area.appendChild(line)}
   const selected=area.querySelector('.branch-item.active');if(area.classList.contains('has-selection')!==!!selected)area.classList.toggle('has-selection',!!selected);
-  if(selected)area.style.setProperty('--branch-selected-y',(selected.offsetTop-18)+'px');
+  if(selected)area.style.setProperty('--branch-selected-height',Math.max(0,selected.offsetTop+selected.offsetHeight/2-10)+'px');
  });
 }
 panel.addEventListener('click',event=>{if(event.target.closest('.branch-item,.branch-heading'))requestAnimationFrame(atualizarLinha)});

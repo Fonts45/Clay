@@ -340,9 +340,6 @@ async function findProfileByUsername(value){
  try{const record=await db.collection('usernames').doc(handle).get();if(!record.exists){finishLoading();accessError('Perfil não encontrado.');return}uid=record.data().uid;await loadPublic()}
  catch(error){finishLoading();accessError(failure(error));$('#retry-load').hidden=false}
 }
-const profileSearch=document.createElement('form');profileSearch.className='branch-profile-search';profileSearch.innerHTML='<label>Encontrar perfil<input name="handle" placeholder="@nome de usuário" aria-label="Nome de usuário para buscar" required maxlength="41"></label><button class="button" type="submit">Buscar perfil</button>';
-const searchAccount=document.querySelector('.branch-account');searchAccount?.before(profileSearch);
-profileSearch.onsubmit=event=>{event.preventDefault();const url=new URL('espaco.html',location.href);url.searchParams.set('usuario',normalizeUsername(profileSearch.elements.handle.value));location.assign(url.href)};
 async function loadPublic(){
  $('#access-message').textContent='Carregando portfólio…';
  if(!/^[A-Za-z0-9_-]{1,128}$/.test(uid)){finishLoading();accessError('Link de perfil inválido.');return }

@@ -40,28 +40,15 @@
     const panel = dialog.querySelector('.space-dock-panel');
     panel.replaceChildren();
     if (index === 1) {
-      const input = document.createElement('input');
-      input.type = 'search'; input.placeholder = 'Buscar nos seus cursos e projetos';
-      input.setAttribute('aria-label', 'Buscar cursos e projetos');
-      const results = document.createElement('div'); results.className = 'space-dock-results';
-      results.setAttribute('aria-live', 'polite');
-      input.oninput = () => {
-        results.replaceChildren();
-        const term = input.value.trim().toLocaleLowerCase('pt-BR');
-        if (!term) return;
-        document.querySelectorAll('#course-list .course-card, #project-editor-list .project-card').forEach(card => {
-          if (!card.textContent.toLocaleLowerCase('pt-BR').includes(term)) return;
-          const result = document.createElement('button'); result.className = 'button';
-          result.textContent = card.querySelector('h3,h2')?.textContent || 'Ver resultado';
-          result.onclick = () => {
-            document.getElementById(card.closest('#course-list') ? 'tab-studies' : 'tab-portfolio')?.click();
-            dialog.close(); card.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center' });
-          };
-          results.append(result);
-        });
-        if (!results.childElementCount) results.textContent = 'Nenhum resultado encontrado.';
-      };
-      panel.append(input, results);
+      dialog.querySelector('h2').textContent = 'Encontrar perfil';
+      const form = document.createElement('form');
+      const label = document.createElement('label');label.textContent = 'Nome de usuário';
+      const input = document.createElement('input');input.name='handle';input.type='search';input.placeholder='@nome de usuário';input.required=true;input.maxLength=41;input.pattern='@?[a-z0-9_.-]{3,40}';input.autocapitalize='none';input.spellcheck=false;
+      input.setAttribute('aria-label','Nome de usuário para buscar');
+      input.addEventListener('input',()=>{input.value=input.value.toLowerCase()});
+      const submit=document.createElement('button');submit.type='submit';submit.className='button primary';submit.textContent='Buscar perfil';
+      label.append(input);form.append(label,submit);panel.append(form);
+      form.onsubmit=event=>{event.preventDefault();const handle=input.value.trim().replace(/^@/,'').toLowerCase();const url=new URL('espaco.html',location.href);url.searchParams.set('usuario',handle);location.assign(url.href)};
     } else if (index === 4 || index === 5) {
       const label = document.createElement('label');
       label.textContent = index === 4 ? 'Ouvir um arquivo do seu dispositivo' : 'Visualizar uma imagem do seu dispositivo';
@@ -94,7 +81,17 @@
     if (index === 3 || index === 4) return;
     const item = document.createElement(index === 0 || index === 3 ? 'a' : 'button');
     item.dataset.dockIndex = String(index); item.className = 'space-dock-item'; item.setAttribute('aria-label', label);
-    if (item.tagName === 'A') item.href = index === 0 ? 'index.html?inicio=1' : 'index.html?destino=ia';
+    if (item.tagName === 'A') {
+      item.href = index === 0 ? 'espaco.html?aba=studies' : 'index.html?destino=ia';
+      if(index===0)item.addEventListener('click',event=>{
+        if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+        event.preventDefault();
+        document.getElementById('tab-studies')?.click();
+        document.querySelectorAll('.organizer-target').forEach(target=>target.classList.remove('organizer-target'));
+        const url=new URL(location.href);url.searchParams.set('aba','studies');url.searchParams.delete('course');url.searchParams.delete('project');url.hash='';history.replaceState(history.state,'',url);
+        window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+      });
+    }
     else { item.type = 'button'; item.setAttribute('aria-haspopup', 'dialog'); item.onclick = () => openPanel(index, item); }
     item.innerHTML = '<span class="space-dock-tile"><svg viewBox="0 0 24 24" aria-hidden="true">' + icons[index] + '</svg></span><span class="space-dock-label" aria-hidden="true">' + label + '</span>';
     dock.append(item);

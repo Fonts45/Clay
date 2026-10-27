@@ -27,3 +27,6 @@ body.branch-visible .space-dock-anchor { left:240px; }
 @media(max-width:540px){.space-dock-anchor,body.branch-visible .space-dock-anchor{bottom:calc(28px + env(safe-area-inset-bottom,0px))}.space-dock{padding:0;border-radius:0}}
 /* Centro da barra alinhado ao eixo vertical da página. */
 .space-dock-anchor,body.branch-visible .space-dock-anchor{left:50%;right:auto;width:max-content;max-width:100%;box-sizing:border-box;transform:translateX(-50%)}
+
+/* Nenhuma moldura permanece na origem durante a elevação. */
+:root .space-dock-item,:root .space-dock-item:hover,:root .space-dock-item:focus,:root .space-dock-item:focus-visible,:root .space-dock-item:active{outline:none!important;box-shadow:none!important;background:transparent;border:0}

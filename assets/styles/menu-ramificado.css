@@ -2,24 +2,24 @@
 .clay-branches{--branch-ink:#f5f5f5;--branch-muted:#929096;--branch-line:#3f3f46;position:fixed;top:74px;bottom:0;left:0;width:240px;padding:26px 16px 24px 30px;overflow:auto;background:#120f17;color:var(--branch-ink);z-index:40;font-family:Inter,Arial,sans-serif;transition:transform 300ms cubic-bezier(.22,1,.36,1)}
 .branch-caption{display:none}
 .branch-group{position:relative;padding:0 0 0 14px;margin:0 0 26px;border:0}
-.branch-group:before{content:'';position:absolute;left:0;top:0;bottom:-26px;width:1.5px;background:var(--branch-line);pointer-events:none}
+.branch-group:before{content:'';position:absolute;left:0;top:0;bottom:-26px;width:2px;background:var(--branch-line);pointer-events:none}
 .branch-group:has(+.branch-account):before{bottom:0}
 .branch-heading{position:relative;display:flex;align-items:center;width:100%;min-height:36px;padding:0 0 8px;border:0;border-radius:10px;background:transparent;color:var(--branch-ink);text-align:left;font:600 14px/20px Inter,Arial,sans-serif;letter-spacing:-.025em;cursor:pointer}
 .branch-heading>span{display:none}
-.branch-heading:before{content:'';position:absolute;left:-14px;top:3px;width:1.5px;height:17px;border-radius:2px;background:var(--branch-ink);opacity:0;transition:opacity 200ms ease}
+.branch-heading:before{content:'';position:absolute;left:-14px;top:3px;width:2px;height:17px;border-radius:2px;background:var(--branch-ink);opacity:0;transition:opacity 200ms ease}
 .branch-group:has(.branch-item.active)>.branch-heading:before{opacity:1}
 .branch-fold{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows 300ms cubic-bezier(.22,1,.36,1),opacity 200ms ease}
 .branch-group.open>.branch-fold{grid-template-rows:1fr;opacity:1}
 .branch-children{position:relative;min-height:0;overflow:hidden;padding-left:40px;isolation:isolate}
-.branch-children:before{content:'';display:block;position:absolute;left:14px;top:0;bottom:18px;border-left:1.5px solid var(--branch-line);transform:scaleY(0);transform-origin:top;transition:transform 400ms cubic-bezier(.22,1,.36,1);pointer-events:none}
+.branch-children:before{content:'';display:block;position:absolute;left:14px;top:0;bottom:18px;border-left:2px solid var(--branch-line);transform:scaleY(0);transform-origin:top;transition:transform 400ms cubic-bezier(.22,1,.36,1);pointer-events:none}
 .open .branch-children:before{transform:scaleY(1)}
 .branch-item{position:relative;display:flex;align-items:center;gap:9px;box-sizing:border-box;width:100%;min-height:36px;margin:0;padding:8px 0;border:0;border-radius:10px;background:transparent;color:var(--branch-muted);font:400 14px/20px Inter,Arial,sans-serif;letter-spacing:-.025em;text-align:left;text-decoration:none;cursor:pointer;transition:color 200ms ease}
-.branch-item:before{content:'';display:block;position:absolute;left:-26px;top:-18px;width:18px;height:36px;border-left:1.5px solid var(--branch-line);border-bottom:1.5px solid var(--branch-line);border-bottom-left-radius:10px;pointer-events:none}
+.branch-item:before{content:'';display:block;position:absolute;left:-26px;top:-18px;width:18px;height:36px;border-left:2px solid var(--branch-line);border-bottom:2px solid var(--branch-line);border-bottom-left-radius:10px;pointer-events:none}
 .branch-item:after{display:none}
 .clay-branches .branch-item.active,.clay-branches .branch-item.active:hover{background:transparent;color:var(--branch-ink);font-weight:600}
 .clay-branches .branch-item:hover,.clay-branches .branch-heading:hover{background:transparent;color:var(--branch-ink)}
 .branch-icon{display:block;flex:0 0 15px;width:15px;height:15px;color:inherit;overflow:visible}
-.branch-selection-line{display:block;position:absolute;left:14px;top:0;width:18px;height:36px;box-sizing:content-box;border-left:1.5px solid var(--branch-ink);border-bottom:1.5px solid var(--branch-ink);border-bottom-left-radius:10px;pointer-events:none;z-index:3;transform:translateY(var(--branch-selected-y,-18px));opacity:0;transition:transform 300ms cubic-bezier(.22,1,.36,1),opacity 200ms ease}
+.branch-selection-line{display:block;position:absolute;left:14px;top:0;width:18px;height:var(--branch-selected-height,18px);box-sizing:content-box;border-left:2px solid var(--branch-ink);border-bottom:2px solid var(--branch-ink);border-bottom-left-radius:10px;pointer-events:none;z-index:3;transform:none;opacity:0;transition:height 300ms cubic-bezier(.22,1,.36,1),opacity 200ms ease}
 .branch-children.has-selection .branch-selection-line{opacity:1}
 .branch-account{display:grid;gap:12px;margin:30px 0 0 14px;padding:0;border:0;color:var(--branch-muted);font-size:12px;overflow-wrap:anywhere}
 .clay-branches .branch-heading:focus-visible,.clay-branches .branch-item:focus-visible{outline:1px solid var(--branch-ink)!important;outline-offset:3px}
@@ -36,3 +36,17 @@ html[data-theme="light"] .clay-branches{--branch-ink:#222;--branch-muted:#777;--
 .clay-branches #workspace-signout{display:none!important}
 
 .branch-profile-search{display:grid;gap:8px;margin:24px 0 0 14px}.branch-profile-search label{font-size:12px}.branch-profile-search input{width:100%;min-width:0;box-sizing:border-box;font-size:12px}.branch-profile-search .button{min-height:34px;font-size:12px}
+
+/* Seleção indicada somente pela ramificação, sem moldura no botão. */
+.clay-branches .branch-heading:focus,.clay-branches .branch-heading:focus-visible,.clay-branches .branch-item:focus,.clay-branches .branch-item:focus-visible{outline:none!important;box-shadow:none!important}
+
+/* A própria curva cinza ganha branco; a camada animada só completa o tronco. */
+.branch-item.active:before{border-color:var(--branch-ink);z-index:4}
+.branch-item:before{transition:border-color 200ms ease}
+.branch-selection-line{width:0;height:var(--branch-selected-height,8px);box-sizing:border-box;border-bottom:0;border-bottom-left-radius:0;left:14px}
+@media(prefers-reduced-motion:reduce){.branch-item:before{transition:none}}
+/* Menu com traços mais encorpados e curvas suaves. */
+.clay-branches .branch-account{display:none}
+.branch-icon{stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.branch-group:before,.branch-children:before,.branch-heading:before{border-radius:999px}
+.branch-item:before{border-bottom-left-radius:12px}
