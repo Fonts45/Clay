@@ -18,8 +18,8 @@
  function open({avatar='',history,save,generate}){
   let busy=false,revision=0,photoURL='',candidate='',cursor=null,historyLoading=false;
   const dialog=document.createElement('dialog');dialog.className='clay-avatar-editor';dialog.setAttribute('aria-labelledby','clay-avatar-title');
-  const action=avatar?'Trocar avatar':'Adicionar avatar';
-  dialog.innerHTML='<div class="avatar-editor-heading"><div><p>CLAY STUDIO</p><h2 id="clay-avatar-title"></h2></div><button type="button" data-avatar-close aria-label="Fechar editor de avatar">×</button></div><nav class="avatar-editor-tabs" aria-label="Avatares"><button type="button" data-avatar-create-tab aria-pressed="true">Criar avatar</button><button type="button" data-avatar-history-tab aria-pressed="false">Meus avatares</button></nav><section data-avatar-create><div class="avatar-editor-preview" hidden><img alt="Foto selecionada para criar o avatar"></div><p class="avatar-editor-help">Escolha uma foto com apenas uma pessoa e um rosto visível. Prefira uma foto do peito para cima, com a cabeça inteira e espaço acima do cabelo.</p><p class="avatar-editor-help">Seu estilo Clay fica salvo. Repetir o mesmo arquivo de foto recupera o avatar anterior. A geração automática ainda não está ativada.</p><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Selecionar uma foto de rosto" hidden><div class="avatar-editor-actions"><button type="button" data-avatar-choose></button><button type="button" data-avatar-apply hidden>Usar avatar</button></div></section><section data-avatar-history hidden><p class="avatar-editor-help">Seus avatares ficam guardados na sua conta. Escolha um para aplicar novamente.</p><div class="avatar-history-grid"></div><button type="button" class="avatar-history-more" hidden>Carregar mais</button></section><p class="avatar-editor-status" role="status" aria-live="polite"></p><div class="avatar-editor-actions"><button type="button" data-avatar-cancel>Fechar</button></div>';
+  const action='Selecionar foto';
+  dialog.innerHTML='<div class="avatar-editor-heading"><div><p>CLAY STUDIO</p><h2 id="clay-avatar-title"></h2></div></div><nav class="avatar-editor-tabs" aria-label="Avatares"><button type="button" data-avatar-create-tab aria-pressed="true">Criar avatar</button><button type="button" data-avatar-history-tab aria-pressed="false">Meus avatares</button></nav><section data-avatar-create><div class="avatar-editor-preview" hidden><img alt="Foto selecionada para criar o avatar"></div><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Selecionar uma foto de rosto" hidden><div class="avatar-editor-actions"><button type="button" data-avatar-choose></button><button type="button" data-avatar-apply hidden>Usar avatar</button></div></section><section data-avatar-history hidden><p class="avatar-editor-help">Seus avatares ficam guardados na sua conta. Escolha um para aplicar novamente.</p><div class="avatar-history-grid"></div><button type="button" class="avatar-history-more" hidden>Carregar mais</button><div class="avatar-editor-actions"><button type="button" data-avatar-change>Trocar avatar</button></div></section><p class="avatar-editor-status" role="status" aria-live="polite"></p>';
   document.body.append(dialog);
   const preview=dialog.querySelector('img'),input=dialog.querySelector('input'),status=dialog.querySelector('.avatar-editor-status'),choose=dialog.querySelector('[data-avatar-choose]');
   const apply=dialog.querySelector('[data-avatar-apply]'),grid=dialog.querySelector('.avatar-history-grid'),more=dialog.querySelector('.avatar-history-more');
@@ -40,16 +40,24 @@
   async function loadHistory(reset=false){
    if(!history||historyLoading)return;historyLoading=true;more.disabled=true;
    try{
-    if(reset){cursor=null;shown.clear();grid.replaceChildren();if(avatar)await history.rememberCurrent(avatar)}
+    if(reset){cursor=null;shown.clear();grid.replaceChildren();if(avatar)tile({image:avatar});if(avatar)await history.rememberCurrent(avatar)}
     const page=await history.list(cursor);if(!dialog.isConnected)return;
     page.items.forEach(tile);cursor=page.cursor;more.hidden=!page.more;
     if(!shown.size)status.textContent='Você ainda não tem avatares salvos.';
    }catch(error){if(dialog.isConnected){status.dataset.error='true';status.textContent=errorMessage(error)}}
    finally{historyLoading=false;more.disabled=false}
   }
+  let sizeAnimation;
   function tab(showHistory){
+   sizeAnimation?.cancel();
+   const previous=dialog.querySelector('[data-avatar-history-tab]').getAttribute('aria-pressed')==='true';
+   dialog.querySelector('.avatar-editor-tabs').dataset.active=showHistory?'history':'create';
    dialog.querySelector('[data-avatar-create]').hidden=showHistory;dialog.querySelector('[data-avatar-history]').hidden=!showHistory;
    dialog.querySelector('[data-avatar-create-tab]').setAttribute('aria-pressed',String(!showHistory));dialog.querySelector('[data-avatar-history-tab]').setAttribute('aria-pressed',String(showHistory));
+   if(previous!==showHistory&&dialog.open&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+    sizeAnimation=dialog.animate([{opacity:.65,transform:'scale(.94)'},{opacity:1,transform:'scale(1)'}],{duration:260,easing:'cubic-bezier(.16,1,.3,1)'});
+   }
+   if(previous!==showHistory&&!matchMedia('(prefers-reduced-motion:reduce)').matches){const panel=dialog.querySelector(showHistory?'[data-avatar-history]':'[data-avatar-create]');panel.getAnimations().forEach(animation=>animation.cancel());panel.animate([{opacity:0,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:280,easing:'cubic-bezier(.22,1,.36,1)'});}
   }
   dialog.querySelector('[data-avatar-create-tab]').onclick=()=>tab(false);
   dialog.querySelector('[data-avatar-history-tab]').onclick=()=>{tab(true);if(!shown.size)loadHistory(true)};
@@ -57,6 +65,7 @@
   dialog.querySelector('h2').textContent=avatar?'Deseja trocar seu avatar?':'Deseja adicionar um avatar?';
   choose.textContent=action;
   choose.onclick=()=>{if(!busy){input.value='';input.click()}};
+  dialog.querySelector('[data-avatar-change]').onclick=()=>{if(!busy){tab(false);input.value='';input.click()}};
   input.addEventListener('change',async()=>{
    if(!input.files.length)return;
    if(photoURL){URL.revokeObjectURL(photoURL);photoURL=''}
@@ -88,10 +97,12 @@
    finally{if(request===revision){busy=false;choose.disabled=false;choose.textContent='Escolher outra foto'}}
   });
   function close(){dialog.close()}
-  dialog.querySelector('[data-avatar-close]').onclick=close;dialog.querySelector('[data-avatar-cancel]').onclick=close;
-  dialog.addEventListener('close',()=>{revision++;if(photoURL)URL.revokeObjectURL(photoURL);dialog.remove();document.getElementById('card-edit')?.focus()});
+  dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)close()});
+  dialog.addEventListener('close',()=>{sizeAnimation?.cancel();revision++;if(photoURL)URL.revokeObjectURL(photoURL);dialog.remove();document.getElementById('card-edit')?.focus()});
+  if(avatar){tab(true);tile({image:avatar})}
   dialog.showModal();
-  if(history){tab(!!avatar);loadHistory(true)}
+  if(!matchMedia('(prefers-reduced-motion:reduce)').matches){sizeAnimation=dialog.animate([{opacity:0,transform:'scale(.84)'},{opacity:1,transform:'scale(1)'}],{duration:280,easing:'cubic-bezier(.16,1,.3,1)'});}
+  if(history)loadHistory(true);
  }
  globalThis.ClayAvatarEditor={open,prepare,preset,BACKGROUND_COLOR,MAX_AVATAR_LENGTH};
 })();

@@ -24,3 +24,6 @@
 #card-presence.is-online i{background:#2ed16c;box-shadow:0 0 5px #2ed16caa,0 0 10px #2ed16c66;animation:clay-presence-glow 2.5s ease-in-out infinite}
 @keyframes clay-presence-glow{50%{box-shadow:0 0 7px #2ed16cdd,0 0 14px #2ed16c88}}
 @media(prefers-reduced-motion:reduce){#card-presence i{transition:none}#card-presence.is-online i{animation:none}}
+.reflective-card{scale:1;transform-origin:center;transition:transform .18s ease-out,scale .32s cubic-bezier(.22,1,.36,1)}
+@media(hover:hover) and (pointer:fine){.reflective-card:hover{scale:1.035}}
+@media(prefers-reduced-motion:reduce){.reflective-card{transition:none}}

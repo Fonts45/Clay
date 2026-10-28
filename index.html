@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<link rel="stylesheet" href="assets/styles/loading.css?v=2"><script src="assets/scripts/loading.js?v=1"></script>
+<link rel="stylesheet" href="assets/styles/loading.css?v=restored-orange-9"><script src="assets/scripts/loading.js?v=fullscreen-fade-5"></script>
 <script>
 // Recarregar ou abrir o site novamente sempre começa pela hero.
 const entradaUrl=new URL(location.href);
@@ -309,7 +309,7 @@ html[data-theme="light"] .clay-specular{color:#171717;background:linear-gradient
 
 <link rel="stylesheet" href="assets/styles/card-nav.css">
 <link rel="stylesheet" href="assets/styles/resource-shredder.css">
-<link rel="stylesheet" href="assets/styles/animated-shortcuts.css?v=folder-icon-4">
+<link rel="stylesheet" href="assets/styles/animated-shortcuts.css?v=horizontal-actions-9">
 <link rel="stylesheet" href="assets/styles/border-glow.css?v=9">
 
 <link rel="stylesheet" href="assets/styles/account-menu.css?v=chat-account-left-4">
@@ -357,6 +357,9 @@ body>nav .links .landing-menu-label{display:inline-block;transform:scale(1);tran
 body>nav .links a:focus-visible .landing-menu-label{transform:scale(1.08)}
 @media(prefers-reduced-motion:reduce){body>nav .links .landing-menu-label{transition:none}}
 </style>
+<style>.hero .cta .btn{transform:translate(0,0);scale:1;transform-origin:center;transition:scale .25s cubic-bezier(.22,1,.36,1),background .3s,border-color .3s,box-shadow .3s}@media(hover:hover) and (pointer:fine){.hero .cta .btn:hover{scale:1.06}}@media(prefers-reduced-motion:reduce){.hero .cta .btn{transition:none}}</style>
+<style>.hero .cta .btn:not(.p):hover{border-color:var(--ln)}</style>
+<link rel="stylesheet" href="assets/styles/account-social.css?v=provider-logos-3">
 </head>
 <body>
 <div id="ld"><span class="brand-lockup"><img class="brand-symbol" src="assets/images/clay-symbol-orange.svg?v=restored-logo-6" alt=""><img class="brand-word" src="assets/images/clay-wordmark-cream.svg" alt="Clay"></span></div>
@@ -383,8 +386,8 @@ body>nav .links a:focus-visible .landing-menu-label{transform:scale(1.08)}
     <div class="tag">Seu conhecimento, em construção.</div>
     <p class="sub">Uma nova maneira de explorar ideias, transformar conhecimento e interagir com a inteligência artificial.</p>
     <div class="cta">
-      <a class="btn p mag" href="#" data-open>Entrar</a>
-      <a class="btn mag" href="#" data-open>Cadastrar</a>
+      <a class="btn p" href="#" data-open>Entrar</a>
+      <a class="btn" href="#" data-open>Cadastrar</a>
       <a id="hero-avancar" class="clay-star-button" href="espaco.html" hidden>Avançar</a>
     </div>
   </div>
@@ -467,15 +470,19 @@ body>nav .links a:focus-visible .landing-menu-label{transform:scale(1.08)}
 <h2 id="conta-titulo">Entrar</h2>
 <p id="conta-descricao">Entre para acessar sua conta Clay.</p>
 <form id="conta-form" autocomplete="on">
-<label id="nome-campo" for="conta-nome" hidden>Nome<input id="conta-nome" name="name" autocomplete="name" maxlength="80"></label>
-<label for="conta-email">Endereço de correio eletrônico<input id="conta-email" name="email" type="email" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required maxlength="254"></label>
-<label for="conta-senha">Senha<input id="conta-senha" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128"></label>
-<label id="confirmar-campo" for="conta-confirmar" hidden>Confirmar senha<input id="conta-confirmar" name="password_confirmation" type="password" autocomplete="new-password" minlength="8" maxlength="128"></label>
+<label id="nome-campo" for="conta-nome" hidden><span class="conta-field-label">Nome</span><input id="conta-nome" placeholder="Nome" name="name" autocomplete="name" maxlength="80"></label>
+<label for="conta-email"><span class="conta-field-label">Endereço de correio eletrônico</span><input id="conta-email" placeholder="E-mail" name="email" type="email" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required maxlength="254"></label>
+<label for="conta-senha"><span class="conta-field-label">Senha</span><input id="conta-senha" placeholder="Senha" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128"></label>
+<label id="confirmar-campo" for="conta-confirmar" hidden><span class="conta-field-label">Confirmar senha</span><input id="conta-confirmar" placeholder="Confirmar senha" name="password_confirmation" type="password" autocomplete="new-password" minlength="8" maxlength="128"></label>
 <label id="manter-campo" class="manter-conectado" for="conta-manter"><input id="conta-manter" name="remember" type="checkbox" checked><span>Manter conectado<small>Salvar o acesso neste navegador.</small></span></label>
 <p id="conta-status" role="status" aria-live="polite"></p>
-<button class="btn p" id="conta-enviar" type="submit">Entrar</button>
-<button class="btn" id="conta-recuperar" type="button">Esqueci minha senha</button>
-<button class="btn" id="conta-alternar" type="button" hidden>Ainda não tenho conta</button>
+<button class="btn" id="conta-recuperar" type="button">Esqueceu a senha?</button>
+<div id="conta-social"><div class="conta-divider"><span>ou</span></div><div class="conta-providers">
+<button type="button" data-provider="google" aria-label="Continuar com Google"><img class="provider-logo provider-logo--google" src="assets/images/auth-google.png" alt=""><span>Google</span></button>
+<button type="button" data-provider="apple" aria-label="Continuar com Apple ID"><img class="provider-logo provider-logo--apple" src="assets/images/auth-apple.png" alt=""><span>Apple ID</span></button>
+<button type="button" data-provider="github" aria-label="Continuar com GitHub"><img class="provider-logo provider-logo--github" src="assets/images/auth-github.png" alt=""><span>GitHub</span></button>
+</div></div>
+<div class="conta-bottom"><button class="btn" id="conta-alternar" type="button">Criar conta</button><button class="btn p" id="conta-enviar" type="submit">Entrar</button></div>
 </form>
 </dialog>
 <script src="config/clay-config.js"></script>
@@ -510,6 +517,15 @@ function alternarMenu(aberto){
 }
 $('#menu').onclick=()=>alternarMenu(!$('.links').classList.contains('o'));
 $$('.links a').forEach(a=>a.addEventListener('click',()=>alternarMenu(false)));
+function voltarInicioPeloMenu(event){
+ if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+ event.preventDefault();alternarMenu(false);
+ const url=new URL(location.href);url.hash='';history.replaceState(history.state,'',url.pathname+url.search);
+ requestAnimationFrame(()=>window.scrollTo({top:0,behavior:RM?'auto':'smooth'}));
+}
+nav.querySelector('.logo').addEventListener('click',voltarInicioPeloMenu);
+nav.querySelector('.links a[href="#top"]').addEventListener('click',voltarInicioPeloMenu);
+
 /* GSAP */
 if(window.gsap&&window.ScrollTrigger&&!RM){
 gsap.registerPlugin(ScrollTrigger);
@@ -701,18 +717,29 @@ function mostrarConta(modo){
   $('#manter-campo').hidden=redefinir;
   $('#conta-email').parentElement.hidden=redefinir;$('#conta-email').required=!redefinir;
   $('#conta-titulo').textContent=redefinir?'Criar nova senha':cadastro?'Criar conta':'Entrar';
-  $('#conta-descricao').textContent=redefinir?'Escolha uma nova senha com pelo menos 8 caracteres.':cadastro?'Crie sua conta Clay. Use uma senha com pelo menos 8 caracteres.':'Entre para acessar sua conta Clay.';
+  $('#conta-descricao').hidden=cadastro;
+  $('#conta-descricao').textContent=redefinir?'Escolha uma nova senha.':cadastro?'Crie sua conta Clay.':'Entre para acessar sua conta Clay.';
   $('#nome-campo').hidden=!cadastro;$('#confirmar-campo').hidden=!(cadastro||redefinir);
-  $('#conta-recuperar').hidden=cadastro||redefinir;$('#conta-alternar').hidden=true;$('#conta-nome').required=cadastro;$('#conta-confirmar').required=cadastro||redefinir;
+  $('#conta-recuperar').hidden=cadastro||redefinir;$('#conta-alternar').hidden=redefinir;$('#conta-social').hidden=redefinir;$('#conta-nome').required=cadastro;$('#conta-confirmar').required=cadastro||redefinir;
   $('#conta-email').autocomplete=cadastro?'email':'username';
   $('#conta-senha').autocomplete=cadastro||redefinir?'new-password':'current-password';
+  $('#conta-senha').placeholder=cadastro||redefinir?'Senha — mínimo de 8 caracteres':'Senha';
+  $('#conta-confirmar').placeholder='Confirmar senha — mínimo de 8 caracteres';
   $('#conta-enviar').textContent=redefinir?'Salvar nova senha':cadastro?'Cadastrar':'Entrar';
-  $('#conta-alternar').textContent=cadastro?'Já tenho uma conta':'Ainda não tenho conta';
+  $('#conta-alternar').textContent=cadastro?'Já tenho conta':'Criar conta';
   $('#conta-status').textContent=clienteConta?'':'O acesso às contas ainda não está disponível. Tente novamente mais tarde.';
   $('#conta-enviar').disabled=!clienteConta;
   if(!$('#conta').open)$('#conta').showModal();
 }
 $('#conta-fechar').onclick=()=>$('#conta').close();
+{
+ const dialogConta=$('#conta');let iniciouFora=false;
+ const fora=event=>{const rect=dialogConta.getBoundingClientRect();return event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom};
+ dialogConta.addEventListener('pointerdown',event=>{iniciouFora=event.target===dialogConta&&fora(event)});
+ dialogConta.addEventListener('click',event=>{if(iniciouFora&&event.target===dialogConta&&fora(event))$('#conta-fechar').click();iniciouFora=false});
+ dialogConta.addEventListener('close',()=>{iniciouFora=false});
+}
+
 $('#conta-alternar').onclick=()=>mostrarConta(modoConta==='entrar'?'cadastrar':'entrar');
 function erroConta(erro){
  const codigo=erro?.code||'';
@@ -776,7 +803,7 @@ if(new URLSearchParams(location.search).get('destino')==='espaco'){
 <script src="assets/scripts/clay-ai-aurora.js"></script>
 <script src="assets/scripts/shortcut-logo.js"></script>
 <script src="assets/scripts/shortcut-detection.js"></script>
-<script src="assets/scripts/resource-shredder.js?v=automatic-source-4"></script>
+<script src="assets/scripts/resource-shredder.js?v=horizontal-actions-7"></script>
 <script src="assets/scripts/animated-shortcuts.js?v=faithful-list-2"></script>
 <script src="assets/scripts/border-glow.js?v=5"></script>
 <script src="assets/scripts/account-menu.js?v=chat-account-5"></script>
@@ -791,5 +818,6 @@ if(new URLSearchParams(location.search).get('destino')==='espaco'){
  dialog.querySelector('a').addEventListener('click',()=>dialog.close());
 })();
 </script>
+<script src="assets/scripts/account-social.js?v=1"></script>
 </body>
 </html>
