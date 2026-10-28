@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="assets/styles/header-layout.css?v=conversation-center-2">
 <script defer src="assets/scripts/profile-return.js?v=1"></script>
 <link rel="stylesheet" href="assets/styles/clay-ai-floating.css?v=3"><script src="assets/scripts/clay-ai-floating.js?v=3"></script>
+<link rel="stylesheet" href="assets/styles/avatar-editor.css?v=history-8">
 </head>
 <body>
 <nav class="clay-global-nav" aria-label="Navegação principal">
@@ -57,12 +58,14 @@
 
 <aside class="professional-rail" aria-label="Carta profissional" hidden>
  <article class="reflective-card" id="professional-card">
+  <canvas id="clay-aurora" aria-hidden="true"></canvas>
   <img id="card-face" alt="Foto do perfil profissional" hidden>
   <div class="card-metal" aria-hidden="true"></div>
   <div class="card-status"><span id="card-verification">◇ Perfil</span><span id="card-presence" aria-live="polite"><i aria-hidden="true"></i><span>Offline</span></span></div>
   <div class="card-identity"><h2 id="card-name">Seu nome</h2><p id="card-role">Sua área de atuação ou estudos</p></div>
-  <div class="card-bottom"><div><span>Nome de usuário</span><code id="card-id">—</code></div><button id="card-edit" aria-label="Editar perfil e foto"><img src="assets/images/clay-fingerprint.svg" alt="" aria-hidden="true"></button></div>
+  <div class="card-bottom"><div><span>Nome de usuário</span><code id="card-id">—</code></div></div>
  </article>
+ <button id="card-edit" aria-label="Editar avatar 3D"><span class="avatar-button-icon" aria-hidden="true"><img src="assets/images/avatar-rounded.svg" alt=""></span><span>Avatar</span></button>
 </aside>
 
 <main class="workspace">
@@ -117,7 +120,10 @@ window.clayLoadingWatchdog=setTimeout(()=>{globalThis.clayLoading?.end('workspac
 <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
 <script defer src="assets/scripts/photo-crop.js?v=1"></script>
 <script defer src="assets/scripts/presence.js?v=1"></script>
-<script defer src="assets/scripts/espaco.js?v=search-in-dock-46"></script>
+<script defer src="assets/scripts/avatar-face-validation.js?v=face-flow-1"></script>
+<script defer src="assets/scripts/avatar-history.js?v=history-1"></script>
+<script defer src="assets/scripts/avatar-editor.js?v=history-8"></script>
+<script defer src="assets/scripts/espaco.js?v=avatar-history-49"></script>
 
 <script src="assets/scripts/cabecalho.js"></script>
 <script src="assets/scripts/clay-star-motion.js"></script>
@@ -125,6 +131,7 @@ window.clayLoadingWatchdog=setTimeout(()=>{globalThis.clayLoading?.end('workspac
 <script src="assets/scripts/magic-bento.js?v=reference-grid-2"></script>
 <script src="assets/scripts/study-bento.js"></script>
 <script src="assets/scripts/carta-profissional.js"></script>
+<script src="assets/scripts/clay-aurora.js?v=visibility-2"></script>
 <script src="assets/scripts/account-menu.js?v=chat-account-5"></script>
 </body></html>
 

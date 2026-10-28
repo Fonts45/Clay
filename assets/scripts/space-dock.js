@@ -39,17 +39,7 @@
     dialog.querySelector('h2').textContent = labels[index];
     const panel = dialog.querySelector('.space-dock-panel');
     panel.replaceChildren();
-    if (index === 1) {
-      dialog.querySelector('h2').textContent = 'Encontrar perfil';
-      const form = document.createElement('form');
-      const label = document.createElement('label');label.textContent = 'Nome de usuário';
-      const input = document.createElement('input');input.name='handle';input.type='search';input.placeholder='@nome de usuário';input.required=true;input.maxLength=41;input.pattern='@?[a-z0-9_.-]{3,40}';input.autocapitalize='none';input.spellcheck=false;
-      input.setAttribute('aria-label','Nome de usuário para buscar');
-      input.addEventListener('input',()=>{input.value=input.value.toLowerCase()});
-      const submit=document.createElement('button');submit.type='submit';submit.className='button primary';submit.textContent='Buscar perfil';
-      label.append(input);form.append(label,submit);panel.append(form);
-      form.onsubmit=event=>{event.preventDefault();const handle=input.value.trim().replace(/^@/,'').toLowerCase();const url=new URL('espaco.html',location.href);url.searchParams.set('usuario',handle);location.assign(url.href)};
-    } else if (index === 4 || index === 5) {
+    if (index === 4 || index === 5) {
       const label = document.createElement('label');
       label.textContent = index === 4 ? 'Ouvir um arquivo do seu dispositivo' : 'Visualizar uma imagem do seu dispositivo';
       const input = document.createElement('input'); input.type = 'file'; input.accept = index === 4 ? 'audio/*' : 'image/*';
@@ -95,6 +85,7 @@
     else { item.type = 'button'; item.setAttribute('aria-haspopup', 'dialog'); item.onclick = () => openPanel(index, item); }
     item.innerHTML = '<span class="space-dock-tile"><svg viewBox="0 0 24 24" aria-hidden="true">' + icons[index] + '</svg></span><span class="space-dock-label" aria-hidden="true">' + label + '</span>';
     dock.append(item);
+    if(index===1)ClaySpaceSearch.attach(item,{dock,owner});
   });
   // Badges são expostos apenas com contagens reais fornecidas pela aplicação.
   document.addEventListener('clay:dock-badges', event => {

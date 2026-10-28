@@ -2,9 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function owner(uid) { return request.auth != null && request.auth.uid == uid; }
+    function avatarImage(image) {
+      return image is string && image.size() <= 300000
+        && (image.matches('^data:image/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$')
+          || image == 'assets/images/avatars/rodrigofontes-foreground.svg');
+    }
     function profileValid(p) {
       return p.keys().hasAll(['name','headline','bio','resume','github','linkedin'])
-        && p.keys().hasOnly(['name','headline','bio','resume','github','linkedin','photo','username','education','currentStudies','careers','pronouns','website','social3','social4','company'])
+        && p.keys().hasOnly(['name','headline','bio','resume','github','linkedin','photo','avatar','username','education','currentStudies','careers','pronouns','website','social3','social4','company'])
+        && (!('avatar' in p) || p.avatar == '' || avatarImage(p.avatar))
         && (!('pronouns' in p) || (p.pronouns is string && p.pronouns.size() <= 40))
         && (!('website' in p) || (p.website is string && p.website.size() <= 2000))
         && (!('social3' in p) || (p.social3 is string && p.social3.size() <= 2000))
@@ -35,6 +41,19 @@ service cloud.firestore {
         && request.resource.data.initialized is bool
         && request.resource.data.updatedAt is number;
       allow delete: if owner(uid);
+    }
+    // Private immutable history. Identical source bytes always resolve to the same document.
+    match /learningSpaces/{uid}/avatars/{avatarId} {
+      allow read: if owner(uid);
+      allow create: if owner(uid) && avatarId.matches('^[a-f0-9]{64}$')
+        && request.resource.data.keys().hasAll(['sourceHash','image','styleVersion','createdAt'])
+        && request.resource.data.keys().hasOnly(['sourceHash','image','styleVersion','createdAt'])
+        && request.resource.data.sourceHash is string
+        && (request.resource.data.sourceHash == '' || request.resource.data.sourceHash == avatarId)
+        && avatarImage(request.resource.data.image)
+        && request.resource.data.styleVersion == 'clay-approved-3d-v1'
+        && request.resource.data.createdAt is number;
+      allow update, delete: if false;
     }
     // Reserva única, consistente com o perfil salvo na mesma transação.
     match /presence/{uid}/sessions/{session} {

@@ -157,7 +157,8 @@ function atualizarCarta(){
  document.getElementById('card-role').textContent=profile.company||'Sua área de atuação ou estudos';
  document.getElementById('card-id').textContent=profile.username?'@'+normalizeUsername(profile.username):'—';
  const verification=document.getElementById('card-verification');verification.replaceChildren();const badge=document.createElement('img');badge.src='assets/images/profile-badge.png';badge.alt='';badge.className='card-profile-badge';verification.append(badge,document.createTextNode(user?.emailVerified?' Verificado':' Perfil'));
- const photo=profile.photo||user?.photoURL||'',face=document.getElementById('card-face');
+ const photo=profile.avatar||globalThis.ClayAvatarEditor?.preset?.(profile.username)||'',face=document.getElementById('card-face');
+ let empty=document.querySelector('.card-avatar-empty');if(!empty){empty=document.createElement('div');empty.className='card-avatar-empty';empty.textContent='Seu avatar 3D';document.getElementById('professional-card').appendChild(empty)}empty.hidden=!!photo;
  face.hidden=!photo;if(photo)face.src=photo;else face.removeAttribute('src');
 }
 async function fotoPerfil(){
@@ -166,7 +167,7 @@ async function fotoPerfil(){
  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024)throw Error('Escolha uma imagem JPG, PNG ou WebP de até 8 MB.');
  const bitmap=await createImageBitmap(file);const canvas=document.createElement('canvas');const ratio=Math.min(1,480/Math.max(bitmap.width,bitmap.height));canvas.width=Math.round(bitmap.width*ratio);canvas.height=Math.round(bitmap.height*ratio);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();const photo=canvas.toDataURL('image/jpeg',.72);if(photo.length>180000)throw Error('Escolha uma foto menor para salvar no perfil.');return photo;
 }
-$('#card-edit').onclick=()=>{if(state)$('#edit-profile').click()};
+$('#card-edit').onclick=()=>{if(!state||!user)return;const owner=user.uid;ClayAvatarEditor.open({avatar:state.profile.avatar||ClayAvatarEditor.preset(state.profile.username),history:ClayAvatarHistory.createStore({db,uid:owner}),save:async avatar=>{if(user?.uid!==owner)throw Error('Sua conta mudou. Abra os avatares novamente.');if(!ClayAvatarHistory.validImage(avatar))throw Error('Escolha um avatar válido de até 300.000 caracteres.');const next=clone(state);next.profile={...state.profile,avatar};await persist(next)}})};
 
 function loadingShell(){globalThis.clayLoading?.begin('workspace');
  document.dispatchEvent(new CustomEvent('clay:studies-update',{detail:{courses:[],published:false,loading:true}}));
