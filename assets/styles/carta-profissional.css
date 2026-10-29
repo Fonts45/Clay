@@ -27,3 +27,5 @@
 .reflective-card{scale:1;transform-origin:center;transition:transform .18s ease-out,scale .32s cubic-bezier(.22,1,.36,1)}
 @media(hover:hover) and (pointer:fine){.reflective-card:hover{scale:1.035}}
 @media(prefers-reduced-motion:reduce){.reflective-card{transition:none}}
+
+#card-presence{display:none!important}
