@@ -18,6 +18,8 @@
    });
   }
   return {
+   async rename(id,name){if(!/^[a-f0-9]{64}$/.test(id)||!name.trim()||name.length>80)throw Error('Use um nome de até 80 caracteres.');await collection.doc(id).update({name:name.trim()})},
+   async remove(id){if(!/^[a-f0-9]{64}$/.test(id))throw Error('Avatar inválido.');await collection.doc(id).delete()},
    async find(sourceHash){const snapshot=await collection.doc(sourceHash).get();return snapshot.exists?{id:snapshot.id,...snapshot.data()}:null},
    async rememberCurrent(image){const id=await hashBytes(new TextEncoder().encode('import:'+image));return remember(id,'',image)},
    async saveGenerated(sourceHash,image){if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('Identificador da foto inválido.');return remember(sourceHash,sourceHash,image)},

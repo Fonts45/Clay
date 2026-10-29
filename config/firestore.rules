@@ -53,7 +53,8 @@ service cloud.firestore {
         && avatarImage(request.resource.data.image)
         && request.resource.data.styleVersion == 'clay-approved-3d-v1'
         && request.resource.data.createdAt is number;
-      allow update, delete: if false;
+      allow update: if owner(uid) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name']) && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80;
+      allow delete: if owner(uid);
     }
     // Reserva única, consistente com o perfil salvo na mesma transação.
     match /presence/{uid}/sessions/{session} {

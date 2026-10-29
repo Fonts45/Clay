@@ -773,8 +773,8 @@ $('#conta-recuperar').onclick=async()=>{
  const botao=$('#conta-recuperar');botao.disabled=true;$('#conta-status').textContent='Enviando instruções…';
  try{
   await clienteConta.sendPasswordResetEmail(campo.value.trim());
-  $('#conta-status').textContent='Se houver uma conta para esse endereço, você receberá um link para criar uma nova senha. Confira também as mensagens indesejadas.';
- }catch(e){$('#conta-status').textContent=e.code==='auth/user-not-found'?'Se houver uma conta para esse endereço, você receberá um link para criar uma nova senha.':erroConta(e)}finally{botao.disabled=false}
+  $('#conta-status').textContent='No seu gmail, você receberá um link para criar uma nova senha. Confira também as mensagens de Spam.';
+ }catch(e){$('#conta-status').textContent=e.code==='auth/user-not-found'?'No seu gmail, você receberá um link para criar uma nova senha. Confira também as mensagens de Spam.':erroConta(e)}finally{botao.disabled=false}
 };
 $('#conta-form').onsubmit=async e=>{
  e.preventDefault();if(!clienteConta)return;

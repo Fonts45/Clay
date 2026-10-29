@@ -150,9 +150,9 @@ $('#profile-back').onclick=()=>{if(dedicatedProfile)location.href='espaco.html';
 function finishLoading(){globalThis.clayLoading?.end('workspace');clearTimeout(window.clayLoadingWatchdog);clearTimeout(loadTimer);$('#retry-load').hidden=true}
 function accessError(message){$('#access-message').textContent=message;$('#access-state').hidden=false}
 
-function atualizarCarta(){
- const profile=state?.profile||{};
- const rail=document.querySelector('.professional-rail');rail.hidden=!user||!!uid;
+function atualizarCarta(publicProfile=null){
+ const profile=publicProfile||state?.profile||{};
+ const rail=document.querySelector('.professional-rail');rail.hidden=!publicProfile&&(!user||!!uid);$('#card-edit').hidden=!!publicProfile||!!uid;
  document.getElementById('card-name').textContent=profile.name||user?.displayName||'Seu nome';
  document.getElementById('card-role').textContent=profile.company||'Sua área de atuação ou estudos';
  document.getElementById('card-id').textContent=profile.username?'@'+normalizeUsername(profile.username):'—';
@@ -167,7 +167,7 @@ async function fotoPerfil(){
  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024)throw Error('Escolha uma imagem JPG, PNG ou WebP de até 8 MB.');
  const bitmap=await createImageBitmap(file);const canvas=document.createElement('canvas');const ratio=Math.min(1,480/Math.max(bitmap.width,bitmap.height));canvas.width=Math.round(bitmap.width*ratio);canvas.height=Math.round(bitmap.height*ratio);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();const photo=canvas.toDataURL('image/jpeg',.72);if(photo.length>180000)throw Error('Escolha uma foto menor para salvar no perfil.');return photo;
 }
-$('#card-edit').onclick=()=>{if(!state||!user)return;const owner=user.uid;ClayAvatarEditor.open({avatar:state.profile.avatar||ClayAvatarEditor.preset(state.profile.username),history:ClayAvatarHistory.createStore({db,uid:owner}),save:async avatar=>{if(user?.uid!==owner)throw Error('Sua conta mudou. Abra os avatares novamente.');if(!ClayAvatarHistory.validImage(avatar))throw Error('Escolha um avatar válido de até 300.000 caracteres.');const next=clone(state);next.profile={...state.profile,avatar};await persist(next)}})};
+$('#card-edit').onclick=()=>{if(!state||!user||uid||requestedUsername)return;const owner=user.uid;ClayAvatarEditor.open({avatar:state.profile.avatar||ClayAvatarEditor.preset(state.profile.username),history:ClayAvatarHistory.createStore({db,uid:owner}),save:async avatar=>{if(user?.uid!==owner)throw Error('Sua conta mudou. Abra os avatares novamente.');if(avatar!==''&&!ClayAvatarHistory.validImage(avatar))throw Error('Escolha um avatar válido de até 300.000 caracteres.');const next=clone(state);next.profile={...state.profile,avatar};await persist(next)}})};
 
 function loadingShell(){globalThis.clayLoading?.begin('workspace');
  document.dispatchEvent(new CustomEvent('clay:studies-update',{detail:{courses:[],published:false,loading:true}}));
@@ -354,7 +354,7 @@ async function findProfileByUsername(value){
 async function loadPublic(){
  $('#access-message').textContent='Carregando portfólio…';
  if(!/^[A-Za-z0-9_-]{1,128}$/.test(uid)){finishLoading();accessError('Link de perfil inválido.');return }
- try{const doc=await db.collection('publicPortfolios').doc(uid).get();finishLoading();if(!doc.exists){accessError('Este perfil não foi publicado ou foi retirado do público.');return}$('#public-profile').innerHTML=renderProfile(doc.data());$('#access-state').hidden=true;$('#public-space').hidden=false;document.title='Clay'}catch(e){finishLoading();accessError(failure(e));$('#retry-load').hidden=false}
+ try{const doc=await db.collection('publicPortfolios').doc(uid).get();finishLoading();if(!doc.exists){accessError('Este perfil não foi publicado ou foi retirado do público.');return}atualizarCarta(doc.data().profile);document.body.classList.add('viewing-public-profile');$('#public-profile').innerHTML=renderProfile(doc.data());$('#access-state').hidden=true;$('#public-space').hidden=false;document.title='Clay'}catch(e){finishLoading();accessError(failure(e));$('#retry-load').hidden=false}
 }
 try{
  if(!window.firebase?.firestore||!window.CLAY_CONFIG?.firebase?.projectId)throw Error('Firebase indisponível');

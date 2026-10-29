@@ -23,7 +23,7 @@
   document.body.append(dialog);
   const preview=dialog.querySelector('img'),input=dialog.querySelector('input'),status=dialog.querySelector('.avatar-editor-status'),choose=dialog.querySelector('[data-avatar-choose]');
   const apply=dialog.querySelector('[data-avatar-apply]'),grid=dialog.querySelector('.avatar-history-grid'),more=dialog.querySelector('.avatar-history-more');
-  const shown=new Set();
+  const shown=new Map();
   function errorMessage(error){return error.code==='permission-denied'?'Não foi possível acessar seus avatares. As permissões do histórico precisam ser atualizadas.':error.message||'Não foi possível acessar seus avatares. Tente novamente.'}
   async function use(image){
    if(busy)return;busy=true;apply.disabled=true;choose.disabled=true;status.dataset.error='false';status.textContent='Aplicando seu avatar…';
@@ -32,15 +32,50 @@
    finally{busy=false;apply.disabled=false;choose.disabled=false}
   }
   function tile(entry){
-   if(shown.has(entry.image))return;shown.add(entry.image);
+   if(shown.has(entry.image)){const existing=shown.get(entry.image);Object.assign(existing.entry,entry);existing.name.textContent=entry.name||existing.defaultName;return}
    const button=document.createElement('button');button.type='button';button.className='avatar-history-item';button.setAttribute('aria-label','Usar este avatar');
    const image=document.createElement('img');image.src=entry.image;image.alt='Avatar Clay salvo';image.loading='lazy';
-   const label=document.createElement('span');label.textContent='Usar este avatar';button.append(image,label);button.onclick=()=>use(entry.image);grid.append(button);
+   const label=document.createElement('span');label.textContent='Usar este avatar';button.append(image,label);button.onclick=()=>{if(!card.classList.contains('is-renaming'))use(entry.image)};
+   const card=document.createElement('div');card.className='avatar-history-card';
+   const options=document.createElement('button');options.type='button';options.className='avatar-history-options';options.setAttribute('aria-label','Opções deste avatar');options.setAttribute('aria-expanded','false');options.innerHTML='<img class="avatar-menu-bars" src="assets/images/avatar-menu-bars.png" alt="" draggable="false">';
+   const menu=document.createElement('div');menu.className='avatar-history-menu';menu.hidden=true;
+   const select=document.createElement('button');select.type='button';select.textContent='Usar este avatar';select.onclick=()=>{menu.hidden=true;options.setAttribute('aria-expanded','false');use(entry.image)};menu.append(select);
+   options.onclick=()=>{const opening=menu.hidden;dialog.querySelectorAll('.avatar-history-menu').forEach(el=>el.hidden=true);dialog.querySelectorAll('.avatar-history-options').forEach(el=>el.setAttribute('aria-expanded','false'));menu.hidden=!opening;options.setAttribute('aria-expanded',String(opening))};
+   card.addEventListener('keydown',event=>{if(event.key==='Escape'&&!menu.hidden){event.preventDefault();event.stopPropagation();menu.hidden=true;options.setAttribute('aria-expanded','false');options.focus()}});
+   card.addEventListener('focusout',event=>{if(!card.contains(event.relatedTarget)){menu.hidden=true;options.setAttribute('aria-expanded','false')}});
+   const defaultName='Avatar '+(shown.size+1);const name=document.createElement('span');name.className='avatar-history-name';name.textContent=entry.name||defaultName;button.replaceChild(name,label);shown.set(entry.image,{entry,name,defaultName});
+   menu.replaceChildren();
+   const rename=document.createElement('button');rename.type='button';rename.textContent='Editar nome';
+   rename.onclick=()=>{
+    menu.hidden=true;options.setAttribute('aria-expanded','false');
+    if(card.querySelector('.avatar-name-input'))return;
+    const field=document.createElement('input');field.className='avatar-name-input';field.type='text';field.maxLength=80;field.value=entry.name||defaultName;field.setAttribute('aria-label','Nome do avatar');
+    const labelRect=name.getBoundingClientRect(),cardRect=card.getBoundingClientRect();
+    field.style.top=(labelRect.top-cardRect.top)+'px';field.style.left=(labelRect.left-cardRect.left)+'px';field.style.width=labelRect.width+'px';field.style.height=labelRect.height+'px';
+    card.style.setProperty('--name-line-top',(labelRect.bottom-cardRect.top+1)+'px');
+    name.style.visibility='hidden';card.append(field);card.classList.add('is-renaming');field.focus();field.select();
+    let done=false;
+    function cancel(){if(done)return;done=true;field.remove();name.style.visibility='';card.classList.remove('is-renaming')}
+    async function commit(){
+     if(done||field.disabled)return;const value=field.value.trim();if(!value){field.setCustomValidity('Digite um nome.');field.reportValidity();return}
+     if(value===(entry.name||defaultName)){cancel();return}
+     field.disabled=true;
+     try{if(!history)throw Error('Histórico indisponível.');if(!entry.id)Object.assign(entry,await history.rememberCurrent(entry.image));await history.rename(entry.id,value);entry.name=value;name.textContent=value;cancel();status.textContent='Nome atualizado.'}
+     catch(error){status.textContent=errorMessage(error);field.disabled=false;field.focus()}
+    }
+    field.addEventListener('click',event=>event.stopPropagation());
+    field.addEventListener('input',()=>field.setCustomValidity(''));
+    field.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Enter'){event.preventDefault();commit()}else if(event.key==='Escape'){event.preventDefault();cancel();options.focus()}});
+    field.addEventListener('blur',()=>{if(!done)commit()});
+   };
+   const remove=document.createElement('button');remove.type='button';remove.textContent='Apagar';
+   remove.onclick=async()=>{menu.hidden=true;if(!confirm('Apagar este avatar?'))return;try{if(!history)throw Error('Histórico indisponível.');if(!entry.id)Object.assign(entry,await history.rememberCurrent(entry.image));if(entry.image===avatar){await save('');avatar=''}await history.remove(entry.id);shown.delete(entry.image);card.remove();status.textContent='Avatar apagado.'}catch(error){status.textContent=errorMessage(error)}};
+   menu.append(rename,remove);card.append(button,options,menu);grid.append(card);
   }
   async function loadHistory(reset=false){
    if(!history||historyLoading)return;historyLoading=true;more.disabled=true;
    try{
-    if(reset){cursor=null;shown.clear();grid.replaceChildren();if(avatar)tile({image:avatar});if(avatar)await history.rememberCurrent(avatar)}
+    if(reset){cursor=null;shown.clear();grid.replaceChildren();if(avatar)tile({image:avatar});if(avatar)tile(await history.rememberCurrent(avatar))}
     const page=await history.list(cursor);if(!dialog.isConnected)return;
     page.items.forEach(tile);cursor=page.cursor;more.hidden=!page.more;
     if(!shown.size)status.textContent='Você ainda não tem avatares salvos.';
