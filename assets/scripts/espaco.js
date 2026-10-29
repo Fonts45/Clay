@@ -311,26 +311,36 @@ $('#owner-space').addEventListener('click',async e=>{
 });
 $('#copy-profile').onclick=async()=>{const url=new URL(location.href);url.search='';url.hash='';url.searchParams.set('perfil',user.uid);try{await navigator.clipboard.writeText(url.href);notice('Link público copiado. Só o portfólio será mostrado.')}catch{notice('Link do perfil: '+url.href)}};
 function onboarding(direction=0){
- $('#onboarding-back').hidden=step===0;$('#onboarding-next').textContent=step===3?'Concluir':'Continuar →';
+ $('#onboarding-next .onboarding-shiny-label').textContent=step===3?'Concluir':'Avançar';
  document.querySelectorAll('.onboarding-steps button').forEach((e,i)=>{e.classList.toggle('active',i===step);e.classList.toggle('visited',i<step);if(i===step)e.setAttribute('aria-current','step');else e.removeAttribute('aria-current')});
  const contents=[`<h2>Bem-vindo(a) a bordo</h2><p>Um espaço para lembrar onde parou e mostrar o que está construindo. Configure em poucos passos.</p>`,
  `<h2>Qual é a sua direção?</h2><p>Escolha um tema para começar a organizar sua trilha. Você pode adicionar outros depois.</p><label>Tema inicial<input name="setup-topic" maxlength="80" required placeholder="Ex.: Desenvolvimento web" value="${esc(setup.topic??'Engenharia de Software')}"></label>`,
  `<h2>Como você quer se apresentar?</h2><label>Seu nome<input name="setup-name" required maxlength="100" value="${esc(setup.name??state.profile.name)}"></label><label>Título profissional<input name="setup-headline" required maxlength="160" value="${esc(setup.headline??state.profile.headline)}"></label>`,
  `<h2>Pronto para começar.</h2><div class="review-item">Trilha inicial: ${esc(setup.topic)}</div><div class="review-item">${esc(setup.name)}<br>${esc(setup.headline)}</div><p>Seus estudos ficam privados na sua conta. O portfólio só será público quando você clicar em Publicar perfil.</p>`];
- const content=$('#onboarding-content');content.innerHTML=contents[step];
+ const content=$('#onboarding-content');globalThis.ClayOnboardingText?.cancel(content);content.innerHTML=contents[step];
  const title=content.querySelector('h2');title.id='onboarding-title';title.tabIndex=-1;
- if(direction&&!matchMedia('(prefers-reduced-motion:reduce)').matches){content.getAnimations().forEach(a=>a.cancel());content.animate([{opacity:0,transform:`translateX(${direction>0?28:-28}px)`},{opacity:1,transform:'translateX(0)'}],{duration:280,easing:'cubic-bezier(.22,1,.36,1)'})}
+ if(!direction)globalThis.ClayOnboardingText?.reveal(content);
  if(direction&&$('#onboarding').open)title.focus({preventScroll:true});
 }
 function captureSetup(){const f=$('#onboarding-form');if(step===1)setup.topic=f.elements.namedItem('setup-topic').value.trim();if(step===2){setup.name=f.elements.namedItem('setup-name').value.trim();setup.headline=f.elements.namedItem('setup-headline').value.trim()}}
-function goToStep(target){if(saving||target===step||target<0||target>3)return;captureSetup();const direction=target-step;step=target;$('#onboarding .form-error').textContent='';onboarding(direction);$('#onboarding').dispatchEvent(new CustomEvent('clay:step-change',{bubbles:true,detail:{step:step+1}}))}
+let onboardingTransitioning=false;
+async function goToStep(target){
+ if(saving||onboardingTransitioning||target===step||target<0||target>3)return;
+ captureSetup();const direction=target-step,owner=user?.uid;
+ const dialog=$('#onboarding'),form=$('#onboarding-form'),controls=[...dialog.querySelectorAll('button')];
+ onboardingTransitioning=true;form.setAttribute('aria-busy','true');controls.forEach(button=>button.disabled=true);
+ function swap(){step=target;$('#onboarding .form-error').textContent='';onboarding(direction);dialog.dispatchEvent(new CustomEvent('clay:step-change',{bubbles:true,detail:{step:step+1}}))}
+ try{
+  if(globalThis.ClayOnboardingText?.transition)await ClayOnboardingText.transition(form,swap,()=>dialog.open&&user?.uid===owner);
+  else swap();
+ }finally{onboardingTransitioning=false;form.removeAttribute('aria-busy');controls.forEach(button=>button.disabled=false)}
+}
 document.querySelectorAll('.onboarding-steps button').forEach(b=>b.onclick=()=>goToStep(Number(b.dataset.step)));
-$('#onboarding-back').onclick=()=>goToStep(step-1);
 $('#onboarding').addEventListener('cancel',e=>e.preventDefault());
 $('#onboarding-form').onsubmit=async e=>{
- e.preventDefault();captureSetup();if(step<3){goToStep(step+1);return}
+ e.preventDefault();if(onboardingTransitioning||saving)return;captureSetup();if(step<3){await goToStep(step+1);return}
  const missing=!setup.topic?.trim()?1:!setup.name?.trim()||!setup.headline?.trim()?2:null;
- if(missing!==null){goToStep(missing);$('#onboarding .form-error').textContent='Preencha os campos desta etapa antes de concluir.';$('#onboarding-form').reportValidity();return}
+ if(missing!==null){await goToStep(missing);$('#onboarding .form-error').textContent='Preencha os campos desta etapa antes de concluir.';$('#onboarding-form').reportValidity();return}
  const b=$('#onboarding-next');b.disabled=true;
  try{const next=clone(state);next.profile.name=setup.name;next.profile.headline=setup.headline;next.initialTopic=setup.topic;next.initialized=true;await persist(next);$('#onboarding').close();$('#onboarding').dispatchEvent(new CustomEvent('clay:setup-completed',{bubbles:true,detail:{step:4}}))}
  catch(e){$('#onboarding .form-error').textContent=failure(e)}finally{b.disabled=false}

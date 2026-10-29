@@ -1,5 +1,5 @@
 (()=>{
- const buttons=[...document.querySelectorAll('[data-provider]')];
+ const buttons=[...document.querySelectorAll('[data-provider="google"]')];
  function message(error){
   if(error.code==='auth/operation-not-allowed')return 'Este provedor ainda precisa ser ativado em Firebase → Authentication → Método de login.';
   if(error.code==='auth/unauthorized-domain')return 'Este endereço do site precisa ser autorizado no Firebase Authentication.';
@@ -13,10 +13,8 @@
   if(!clienteConta){status.textContent='O acesso às contas ainda não está disponível. Tente novamente.';return}
   if(location.protocol==='file:'){status.textContent='Para entrar com estas contas, acesse o site publicado ou pelo localhost.';return}
   if(autenticandoConta)return;
-  const key=button.dataset.provider;
-  const provider=key==='google'?new firebase.auth.GoogleAuthProvider():key==='github'?new firebase.auth.GithubAuthProvider():new firebase.auth.OAuthProvider('apple.com');
-  if(key==='google')provider.setCustomParameters({prompt:'select_account'});
-  if(key==='apple'){provider.addScope('email');provider.addScope('name')}
+  const provider=new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({prompt:'select_account'});
   autenticandoConta=true;buttons.forEach(b=>b.disabled=true);document.getElementById('conta-enviar').disabled=true;document.getElementById('conta-alternar').disabled=true;
   status.textContent='Aguardando sua autenticação…';
   try{

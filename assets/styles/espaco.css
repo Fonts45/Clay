@@ -12,3 +12,54 @@
 
 .access-feedback{padding:12px 0;text-align:center;color:var(--muted);font-size:13px}
 .organizer-target{outline:none!important;scroll-margin-top:100px}
+
+/* Configuração inicial compacta, com hierarquia tipográfica mais clara. */
+#onboarding{width:min(440px,calc(100% - 32px));padding:20px;border:1px solid #ffffff18;border-radius:20px;background:#1c1b20;box-shadow:0 20px 70px #0006}
+#onboarding-form{gap:16px}
+#onboarding .onboarding-steps{gap:4px;padding:0 0 12px;margin:0;border-bottom:1px solid #ffffff12;border-radius:0;background:transparent}
+#onboarding .onboarding-steps button{min-height:36px;padding:7px 5px;gap:5px;border:0;border-radius:8px;font-size:12px;font-weight:600;color:#aaa6b1}
+#onboarding .onboarding-steps button.active{background:#ffffff0d;color:#fff}
+#onboarding .onboarding-steps button:hover{background:#ffffff08;color:#fff}
+#onboarding .onboarding-steps .step-number{width:20px;height:20px;font-size:11px;font-weight:600}
+#onboarding .stepper-viewport{min-height:0}
+#onboarding-content{display:grid;gap:12px;padding:0}
+#onboarding-content h2{margin:0;font-size:24px;font-weight:700;line-height:1.25;letter-spacing:-.035em}
+#onboarding-content p{margin:0;font-size:14px;font-weight:500;line-height:1.55;color:#bebac5}
+#onboarding-content label{gap:7px;font-size:14px;font-weight:600}
+#onboarding-content input{min-height:42px;padding:10px 12px;font-size:14px;font-weight:500;border-radius:10px}
+#onboarding-content .review-item{padding:12px;border:1px solid #ffffff12;border-radius:10px;background:#ffffff04;font-size:14px;font-weight:500}
+#onboarding .onboarding-actions{gap:10px;margin:0;padding:0}
+#onboarding .onboarding-actions .button{min-height:44px;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600}
+@media(max-width:380px){#onboarding{padding:16px}#onboarding .onboarding-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}#onboarding .onboarding-steps button{font-size:12px;gap:6px}#onboarding-content h2{font-size:23px}}
+
+/* Boas-vindas sem moldura, sobre o próprio Meu Espaço. */
+#onboarding{width:min(580px,calc(100% - 32px));max-height:calc(100dvh - 32px);padding:24px 12px;border:0;border-radius:0;background:transparent;box-shadow:none;color:#fff;overflow-x:hidden}
+#onboarding::backdrop{background:rgba(7,6,10,.48);backdrop-filter:blur(9px) brightness(.75) saturate(.8);-webkit-backdrop-filter:blur(9px) brightness(.75) saturate(.8)}
+#onboarding-form{gap:24px}
+#onboarding .onboarding-steps{display:none}
+#onboarding .stepper-viewport{overflow:visible}
+#onboarding-content{text-align:center;gap:16px}
+#onboarding-content h2{font-size:clamp(27px,4.5vw,34px);font-weight:700;line-height:1.2;text-wrap:balance}
+#onboarding-content p{max-width:480px;margin-inline:auto;color:#d0ccd6;font-size:15px;font-weight:500;line-height:1.65;text-wrap:pretty}
+#onboarding-content label{text-align:left}
+#onboarding .onboarding-actions{justify-content:center}
+#onboarding .onboarding-actions .button{min-width:132px}
+#onboarding .form-error{text-align:center}
+#onboarding-form[aria-busy="true"] button:disabled{opacity:1;cursor:default}
+.clay-split-accessible{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.clay-split-word,.clay-split-piece{display:inline-block}
+.clay-split-settled{transition:transform .28s cubic-bezier(.22,1,.36,1)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.clay-split-settled:hover{transform:translateY(-.16em)}}
+
+/* ShinyText adapted from the supplied React Bits reference; see docs/licenses/react-bits-license.txt. */
+#onboarding #onboarding-next.button{min-width:132px;min-height:44px;padding:8px 14px;border:0;background:transparent;box-shadow:none;color:#b5b5b5;font-size:22px;font-weight:600;line-height:1.3}
+#onboarding-next .onboarding-shiny-label{display:inline-block;color:#b5b5b5;transform-origin:center;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+@media(hover:hover){#onboarding-next:not(:disabled):hover .onboarding-shiny-label{transform:scale(1.07)}}
+#onboarding-next:focus-visible .onboarding-shiny-label{transform:scale(1.07)}
+@supports ((background-clip:text) or (-webkit-background-clip:text)){
+ #onboarding-next .onboarding-shiny-label{background-image:linear-gradient(120deg,#b5b5b5 30%,#c3c3c3 38%,#e8e8e8 45%,#fff 50%,#e8e8e8 55%,#c3c3c3 62%,#b5b5b5 70%);background-size:250% 100%;background-repeat:no-repeat;background-position:85% center;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:clay-onboarding-text-shine 2.2s cubic-bezier(.37,0,.63,1) infinite alternate}
+}
+@keyframes clay-onboarding-text-shine{from{background-position:85% center}to{background-position:15% center}}
+#onboarding:not([open]) .onboarding-shiny-label{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){#onboarding-next .onboarding-shiny-label{animation:none;transition:none;background:none;-webkit-text-fill-color:currentColor}}
+@media(forced-colors:active){#onboarding-next .onboarding-shiny-label{animation:none;background:none;color:ButtonText;-webkit-text-fill-color:ButtonText}}
