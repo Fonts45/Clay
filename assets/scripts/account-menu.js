@@ -40,27 +40,38 @@
   }
   if(action==='signout'&&auth){signout.disabled=true;try{await auth.signOut();location.href='index.html?inicio=1'}catch{show('Não foi possível sair','<p>Verifique sua conexão e tente novamente.</p>')}finally{signout.disabled=!user}}
  });
- let unsubscribeProfile=null;
+ const photoTask='header-photo-'+instance;globalThis.clayLoading?.begin(photoTask);
+ const photoReady=()=>globalThis.clayLoading?.end(photoTask);
+ let unsubscribeProfile=null,currentPhoto='',photoRequest=0,customPhoto='';
+ function cachedPhoto(uid){try{return localStorage.getItem('clay-profile-photo:'+uid)||''}catch{return ''}}
+ function applyProfilePhoto(profile,confirmed=false){
+  if(!user)return;
+  if(profile?.photo){customPhoto=profile.photo;try{localStorage.setItem('clay-profile-photo:'+user.uid,customPhoto)}catch{}}
+  const photo=customPhoto||cachedPhoto(user.uid)||(confirmed?user.photoURL:'')||'';showProfilePhoto(photo);if(confirmed&&!photo)photoReady();
+ }
  function showProfilePhoto(photo){
-  toggle.replaceChildren();
-  if(!photo){toggle.innerHTML=silhouette;return}
-  const image=document.createElement('img');image.src=photo;image.alt='';image.referrerPolicy='no-referrer';image.onerror=()=>{toggle.innerHTML=silhouette};toggle.appendChild(image);
+  if(currentPhoto===photo&&toggle.childElementCount){if(photo)photoReady();return;}
+  const request=++photoRequest;
+  if(!photo){currentPhoto='';toggle.innerHTML=silhouette;return}
+  const image=new Image();image.alt='';image.referrerPolicy='no-referrer';
+  image.onload=async()=>{try{await image.decode()}catch{}if(request!==photoRequest)return;currentPhoto=photo;toggle.replaceChildren(image);photoReady()};
+  image.onerror=()=>{if(request!==photoRequest)return;if(!toggle.querySelector('img'))toggle.innerHTML=silhouette;photoReady()};image.src=photo;
  }
  document.addEventListener('clay:profile-updated',event=>{
-  if(user&&event.detail?.uid===user.uid)showProfilePhoto(event.detail.profile?.photo||user.photoURL||'');
+  if(user&&event.detail?.uid===user.uid)applyProfilePhoto(event.detail.profile,true);
  });
  function connect(){
-  if(!window.firebase?.apps?.length)return;
+  if(!window.firebase?.apps?.length){photoReady();return;}
   auth=firebase.auth();auth.onAuthStateChanged(value=>{
    if(unsubscribeProfile){unsubscribeProfile();unsubscribeProfile=null}
-   user=value;signout.disabled=!user;showProfilePhoto(user?.photoURL||'');
+   user=value;customPhoto=user?cachedPhoto(user.uid):'';signout.disabled=!user;showProfilePhoto(customPhoto);if(!user)photoReady();
    if(user&&firebase.firestore){
     const owner=user.uid;
-    unsubscribeProfile=firebase.firestore().collection('learningSpaces').doc(owner).onSnapshot(snapshot=>{
+    unsubscribeProfile=firebase.firestore().collection('learningSpaces').doc(owner).onSnapshot({includeMetadataChanges:true},snapshot=>{
      if(user?.uid!==owner)return;
      const profile=snapshot.exists?snapshot.data().profile:null;
-     showProfilePhoto(profile?.photo||user.photoURL||'');
-    },()=>{/* Keep the current avatar if the connection is unavailable. */});
+     applyProfilePhoto(profile,!snapshot.metadata.fromCache);
+    },()=>{photoReady();});
    }
   });
  }

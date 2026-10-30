@@ -1,0 +1,14 @@
+html,*{scrollbar-width:thin;scrollbar-color:#77737b transparent}
+::-webkit-scrollbar{width:6px;height:6px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece{background:transparent;border:0;box-shadow:none}
+::-webkit-scrollbar-thumb{background:#77737b;border-radius:999px;border:0;box-shadow:none}
+::-webkit-scrollbar-thumb:hover{background:#96919b}
+::-webkit-scrollbar-button,::-webkit-scrollbar-button:single-button,::-webkit-scrollbar-button:increment,::-webkit-scrollbar-button:decrement{display:none;width:0;height:0;background:transparent;border:0}
+::-webkit-scrollbar-corner{background:transparent}
+
+/* Chromium prioriza scrollbar-width sobre os pseudo-elementos. */
+@supports selector(::-webkit-scrollbar){html,body,*{scrollbar-width:auto!important;scrollbar-color:auto!important}html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{width:6px!important;height:6px!important;background:transparent!important}html::-webkit-scrollbar-button,body::-webkit-scrollbar-button,*::-webkit-scrollbar-button{display:none!important;width:0!important;height:0!important;border:0!important;background:none!important}html::-webkit-scrollbar-track,body::-webkit-scrollbar-track,*::-webkit-scrollbar-track{background:transparent!important;box-shadow:none!important}html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb,*::-webkit-scrollbar-thumb{background:#77737b!important;border:0!important;border-radius:999px!important}}
+
+@supports selector(::-webkit-scrollbar){textarea::-webkit-scrollbar{width:14px!important}textarea::-webkit-scrollbar-thumb{border:3px solid transparent!important;background-clip:padding-box!important;border-radius:999px!important}textarea::-webkit-scrollbar-track{margin-block:7px!important;background:transparent!important}textarea{scrollbar-gutter:stable;padding-right:8px}}
+
+textarea::-webkit-scrollbar,textarea::-webkit-scrollbar-thumb,textarea::-webkit-scrollbar-track{cursor:default!important}

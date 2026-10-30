@@ -10,3 +10,5 @@ html body #ld{display:none}
 .clay-loading-layer.is-leaving{opacity:0;pointer-events:none}
 html.clay-content-loading{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.clay-loading-layer{transition-duration:.15s}}
+
+body>nav{transition:opacity .65s cubic-bezier(.22,1,.36,1)}html.clay-content-loading body>nav{opacity:0;visibility:hidden}html:not(.clay-content-loading) body>nav{visibility:visible}@media(prefers-reduced-motion:reduce){body>nav{transition-duration:.15s}}

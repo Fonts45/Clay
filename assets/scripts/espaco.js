@@ -8,6 +8,8 @@ const statuses={planned:'Planejado',active:'Em andamento',done:'Concluído'};
 const route=new URLSearchParams(location.search);
 const dedicatedProfile=location.pathname.endsWith('/perfil.html');
 if(dedicatedProfile)route.set('aba','perfil');
+if(dedicatedProfile){const workspace=document.querySelector('main.workspace'),rail=document.querySelector('.professional-rail');const layout=document.createElement('div');layout.className='profile-centered-layout';workspace.before(layout);layout.append(workspace,rail)}
+
 let uid=route.get('perfil');
 const requestedUsername=route.get('usuario');
 let organizerRouteHandled=false;
@@ -49,8 +51,8 @@ emailField.querySelector('button').addEventListener('click',async()=>{
 moveField('bio','Biografia');
 profileFields.querySelector('[name="bio"]').placeholder='Conte sobre você.';
 const biography=profileFields.querySelector('[name="bio"]');biography.maxLength=600;
-const biographyCount=document.createElement('small');biographyCount.id='profile-bio-count';biographyCount.className='profile-bio-count';biographyCount.textContent='0 / 600 caracteres';biography.setAttribute('aria-describedby','profile-bio-count');biography.closest('label').appendChild(biographyCount);
-function updateBiographyCount(){const length=biography.value.length;biographyCount.textContent=length+' / 600 caracteres';biography.setCustomValidity(length>600?'A biografia deve ter no máximo 600 caracteres.':'')}
+const biographyCount=document.createElement('small');biographyCount.id='profile-bio-count';biographyCount.className='profile-bio-count';biographyCount.textContent='0 / 600';biography.setAttribute('aria-describedby','profile-bio-count');biography.closest('label').appendChild(biographyCount);
+function updateBiographyCount(){const length=biography.value.length;biographyCount.textContent=length+' / 600';biography.setCustomValidity(length>600?'A biografia deve ter no máximo 600 caracteres.':'')}
 biography.addEventListener('input',updateBiographyCount);
 profileFields.insertAdjacentHTML('beforeend','<label>Pronomes<select name="pronouns"><option value="">Não especificar</option><option value="ele/dele">ele/dele</option><option value="ela/dela">ela/dela</option><option value="elu/delu">elu/delu</option><option value="outros">outros</option></select></label><fieldset class="profile-socials"><legend>Minhas conexões</legend></fieldset>');
 const socialFields=profileFields.querySelector('.profile-socials');
@@ -87,7 +89,7 @@ for(const [name,domain,label] of [['github','github.com','GitHub'],['linkedin','
  const validate=()=>{try{normalizeSocialLink(input.value,domain,label);input.setCustomValidity('')}catch(error){input.setCustomValidity(error.message)}};
  input.addEventListener('input',validate);input.addEventListener('blur',()=>{validate();if(!input.validity.valid)input.reportValidity()});
 }
-profileFields.insertAdjacentHTML('beforeend','<label>Área de atuação ou estudos<input name="company" maxlength="160" placeholder="Ex.: Design, Engenharia de Software, Medicina"><small>Conte em qual área você trabalha ou o que está estudando.</small></label>');
+profileFields.insertAdjacentHTML('beforeend','<label>Área de atuação ou estudos<input name="company" maxlength="160" placeholder="Ex.: Design, Engenharia de Software, Medicina"></label>');
 const additional=document.createElement('details');additional.className='profile-additional';additional.innerHTML='<summary>Formação e informações profissionais</summary>';
 for(const field of [...profileForm.children]){if(field.matches('fieldset,.form-row,label'))additional.appendChild(field)}
 profileForm.prepend(profilePhoto,profileFields);profileForm.querySelector('.form-error').before(additional);
@@ -99,7 +101,7 @@ $('#profile-photo-control').hidden=true;
 const photoPreviewButton=document.createElement('button');photoPreviewButton.type='button';photoPreviewButton.id='profile-photo-preview';photoPreviewButton.className='profile-photo-preview';photoPreviewButton.setAttribute('aria-label','Trocar foto de perfil');photoPreviewButton.title='Selecionar uma foto do computador';
 $('#profile-photo-preview').replaceWith(photoPreviewButton);
 photoPreviewButton.addEventListener('click',()=>$('#profile-photo').click());
-const profileSave=profileForm.querySelector('button.primary');profileSave.type='submit';profileSave.id='profile-save';
+const profileSave=profileForm.querySelector('button.primary');profileSave.type='submit';profileSave.id='profile-save';profileSave.textContent='Salvar';
 const profileSaveRow=document.createElement('div');profileSaveRow.className='profile-save-row';profileSave.before(profileSaveRow);profileSaveRow.appendChild(profileSave);profileSaveRow.insertAdjacentHTML('beforeend','<p id="profile-save-feedback" role="status" aria-live="polite"></p>');
 let profilePhotoPreviewUrl=null,profileDirty=false,croppedProfilePhoto=null,profileCropSource=null;
 let profileFeedbackTimer=null,profileFeedbackAnimation=null;
@@ -159,7 +161,19 @@ function atualizarCarta(publicProfile=null){
  const verification=document.getElementById('card-verification');verification.replaceChildren();const badge=document.createElement('img');badge.src='assets/images/profile-badge.png';badge.alt='';badge.className='card-profile-badge';verification.append(badge,document.createTextNode(user?.emailVerified?' Verificado':' Perfil'));
  const photo=profile.avatar||globalThis.ClayAvatarEditor?.preset?.(profile.username)||'',face=document.getElementById('card-face');
  let empty=document.querySelector('.card-avatar-empty');if(!empty){empty=document.createElement('div');empty.className='card-avatar-empty';empty.textContent='Seu avatar 3D';document.getElementById('professional-card').appendChild(empty)}empty.hidden=!!photo;
- face.hidden=!photo;if(photo)face.src=photo;else face.removeAttribute('src');
+ if(!photo){face.dataset.pendingAvatar='';face.hidden=true;face.removeAttribute('src');return}
+ if(face.dataset.pendingAvatar===photo)return;
+ face.dataset.pendingAvatar=photo;
+ const prepared=new Image();prepared.src=photo;
+ const revealAvatar=async()=>{
+  try{await prepared.decode()}catch{}
+  if(face.dataset.pendingAvatar!==photo||!prepared.naturalWidth)return;
+  const loading=document.querySelector('.clay-loading-layer');
+  const pageVisible=document.readyState==='complete'&&!document.documentElement.classList.contains('clay-content-loading')&&(!loading||loading.hidden);
+  face.getAnimations().forEach(animation=>animation.cancel());face.src=photo;face.hidden=false;
+  if(pageVisible&&!matchMedia('(prefers-reduced-motion:reduce)').matches)face.animate([{opacity:0},{opacity:1}],{duration:650,easing:'cubic-bezier(.22,1,.36,1)'});
+ };
+ if(prepared.complete&&prepared.naturalWidth)revealAvatar();else prepared.onload=revealAvatar;
 }
 async function fotoPerfil(){
  if(croppedProfilePhoto)return croppedProfilePhoto;
@@ -201,7 +215,7 @@ function failure(e){if(e?.code==='permission-denied')return 'O banco não autori
 function publicData(data){return {profile:clone(data.profile),projects:clone(data.projects),learning:data.courses.filter(c=>c.share).map(c=>({title:c.title,topic:c.topic,status:c.status})),updatedAt:Date.now()}}
 async function persist(next){
  if(!user||saving)throw Error('Aguarde o salvamento anterior e tente novamente.');
- next.published=true;const owner=user.uid;saving=true;notice('Salvando na sua conta…');
+ next.published=true;const owner=user.uid;saving=true;notice('');
  try{
   const handle=normalizeUsername(next.profile.username),oldHandle=normalizeUsername(state?.profile?.username);
   if(handle&&!/^[a-z0-9_.-]{3,40}$/.test(handle))throw Error('Nome de usuário inválido.');
@@ -219,7 +233,7 @@ async function persist(next){
    transaction.set(publicRef,publicData(next));
   });
   if(user?.uid!==owner)return;
-  state=next;render();notice('Salvo na sua conta · sincronizado entre dispositivos');
+  state=next;render();notice('');
  }catch(e){notice(failure(e),true);throw e}finally{saving=false}
 }
 function renderProfile(data){
@@ -296,7 +310,7 @@ bindForm('#course-form',async data=>{
  if(index<0){if(next.courses.length>=100)throw Error('O limite desta trilha é de 100 cursos.');next.courses.push(entry)}else next.courses[index]=entry;
  await persist(next);
 });
-bindForm('#profile-form',async data=>{if((data.bio||'').length>600)throw Error('A biografia deve ter no máximo 600 caracteres.');data.username=normalizeUsername(data.username);if(!data.username)throw Error('Escolha seu nome de usuário.');normalizeProfileLinks(data);checkUrls(data,['resume','github','linkedin','website','social3','social4']);if(!data.name)throw Error('Preencha seu nome.');if(data.username&&!/^[A-Za-z0-9_.-]{3,40}$/.test(data.username))throw Error('Confira o nome de usuário: use de 3 a 40 letras, números, pontos, hífens ou sublinhados.');const next=clone(state);next.profile={...state.profile,...data,photo:await fotoPerfil()};await persist(next);profileDirty=false;$('#profile-photo').value='';updateProfilePhoto(next.profile.photo||user?.photoURL);$('#profile-save-feedback').textContent='Perfil salvo. Seu card profissional foi atualizado.';fadeProfileConfirmation()});
+bindForm('#profile-form',async data=>{if((data.bio||'').length>600)throw Error('A biografia deve ter no máximo 600 caracteres.');data.username=normalizeUsername(data.username);if(!data.username)throw Error('Escolha seu nome de usuário.');normalizeProfileLinks(data);checkUrls(data,['resume','github','linkedin','website','social3','social4']);if(!data.name)throw Error('Preencha seu nome.');if(data.username&&!/^[A-Za-z0-9_.-]{3,40}$/.test(data.username))throw Error('Confira o nome de usuário: use de 3 a 40 letras, números, pontos, hífens ou sublinhados.');const next=clone(state);next.profile={...state.profile,...data,photo:await fotoPerfil()};await persist(next);profileDirty=false;$('#profile-photo').value='';updateProfilePhoto(next.profile.photo||user?.photoURL);$('#profile-save-feedback').textContent='';globalThis.clayReturnFromProfile?.()});
 bindForm('#project-form',async data=>{checkUrls(data,['url']);const next=clone(state),entry={...data,id:projectId||crypto.randomUUID()},index=next.projects.findIndex(p=>p.id===projectId);if(index<0){if(next.projects.length>=40)throw Error('O limite é de 40 projetos.');next.projects.push(entry)}else next.projects[index]=entry;await persist(next)});
 $('#owner-space').addEventListener('click',async e=>{
  const b=e.target.closest('button');if(!b||saving||!state)return;
