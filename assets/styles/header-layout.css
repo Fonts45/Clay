@@ -48,7 +48,7 @@ html body>nav.card-nav-mode .links{top:var(--clay-header-height);left:var(--clay
 
 /* A navegação da landing se recolhe ao sair da hero. */
 html body>nav:has(+.hero){left:50%;right:auto;transform:translateX(-50%);transition:width .6s cubic-bezier(.22,1,.36,1),top .6s cubic-bezier(.22,1,.36,1),height .45s cubic-bezier(.22,1,.36,1),min-height .45s,border-radius .6s,background .4s,border-color .4s,box-shadow .4s}
-html body>nav.card-nav-mode:has(+.hero){--clay-header-height:60px;--clay-header-center-y:30px;--clay-header-actions-y:7px;--clay-header-edge:8px;--clay-header-control-height:44px;top:14px;left:50%;right:auto;width:min(800px,calc(100% - 32px));height:60px;min-height:60px;padding:0 8px;transform:translateX(-50%);border:1px solid #ffffff20;border-radius:18px;background:rgba(35,32,43,.88);box-shadow:inset 0 1px 0 #ffffff08,0 10px 35px #0003;backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%)}
+html body>nav.card-nav-mode:has(+.hero){--clay-header-height:60px;--clay-header-center-y:30px;--clay-header-actions-y:7px;--clay-header-edge:8px;--clay-header-control-height:44px;top:14px;left:50%;right:auto;width:min(800px,calc(100% - 32px));height:60px;min-height:60px;padding:0 8px;transform:translateX(-50%);border:1px solid #ffffff20;border-radius:18px;background:#282828;box-shadow:inset 0 1px 0 #ffffff08,0 10px 35px #0003;backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%)}
 html body>nav.card-nav-mode:has(+.hero) .clay-header-actions{right:7px;top:7px;height:44px;transition:right .6s,top .5s}
 html body>nav.card-nav-mode.card-nav-open:has(+.hero){height:260px}
 html body>nav.card-nav-mode:has(+.hero) .links{top:60px;left:0;right:0;width:auto}
@@ -64,7 +64,7 @@ html body>nav.card-nav-mode:has(+.hero) .clay-account-menu{top:calc(100% + 12px)
 @media(prefers-reduced-motion:reduce){html body>nav.card-nav-mode:has(+.hero) #menu{transition:none}}
 /* Evita linhas de borda e recomposição do vidro enquanto a barra encolhe. */
 html body>nav:has(+.hero){border:0;backdrop-filter:none;-webkit-backdrop-filter:none;isolation:isolate}
-html body>nav.card-nav-mode:has(+.hero){border:0;background:rgba(35,32,43,.96);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 10px 35px #0003}
+html body>nav.card-nav-mode:has(+.hero){border:0;background:#282828;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 10px 35px #0003}
 html body>nav:has(+.hero) .clay-header-actions .clay-star-button,
 html body>nav:has(+.hero) .clay-account-toggle{backdrop-filter:none;-webkit-backdrop-filter:none;transform:translateZ(0);isolation:isolate}
 html body>nav:has(+.hero) .clay-star-outline-svg{contain:paint;clip-path:inset(0 round 12px);transform:translateZ(0)}
@@ -86,3 +86,6 @@ html body>nav:has(+.hero)>.logo,html body>nav.card-nav-mode:has(+.hero)>.logo{to
 @media(prefers-reduced-motion:reduce){html body>nav:has(+.hero){transition:none}}
 /* Oculta a marca do cabeçalho da landing em telas compactas. */
 @media(max-width:600px){html body>nav:has(+.hero)>.logo,html body>nav.card-nav-mode:has(+.hero)>.logo{display:none}}
+
+html body>nav.card-nav-mode:has(+.hero){background:#282828;border:1px solid #ffffff1a;border-radius:18px;box-shadow:0 10px 30px #0003}
+html body>nav.card-nav-mode:has(+.hero) .clay-star-button{background:#ffffff06;color:#f5f3f7;border:1px solid #ffffff1a;border-radius:12px}
