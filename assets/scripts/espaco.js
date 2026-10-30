@@ -31,6 +31,27 @@ profilePhoto.appendChild(profileForm.querySelector('.profile-photo-row'));
 const moveField=(name,title,help)=>{const field=profileForm.elements.namedItem(name).closest('label');field.firstChild.textContent=title;profileFields.appendChild(field);if(help)field.insertAdjacentHTML('beforeend','<small>'+help+'</small>');return field};
 moveField('name','Nome');
 const usernameLabel=moveField('username','Nome de usuário');
+function identityRow(label,username){
+ label.classList.add('profile-identity-field');
+ const input=label.querySelector('input'),row=document.createElement('div');row.className='profile-identity-row';input.before(row);
+ if(username){const at=document.createElement('span');at.className='profile-identity-at';at.textContent='@';at.setAttribute('aria-hidden','true');row.append(at)}
+ row.append(input);const edit=document.createElement('button');edit.type='button';edit.className='profile-identity-edit';edit.setAttribute('aria-label',username?'Editar nome de usuário':'Editar nome');
+ edit.innerHTML='<img src="assets/images/profile-edit-original.png" alt="">';
+ const normalIcon=edit.innerHTML;let editingIdentity=false,previousValue='';
+ function finishIdentity(cancel=false){
+  if(!editingIdentity)return;
+  if(!cancel&&!input.reportValidity())return;
+  if(cancel){input.value=previousValue;input.dispatchEvent(new Event('input',{bubbles:true}))}
+  editingIdentity=false;row.classList.remove('is-editing');edit.innerHTML=normalIcon;edit.setAttribute('aria-label',username?'Editar nome de usuário':'Editar nome');input.readOnly=true;
+ }
+ function beginIdentity(){if(editingIdentity)return;editingIdentity=true;previousValue=input.value;input.readOnly=false;row.classList.add('is-editing');edit.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>';edit.setAttribute('aria-label','Confirmar alteração');input.focus();input.select()}
+ input.readOnly=true;
+ edit.onclick=()=>editingIdentity?finishIdentity():beginIdentity();
+ input.addEventListener('click',beginIdentity);
+ input.addEventListener('keydown',event=>{if(event.key==='Enter'&&editingIdentity){event.preventDefault();finishIdentity()}else if(event.key==='Escape'&&editingIdentity){event.preventDefault();event.stopPropagation();finishIdentity(true)}});
+ row.append(edit);
+}
+identityRow(profileFields.querySelector('[name="name"]').closest('label'),false);identityRow(usernameLabel,true);
 const usernameInput=usernameLabel.querySelector('input');usernameInput.required=true;usernameInput.placeholder='@rodrigofontes150';usernameInput.autocapitalize='none';usernameInput.spellcheck=false;usernameInput.removeAttribute('pattern');
 usernameInput.addEventListener('input',()=>{const start=usernameInput.selectionStart,end=usernameInput.selectionEnd;usernameInput.value=usernameInput.value.toLowerCase();if(start!==null)usernameInput.setSelectionRange(start,end);const value=normalizeUsername(usernameInput.value);usernameInput.setCustomValidity(!value||/^[a-z0-9_.-]{3,40}$/.test(value)?'':'Use de 3 a 40 letras, números, pontos, hífens ou sublinhados.');});
 
@@ -327,11 +348,13 @@ $('#copy-profile').onclick=async()=>{const url=new URL(location.href);url.search
 function onboarding(direction=0){
  $('#onboarding-next .onboarding-shiny-label').textContent=step===3?'Concluir':'Avançar';
  document.querySelectorAll('.onboarding-steps button').forEach((e,i)=>{e.classList.toggle('active',i===step);e.classList.toggle('visited',i<step);if(i===step)e.setAttribute('aria-current','step');else e.removeAttribute('aria-current')});
- const contents=[`<h2>Bem-vindo(a) a bordo</h2><p>Um espaço para lembrar onde parou e mostrar o que está construindo. Configure em poucos passos.</p>`,
- `<h2>Qual é a sua direção?</h2><p>Escolha um tema para começar a organizar sua trilha. Você pode adicionar outros depois.</p><label>Tema inicial<input name="setup-topic" maxlength="80" required placeholder="Ex.: Desenvolvimento web" value="${esc(setup.topic??'Engenharia de Software')}"></label>`,
- `<h2>Como você quer se apresentar?</h2><label>Seu nome<input name="setup-name" required maxlength="100" value="${esc(setup.name??state.profile.name)}"></label><label>Título profissional<input name="setup-headline" required maxlength="160" value="${esc(setup.headline??state.profile.headline)}"></label>`,
- `<h2>Pronto para começar.</h2><div class="review-item">Trilha inicial: ${esc(setup.topic)}</div><div class="review-item">${esc(setup.name)}<br>${esc(setup.headline)}</div><p>Seus estudos ficam privados na sua conta. O portfólio só será público quando você clicar em Publicar perfil.</p>`];
+ const contents=[`<h2>Seu espaço começa aqui.</h2><p>Organize seus conhecimentos, acompanhe sua evolução e construa seu futuro. Tudo em um só lugar.</p>`,
+ `<h2>Vamos evoluir!</h2><p>Organize seus conhecimentos, desenvolva projetos e acompanhe sua evolução. Tudo em um só lugar.</p><label>Qual sua área de atuação?<input name="setup-topic" maxlength="80" placeholder="Ex.: Engenharia de Software, Design, Medicina" value="${esc(setup.topic??'')}" list="setup-area-options"><datalist id="setup-area-options"></datalist></label>`,
+ `<h2>Como você quer se apresentar?</h2><label>Seu nome<input name="setup-name" required maxlength="100" value="${esc(setup.name??state.profile.name)}"></label><label>Título profissional<input name="setup-headline" required maxlength="160" value="${esc(setup.headline??(state.profile.headline||setup.topic||''))}"></label>`,
+ `<h2>Pronto para começar.</h2><div class="review-item">Área de atuação: ${esc(setup.topic)}</div><div class="review-item">${esc(setup.name)}<br>${esc(setup.headline)}</div><p>Seus estudos ficam privados na sua conta. O portfólio só será público quando você clicar em Publicar perfil.</p>`];
  const content=$('#onboarding-content');globalThis.ClayOnboardingText?.cancel(content);content.innerHTML=contents[step];
+ const area=content.querySelector('[name="setup-topic"]');
+ if(area){const suggestions=['Engenharia de Software','Desenvolvimento Web','Design Gráfico','Design de Produto','Medicina','Psicologia','Administração','Direito','Engenharia Civil','Marketing','Ciência de Dados','Educação','Estudante de Engenharia de Software','Estudante de Medicina','Estudante de Administração'];const normalize=value=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();area.addEventListener('input',()=>{const words=normalize(area.value).trim().split(/\s+/);const list=content.querySelector('datalist');list.replaceChildren();if(area.value.trim().length<2)return;suggestions.filter(value=>words.every(word=>normalize(value).split(/\s+/).some(part=>part.startsWith(word)))).slice(0,3).forEach(value=>{const option=document.createElement('option');option.value=value;list.append(option)})})}
  const title=content.querySelector('h2');title.id='onboarding-title';title.tabIndex=-1;
  if(!direction)globalThis.ClayOnboardingText?.reveal(content);
  if(direction&&$('#onboarding').open)title.focus({preventScroll:true});
@@ -353,10 +376,10 @@ document.querySelectorAll('.onboarding-steps button').forEach(b=>b.onclick=()=>g
 $('#onboarding').addEventListener('cancel',e=>e.preventDefault());
 $('#onboarding-form').onsubmit=async e=>{
  e.preventDefault();if(onboardingTransitioning||saving)return;captureSetup();if(step<3){await goToStep(step+1);return}
- const missing=!setup.topic?.trim()?1:!setup.name?.trim()||!setup.headline?.trim()?2:null;
+ const missing=!setup.name?.trim()||!setup.headline?.trim()?2:null;
  if(missing!==null){await goToStep(missing);$('#onboarding .form-error').textContent='Preencha os campos desta etapa antes de concluir.';$('#onboarding-form').reportValidity();return}
  const b=$('#onboarding-next');b.disabled=true;
- try{const next=clone(state);next.profile.name=setup.name;next.profile.headline=setup.headline;next.initialTopic=setup.topic;next.initialized=true;await persist(next);$('#onboarding').close();$('#onboarding').dispatchEvent(new CustomEvent('clay:setup-completed',{bubbles:true,detail:{step:4}}))}
+ try{const next=clone(state);next.profile.name=setup.name;next.profile.headline=setup.headline;next.initialTopic=setup.topic;if(!next.profile.company)next.profile.company=setup.topic;next.initialized=true;await persist(next);$('#onboarding').close();$('#onboarding').dispatchEvent(new CustomEvent('clay:setup-completed',{bubbles:true,detail:{step:4}}))}
  catch(e){$('#onboarding .form-error').textContent=failure(e)}finally{b.disabled=false}
 };
 async function findProfileByUsername(value){
@@ -387,7 +410,7 @@ try{
    if(!doc.exists&&doc.metadata.fromCache)return;
    finishLoading();state=doc.exists?{...blank(),...doc.data()}:blank();$('#access-state').hidden=true;$('#owner-space').hidden=false;$('#owner-space').setAttribute('aria-busy','false');writeControls.forEach(id=>$(id).disabled=false);render();notice(doc.metadata.fromCache?'Dados em memória · verificando atualizações…':'');
    if(!doc.metadata.fromCache&&(!doc.exists||!state.published)&&!saving){const publicState=clone(state);publicState.published=true;persist(publicState).catch(()=>{});}
-   if(route.get('aba')!=='perfil'&&!state.initialized&&!$('#onboarding').open){step=0;setup={topic:state.initialTopic||'Engenharia de Software',name:state.profile.name,headline:state.profile.headline};onboarding();$('#onboarding').showModal()}
+   if(route.get('aba')!=='perfil'&&!state.initialized&&!$('#onboarding').open){step=0;setup={topic:'',name:state.profile.name,headline:state.profile.headline};onboarding();$('#onboarding').showModal()}
   },e=>{if(user?.uid!==owner)return;finishLoading();$('#owner-space').setAttribute('aria-busy','false');if(!state){$('#owner-space').hidden=false;$('#access-state').hidden=false;$('#course-list').replaceChildren();$('#portfolio-preview').replaceChildren()}$('#access-message').textContent=failure(e);notice(failure(e),true);$('#retry-load').hidden=false});
  });
 }catch{finishLoading();accessError('Não foi possível conectar. Confira a conexão e tente novamente.');$('#login-link').hidden=!!uid;$('#retry-load').hidden=false}

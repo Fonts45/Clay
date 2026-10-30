@@ -762,7 +762,7 @@ $('#conta-alternar').onclick=()=>mostrarConta(modoConta==='entrar'?'cadastrar':'
 function erroConta(erro){
  const codigo=erro?.code||'';
  if(['auth/invalid-credential','auth/wrong-password','auth/user-not-found'].includes(codigo))return 'Endereço ou senha incorretos.';
- if(codigo==='auth/email-already-in-use')return 'Não foi possível cadastrar. Tente entrar ou utilize outro endereço.';
+ if(codigo==='auth/email-already-in-use')return 'Este e-mail já tem uma conta Clay. Para entrar também com senha, clique em Esqueceu a senha e defina uma pelo link recebido no e-mail.';
  if(codigo==='auth/invalid-email')return 'Digite um endereço válido.';
  if(codigo==='auth/too-many-requests')return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
  if(codigo==='auth/weak-password'||codigo==='auth/password-does-not-meet-requirements')return 'Escolha uma senha mais forte.';
@@ -793,7 +793,16 @@ $('#conta-form').onsubmit=async e=>{
   atualizarUsuario(resultado.user);$('#conta').close();
   if(new URLSearchParams(location.search).get('destino')==='ia')open();
   else location.href=new URLSearchParams(location.search).get('aba')==='perfil'?'perfil.html':'espaco.html';
- }catch(e){$('#conta-status').textContent=erroConta(e)}
+ }catch(e){
+  if(cadastro&&e.code==='auth/email-already-in-use'){
+   const emailExistente=$('#conta-email').value.trim();
+   try{
+    await clienteConta.sendPasswordResetEmail(emailExistente);
+    mostrarConta('entrar');$('#conta-email').value=emailExistente;
+    $('#conta-status').textContent='Você pode usar esta mesma conta com Google ou senha. Enviamos um link ao seu e-mail para definir a senha. Confira também o Spam. Depois, entre aqui com seu e-mail e a nova senha.';
+   }catch(resetError){$('#conta-status').textContent=erroConta(resetError)}
+  }else $('#conta-status').textContent=erroConta(e);
+ }
  finally{botao.disabled=false;$('#conta-alternar').disabled=false;autenticandoConta=false;globalThis.clayLoading?.end('account')}
 };
 $('#sair').onclick=async()=>{

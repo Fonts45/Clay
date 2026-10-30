@@ -19,7 +19,7 @@
   let busy=false,revision=0,photoURL='',candidate='',cursor=null,historyLoading=false;
   const dialog=document.createElement('dialog');dialog.className='clay-avatar-editor';dialog.setAttribute('aria-labelledby','clay-avatar-title');
   const action='Selecionar foto';
-  dialog.innerHTML='<div class="avatar-editor-heading"><div><p>CLAY STUDIO</p><h2 id="clay-avatar-title"></h2></div></div><nav class="avatar-editor-tabs" aria-label="Avatares"><button type="button" data-avatar-create-tab aria-pressed="true">Criar avatar</button><button type="button" data-avatar-history-tab aria-pressed="false">Meus avatares</button></nav><section data-avatar-create><div class="avatar-editor-preview" hidden><img alt="Foto selecionada para criar o avatar"></div><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Selecionar uma foto de rosto" hidden><div class="avatar-editor-actions"><button type="button" data-avatar-choose></button><button type="button" data-avatar-apply hidden>Usar avatar</button></div></section><section data-avatar-history hidden><p class="avatar-editor-help">Seus avatares ficam guardados na sua conta. Escolha um para aplicar novamente.</p><div class="avatar-history-grid"></div><button type="button" class="avatar-history-more" hidden>Carregar mais</button><div class="avatar-editor-actions"><button type="button" data-avatar-change>Trocar avatar</button></div></section><p class="avatar-editor-status" role="status" aria-live="polite"></p>';
+  dialog.innerHTML='<div class="avatar-editor-heading"><div><p>CLAY STUDIO</p><h2 id="clay-avatar-title"></h2></div></div><nav class="avatar-editor-tabs" aria-label="Avatares"><button type="button" data-avatar-create-tab aria-pressed="true">Criar avatar</button><button type="button" data-avatar-history-tab aria-pressed="false">Meus avatares</button></nav><section data-avatar-create><div class="avatar-editor-preview" hidden><img alt="Foto selecionada para criar o avatar"></div><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Selecionar uma foto de rosto" hidden><div class="avatar-editor-actions"><button type="button" data-avatar-choose></button><button type="button" data-avatar-apply hidden>Usar avatar</button></div></section><section data-avatar-history hidden><p class="avatar-editor-help" data-avatar-empty>Você ainda não tem avatares salvos.</p><div class="avatar-history-grid"></div><button type="button" class="avatar-history-more" hidden>Carregar mais</button><div class="avatar-editor-actions"><button type="button" data-avatar-change>Trocar avatar</button></div></section><p class="avatar-editor-status" role="status" aria-live="polite"></p>';
   document.body.append(dialog);
   const preview=dialog.querySelector('img'),input=dialog.querySelector('input'),status=dialog.querySelector('.avatar-editor-status'),choose=dialog.querySelector('[data-avatar-choose]');
   const apply=dialog.querySelector('[data-avatar-apply]'),grid=dialog.querySelector('.avatar-history-grid'),more=dialog.querySelector('.avatar-history-more');
@@ -43,7 +43,7 @@
    options.onclick=()=>{const opening=menu.hidden;dialog.querySelectorAll('.avatar-history-menu').forEach(el=>el.hidden=true);dialog.querySelectorAll('.avatar-history-options').forEach(el=>el.setAttribute('aria-expanded','false'));menu.hidden=!opening;options.setAttribute('aria-expanded',String(opening))};
    card.addEventListener('keydown',event=>{if(event.key==='Escape'&&!menu.hidden){event.preventDefault();event.stopPropagation();menu.hidden=true;options.setAttribute('aria-expanded','false');options.focus()}});
    card.addEventListener('focusout',event=>{if(!card.contains(event.relatedTarget)){menu.hidden=true;options.setAttribute('aria-expanded','false')}});
-   const defaultName='Avatar '+(shown.size+1);const name=document.createElement('span');name.className='avatar-history-name';name.textContent=entry.name||defaultName;button.replaceChild(name,label);shown.set(entry.image,{entry,name,defaultName});
+   const defaultName='Avatar '+(shown.size+1);const name=document.createElement('span');name.className='avatar-history-name';name.textContent=entry.name||defaultName;button.replaceChild(name,label);shown.set(entry.image,{entry,name,defaultName});dialog.querySelector('[data-avatar-empty]').hidden=true;
    menu.replaceChildren();
    const rename=document.createElement('button');rename.type='button';rename.textContent='Editar nome';
    rename.onclick=()=>{
@@ -69,7 +69,7 @@
     field.addEventListener('blur',()=>{if(!done)commit()});
    };
    const remove=document.createElement('button');remove.type='button';remove.textContent='Apagar';
-   remove.onclick=async()=>{menu.hidden=true;if(!confirm('Apagar este avatar?'))return;try{if(!history)throw Error('Histórico indisponível.');if(!entry.id)Object.assign(entry,await history.rememberCurrent(entry.image));if(entry.image===avatar){await save('');avatar=''}await history.remove(entry.id);shown.delete(entry.image);card.remove();status.textContent='Avatar apagado.'}catch(error){status.textContent=errorMessage(error)}};
+   remove.onclick=async()=>{menu.hidden=true;if(!confirm('Apagar este avatar?'))return;try{if(!history)throw Error('Histórico indisponível.');if(!entry.id)Object.assign(entry,await history.rememberCurrent(entry.image));if(entry.image===avatar){await save('');avatar=''}await history.remove(entry.id);shown.delete(entry.image);card.remove();dialog.querySelector('[data-avatar-empty]').hidden=shown.size>0;status.textContent='Avatar apagado.'}catch(error){status.textContent=errorMessage(error)}};
    menu.append(rename,remove);card.append(button,options,menu);grid.append(card);
   }
   async function loadHistory(reset=false){
@@ -78,7 +78,7 @@
     if(reset){cursor=null;shown.clear();grid.replaceChildren();if(avatar)tile({image:avatar});if(avatar)tile(await history.rememberCurrent(avatar))}
     const page=await history.list(cursor);if(!dialog.isConnected)return;
     page.items.forEach(tile);cursor=page.cursor;more.hidden=!page.more;
-    if(!shown.size)status.textContent='Você ainda não tem avatares salvos.';
+    dialog.querySelector('[data-avatar-empty]').hidden=shown.size>0;
    }catch(error){if(dialog.isConnected){status.dataset.error='true';status.textContent=errorMessage(error)}}
    finally{historyLoading=false;more.disabled=false}
   }

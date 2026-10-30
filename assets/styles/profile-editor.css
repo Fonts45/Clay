@@ -140,3 +140,22 @@ html.profile-page body.branch-visible .profile-centered-layout main.workspace{pa
 .profile-editor textarea[name=bio]{border-radius:16px}
 .profile-editor .profile-social-field input{border-radius:10px}
 .profile-editor .profile-save-row #profile-save{border-radius:12px}
+
+.profile-editor .profile-identity-field{gap:12px;margin-bottom:12px;color:#a29ea9;font-size:13px;font-weight:500}
+.profile-identity-row{display:flex;align-items:center;gap:16px;min-width:0;min-height:36px}
+.profile-editor .profile-identity-row input{flex:1;width:0;min-width:0;max-width:none;background:transparent;border:0;border-radius:0;padding:4px 0;color:#f5f3f7;font-size:15px;box-shadow:none}
+.profile-editor .profile-identity-row input:focus{outline:none;border:0;background:transparent}
+.profile-identity-at{flex:none;font:500 23px/1 Inter,Arial,sans-serif;color:#a29ea9}
+.profile-editor .profile-identity-edit{width:32px;height:32px;flex:none;display:grid;place-items:center;padding:6px;background:transparent;border:0;border-radius:10px;color:#c6c2cb;cursor:pointer;box-shadow:none}
+.profile-identity-edit img,.profile-identity-edit svg{width:20px;height:20px;object-fit:contain}.profile-identity-edit img{filter:brightness(0) invert(1)}
+.profile-editor .profile-identity-edit:hover{background:#ffffff08}
+
+.profile-editor .profile-identity-row{position:relative}
+.profile-editor .profile-identity-row:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:999px;background:#77737b;opacity:0;transition:opacity .2s}
+.profile-editor .profile-identity-row.is-editing:after{opacity:1}
+.profile-editor .profile-identity-row input[readonly]{background:transparent;cursor:text}
+
+.profile-editor .profile-identity-row input,.profile-editor .profile-identity-row input:is(:focus,:focus-visible,:active,[readonly]){outline:none!important;border:0!important;box-shadow:none!important;background:transparent!important;appearance:none;-webkit-appearance:none}
+.profile-editor .profile-identity-row{outline:none!important;box-shadow:none!important;border:0!important}
+
+#onboarding-form,#onboarding-content,#onboarding-content h2,#onboarding-form:focus,#onboarding-form:focus-visible,#onboarding-content:focus,#onboarding-content:focus-visible,#onboarding-content h2:focus,#onboarding-content h2:focus-visible{outline:none!important;box-shadow:none!important}#onboarding-form,#onboarding-content{border:0!important}
