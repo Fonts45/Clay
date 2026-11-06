@@ -24,7 +24,7 @@
  }
  async function prepare(src){
   const image=new Image();image.crossOrigin='anonymous';image.referrerPolicy='no-referrer';image.src=src;await image.decode();
-  const scale=Math.min(1,256/Math.max(image.naturalWidth,image.naturalHeight));
+  const scale=Math.min(1,512/Math.max(image.naturalWidth,image.naturalHeight));
   const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
   const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0,canvas.width,canvas.height);
   const pixels=removeBackground(ctx.getImageData(0,0,canvas.width,canvas.height));ctx.putImageData(pixels,0,0);
@@ -35,6 +35,6 @@
   return cropped.toDataURL('image/png');
  }
  const cache=new Map();
- function fromSite(url){const domain=new URL(url).hostname;if(!cache.has(domain))cache.set(domain,prepare('/api/shortcut-logo?domain='+encodeURIComponent(domain)).catch(error=>{cache.delete(domain);throw error}));return cache.get(domain)}
+ function fromSite(url){const domain=new URL(url).hostname;if(!cache.has(domain))cache.set(domain,prepare('/api/shortcut-logo?domain='+encodeURIComponent(domain)).catch(()=>prepare('https://www.google.com/s2/favicons?domain='+encodeURIComponent(domain)+'&sz=256')).catch(error=>{cache.delete(domain);throw error}));return cache.get(domain)}
  globalThis.ClayLogo={removeBackground,prepare,fromSite};
 })();
